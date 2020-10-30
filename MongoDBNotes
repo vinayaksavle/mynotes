@@ -1,0 +1,585 @@
+MongoDB Notes:
+
+https://www.quackit.com/mongodb/tutorial/
+
+1. About MongoDB
+
+- MongoDB is an open source database management system (DBMS) that uses a document-oriented data model. It is considered a NoSQL database, as it doesn't use the relational model, and therefore doesn't use SQL as its query language.
+
+- The Collections
+In MongoDB, a collection is a group of documents. A collection typically contains documents that have a similar topic (like Users, Products, Posts, etc).
+Collections are therefore, in many ways, similar to tables from the relational model.
+
+- The Documents
+In MongoDB, documents are stored as JSON documents. JSON (JavaScript Object Notation) is a standard that facilitates data interchange. JSON documents are similar to XML documents in that data can be presented in a hierarchical way, and can be read by humans and computers alike.
+E.g. 
+{
+    artistname : "Deep Purple",
+    albums : [
+                {
+                    album : "Machine Head",
+                    year : 1972,
+                    genre : "Rock"
+                }, 
+                {
+                    album : "Stormbringer",
+                    year : 1974,
+                    genre : "Rock"
+                }
+            ]
+}
+
+- The _id field is the unique identifier for a document. MongoDB allows for each document to be retrieved/referenced using this field. You can supply this or let MongoDB generate it.
+
+- MongoDB actually stores the JSON documents in a binary-encoded format called BSON. BSON extends JSON through supporting additional data types and to be efficient for encoding and decoding within different languages.
+
+- Schemaless
+Each JSON document in a collection can contain its own structure. Therefore, there is no fixed schema that limits the type of data that can be entered into a MongoDB database.
+
+This is in contrast to a relational database where, you must create the schema first (i.e. define the tables, columns, data types, etc), before entering any data. If data doesn't adhere to the schema, it doesn't go into the database.
+
+In a MongoDB database, there is no rule to say which fields, or how many fields, each document should have. For example, one document from a collection might contain name, address, and phone number, while another document might contain name and email address.
+
+
+2. MongoDB - Create a Database
+
+- In MongoDB, you create a database by switching to a non-existent database, then inserting data into it.
+
+- There is no CREATE DATABASE statement in MongoDB like there is in SQL. To create a database in MongoDB, simply switch to a non-existent database, then insert data into it.
+
+- To switch databases, run the use statement. If the database doesn't already exist, it will be created:
+
+CMD - use music
+O/P - switched to db music
+
+However, the database isn't actually created until you insert data into it:
+
+db.artists.insert({ artistname: "The Tea Party" })
+The above statement creates a collection and inserts a document into it.
+O/P - WriteResult({ "nInserted" : 1 })
+
+- You can see the database in your list of databases by issuing the following command:
+
+CMD - show databases
+O/P - 
+local  0.000GB
+music  0.000GB
+test   0.005GB
+
+- You can also run the following line to view the contents of your database:
+
+CMD - db.artists.find()
+O/P - 
+{ "_id" : ObjectId("5780fbf948ef8c6b3ffb0149"), "artistname" : "The Tea Party" }
+
+3. MongoDB - Create a Collection
+
+- You can create a collection using the createCollection() method, or on the fly as you insert a document.
+
+- When we created our database, we created a collection called artists. This collection will contain documents with artist details, such as the artists' names, albums they've released, etc.
+
+- Two ways to Create a Collection
+*You can create a collection on the fly when inserting a document (using the insert() method.
+E.g. db.artists.insert({ artistname: "The Tea Party" })
+
+*You can also create a collection explicitly, using the createCollection() method. This allows you to create a collection without inserting a document.
+E.g. db.createCollection("producers")
+
+- You can also specify options for the collection by using the db.createCollection(name, options) syntax.
+E.g. db.createCollection("log", { capped : true, size : 4500500, max : 4000 } )
+
+The fields available as of MongoDB version 3.2 are as follows.
+* Field - capped	type - boolean
+When set to true, creates a capped collection. A capped collection is a fixed-sized collection that automatically overwrites its oldest entries when it reaches its maximum size. If you specify true, you must also set a maximum size in the size field.
+
+*autoIndexId	boolean
+Specify false to disable the automatic creation of an index on the _id field. As of MongoDB version 3.2, this field is deprecated, and it will be removed in version 3.4.
+
+*size	number	
+Maximum size in bytes for a capped collection. Only used with capped collections (it is ignored in other collections).
+
+*max	number	
+Maximum number of documents allowed in the capped collection. Note that the size field takes precedence over the max field. If the collection reaches its size limit before the document limit has been reached, MongoDB will remove documents anyway.
+
+*usePowerOf2Sizes	boolean
+Only available in the MMAPv1 storage engine. This field has been deprecated since version 3.0.
+
+*noPadding	boolean	
+Only available in the MMAPv1 storage engine. Disables the power of 2 sizes allocation for the collection. Defaults to false.
+
+*storageEngine	document
+Only available in the WiredTiger storage engine. Allows configuration to the storage engine on a per-collection basis when creating a collection. Syntax is as follows: { <storage-engine-name>: <options> }
+
+*validator	document	
+Allows you to specify validation rules or expressions for the collection. Note that validation is only applied when inserting and updating data. Therefore, data that already exists in the database is not validated (until it is updated).
+
+*validationLevel	string
+Allows you to specify how strictly any validation rules are applied to existing documents during an update. Possible values:
+off	- No validation occurs for inserts or updates.
+strict	- Validation occurs for inserts and updates. this is the default value.
+moderate	- Validation rules are only applied to existing valid documents, but not to existing invalid documents.
+
+*validationAction	string
+Specifies whether an error should occur, or just a warning, when invalid documents are inserted. If an error, the invalid documents will still be inserted, but with a warning.
+error	- Specifies that an error occurs when an invalid document is being written, and the operation fails.
+warning	- Specifies that invalid documents can still be written, and that the warning will be logged.
+
+*indexOptionDefaults	document	
+Allows you to specify a default configuration for indexes when creating a collection. Accepts a storageEngine document with the following syntax: { <storage-engine-name>: <options> }
+
+
+4. MongoDB - Create a Document
+
+- MongoDB provides the following three methods for inserting documents into a database:
+insert()
+insertOne()
+insertMany()
+
+- The insert() Method
+db.collectionName.insert({ name: "value" })
+
+Create Multiple Documents
+db.artists.insert(
+   [
+     { artistname: "The Kooks" },
+     { artistname: "Bastille" },
+     { artistname: "Gang of Four" }
+   ]
+)
+
+- The insertOne() Method
+db.musicians.insertOne({ _id: 1, name: "Ian Gillan", instrument: "Vocals" })
+
+- The insertMany() Method
+db.musicians.insertMany(
+   [
+     { _id: 2, name: "Ian Paice", instrument: "Drums", born: 1948 },
+     { _id: 3, name: "Roger Glover", instrument: "Bass", born: 1945 },
+     { _id: 4, name: "Steve Morse", instrument: "Guitar", born: 1954 },
+     { _id: 5, name: "Don Airey", instrument: "Keyboards", born: 1948 },
+     { _id: 6, name: "Jeff Martin", instrument: "Vocals", born: 1969 },
+     { _id: 7, name: "Jeff Burrows", instrument: "Drums", born: 1968 },
+     { _id: 8, name: "Stuart Chatwood", instrument: "Bass", born: 1969 },
+   ]
+)
+
+5. MongoDB - Query a Collection
+
+- MongoDB provides the db.collection.find() method to query documents within a collection.
+db.artists.find()
+
+- Add Filtering Criteria
+db.artists.find({ artistname : "Deep Purple" })
+
+You can use the pretty() method to format the results so that they're a bit easier to read.
+db.artists.find({ artistname : "Deep Purple" }).pretty()
+
+- Specify AND Conditions
+We specify that only musicians who play drums and where born before 1950 should be returned. Only documents that match both criteria will be returned.
+
+CMD - db.musicians.find( { instrument: "Drums", born: { $lt: 1950 } } )
+$lt stands for less than.
+
+- Specify OR Conditions
+In this example, we want documents that contain musicians that either play drums, or were born before 1950.
+
+CMD - db.musicians.find(
+   {
+     $or: [ { instrument: "Drums" }, { born: { $lt: 1950 } } ]
+   }
+)
+
+- The $in Operator
+Using the following example, we're searching for all musicians who are either on vocals, or play guitar.
+
+CMD - db.musicians.find( { instrument: { $in: [ "Vocals", "Guitar" ] } } )
+
+- Query an Array of Documents
+This example queries an array of documents. It finds albums that were released after the year 2000.
+
+CMD - db.artists.find(
+   {
+      albums: {
+                $elemMatch: {
+                     year: { $gt: 2000 }
+                }
+      }
+   }
+).pretty()
+
+- The db.collection.findOne() Method
+CMD - db.musicians.findOne( )
+
+6. MongoDB - Projection Queries
+
+- A projection query is a query where you specify which fields should be returned.
+
+- You can do this by including the field names in your query, and adding a 1 or 0 next to them, to specify whether it should be returned or not. This is a projection parameter. A projection parameter of 1 will display the field and a 0 will hide it.
+
+Without Projection
+db.musicians.find( { instrument: "Vocals"} )
+
+Result - 
+{ "_id" : 1, "name" : "Ian Gillan", "instrument" : "Vocals" }
+{ "_id" : 6, "name" : "Jeff Martin", "instrument" : "Vocals", "born" : 1969 }
+
+With Projection
+db.musicians.find( { instrument: "Vocals" }, { name: 1 } )
+
+Result - 
+{ "_id" : 1, "name" : "Ian Gillan" }
+{ "_id" : 6, "name" : "Jeff Martin" }
+
+- You will notice that the _id field is automatically included, even if you don't specify it. You can exclude this field by using a 0 against it:
+
+CMD - db.musicians.find( { instrument: "Vocals" }, { _id: 0, name: 1 } )
+
+- You can't mix 1s and 0s (with the exception of the _id field). If you try to mix inclusions and exclusions, like this:
+
+CMD - db.musicians.find( { instrument: "Vocals" }, { name: 1, born: 0 } )
+You'll end up with this error:
+
+Error: error: {
+	"waitedMS" : NumberLong(0),
+	"ok" : 0,
+	"errmsg" : "Projection cannot have a mix of inclusion and exclusion.",
+	"code" : 2
+}
+
+- So to you either include fields or exclude them — not both.
+
+7. MongoDB - Limit the Results of a Query
+
+- Return only the number of documents you need with the limit() method.
+
+Without a Limit
+CMD - db.artists.find( { albums: { $exists: false }} )
+
+With a Limit
+CMD - db.artists.find( { albums: { $exists: false }} ).limit(3)
+
+In our query, we're using the $exists operator to check for the existence of a field. In this case we exclude those artists that have an albums field in the document.
+This could easily be switched around to { $exists: true } to include only those artists with an albums field.
+
+- Add the skip() Method
+
+You can use the skip() method to skip to a document within the cursor. In other words, you can control where MongoDB begins returning the results.
+
+CMD - db.artists.find( { albums: { $exists: false }} ).limit(3).skip(1)
+
+Note that skip() can be used on any query (not just ones with limit()).
+
+8. MongoDB - Sort the Results of a Query
+
+- In MongoDB, you can sort the results of a query by using the sort() method.
+
+- With sort() in Ascending Order
+A value of 1 next to a field name specifies that the documents should be sorted by the specified field in ascending order.
+
+CMD - db.musicians.find( ).sort( { name: 1 } )
+
+- With sort() in Descending Order
+A value of -1 next to a field name specifies descending order.
+
+CMD - db.musicians.find( ).sort( { name: -1 } )
+
+- You can sort by multiple fields. Just separate each field by a comma. When you do this, the documents will be sorted by the first field specified, then the next, and so on.
+
+CMD - db.musicians.find( ).sort( { instrument: 1, born: 1 } )
+
+- When comparing values of different BSON types, MongoDB uses the following comparison order, from lowest to highest:
+MinKey (internal type)
+Null
+Numbers (ints, longs, doubles)
+Symbol, String
+Object
+Array
+BinData
+ObjectId
+Boolean
+Date
+Timestamp
+Regular Expression
+MaxKey (internal type)
+
+9. MongoDB - Create a Relationship
+
+- To create a relationship in MongoDB, either embed a BSON document within another, or reference it from another.
+
+- In MongoDB, you can create a relationship using one of the following two methods:
+1. Embedded documents.
+With MongoDB, you can embed documents within documents. Therefore, a single document can contain its own relationships.
+
+* One-to-One Relationship
+A one-to-one relationship is where the parent document has one child, and the child has one parent.
+
+For example, a business rule might say that an artist can only have one address and that the address can only belong to one artist.
+
+* One-to-Many Relationship
+A one-to-many relationship is where the parent document can have many child documents, but the child documents can only have one parent document.
+
+So, another business rule might say that one artist can have many albums, but an album can only belong to one artist.
+
+
+
+2. Referenced documents.
+You can use a document reference to create a relationship. Rather than embedding the child document into the parent document (like we did above), you separate the child document out into to its own stand alone document.
+
+E.g.
+Parent Document
+db.artists.insert(
+    {
+        _id : 4,
+        artistname : "Rush"
+    }
+)
+
+Child Documents
+We'll insert 3 child documents — one for each band member:
+
+db.musicians.insert(
+    {
+        _id : 9,
+        name : "Geddy Lee",
+        instrument : [ "Bass", "Vocals", "Keyboards" ],
+        artist_id : 4
+    }
+)
+
+db.musicians.insert(
+    {
+        _id : 10,
+        name : "Alex Lifeson",
+        instrument : [ "Guitar", "Backing Vocals" ],
+        artist_id : 4
+    }
+)
+
+db.musicians.insert(
+    {
+        _id : 11,
+        name : "Neil Peart",
+        instrument : "Drums",
+        artist_id : 4
+    }
+)
+
+Querying the Relationship
+After inserting the above two documents, you can use $lookup to perform a left outer join on the two collections.
+
+This, in conjunction with the aggregate() method, and $match to specify the specific artist you're interested in, will return parent and child documents in one.
+
+db.artists.aggregate([
+    {
+      $lookup:
+        {
+          from: "musicians",
+          localField: "_id",
+          foreignField: "artist_id",
+          as: "band_members"
+        }
+   },
+   { $match : { artistname : "Rush" } }
+]).pretty()
+
+Result:
+
+{
+	"_id" : 4,
+	"artistname" : "Rush",
+	"band_members" : [
+		{
+			"_id" : 9,
+			"name" : "Geddy Lee",
+			"instrument" : [
+				"Bass",
+				"Vocals",
+				"Keyboards"
+			],
+			"artist_id" : 4
+		},
+		{
+			"_id" : 10,
+			"name" : "Alex Lifeson",
+			"instrument" : [
+				"Guitar",
+				"Backing Vocals"
+			],
+			"artist_id" : 4
+		},
+		{
+			"_id" : 11,
+			"name" : "Neil Peart",
+			"instrument" : "Drums",
+			"artist_id" : 4
+		}
+	]
+}
+
+- When to use Embedded Documents vs Referenced Documents
+Both methods of creating relationships have their pros and cons. There are times you might use embedded documents, and other times you'll use referenced documents.
+
+- When to use Embedded Relationships
+One of the main benefits of using the embedded relationship method is performance. When the relationship is embedded within the document, queries will run faster than if they were spread out over multiple documents. MongoDB only needs to return the one document, rather than joining multiple documents in order to retrieve the relationships. This can provide a major performance boost — especially when working with lots of data.
+
+Embedded relationships also make queries easier to write. Rather than writing complex queries that join many documents via their unique identifier, you can return all related data within a single query.
+
+Another consideration to keep in mind is that, MongoDB can only ensure atomicity at a document level. Document updates to a single document are always atomic, but not for multiple documents.
+
+When multiple users are accessing the data, there's always a chance that two or more users will try to update the same document with different data. In this case, MongoDB will ensure that no conflict occurs and only one set of data is updated at a time. MongoDB cannot ensure this across multiple documents.
+
+So in general, embedded relationships can be used in most cases, as long as the document remains within the size limit (16 megabytes at the time of writing), and/or its nesting limit (100 levels deep at the time of writing).
+
+However, embedded relationships aren't appropriate for all occasions. There may be situations where it makes more sense to create a document referenced relationship.
+
+
+- When to use Referenced Relationships
+For data that needs to be repeated across many documents, it can be helpful to have them in their own separate document. This can reduce errors and help in keeping the data consistent (while bearing in mind that multiple-document updates are not atomic).
+
+Using the above example, one musician could be a member (or ex-member) of many bands. Some might also produce albums for other artists, teach students, run clinics, etc. Also, a lot of data could be stored against each musician. So having a separate document for each musician makes sense in this case.
+
+Also, if you think your embedded documents might exceed the file size limit imposed by MongoDB, then you'll need to store some data in separate documents.
+
+10. MongoDB - Update a Document
+
+- Use the update() method or save() method to update documents in MongoDB.
+
+In MongoDB, both the update() method and the save() method can be used to update a document.
+
+The update() method updates values in an existing document or documents, while the save() method replaces a document with the document passed in as a parameter.
+
+However, the update() method can also replace the whole document, depending on the parameter that's passed in.
+
+- The update() Method
+Jeff actually does a lot more than just sing. So let's add some more instruments. We'll use the $set operator to update a single field.
+
+CMD - db.musicians.update(
+        { _id: 6 }, 
+        { $set:{ instrument : [ "Vocals", "Guitar", "Sitar" ] } }
+    )
+	
+Result:
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+- Some more options:
+
+If the field does not exist, the $set operator will add a new field with the specified value, provided that the new field does not violate a type constraint.
+You can also use { upsert: true } to create a new document when no document matches the query.
+You can use { multi: true } to update multiple documents that meet the query criteria. By default, this option is set to false, so only one document is updated if you don't set it to true.
+	
+- The save() Method
+
+The save() method is a cross between update() and insert(). When you use the save() method, if the document exists, it will be udpated. If it doesn't exist, it will be created.
+
+If you don't specify an _id field, MongoDB will create a document with an _id that contains a ObjectId value (as per an insert()).
+
+If you specify an _id field, it performs an update with { upsert: true }, meaning, it creates a new document if no document matches the query.
+
+We don't currently have any documents in our producers collection. Let's create one using the save() method:
+
+CMD - db.producers.save({ _id: 1, name: "Bob Rock" })
+Result:
+
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 1 })
+
+10. MongoDB - Export Data
+
+- In MongoDB, you can export data using the mongoexport utility.
+
+To export data, first open a new Terminal/Command Prompt window, then type the applicable command.
+
+- Export a Collection to a JSON File
+CMD - mongoexport --db music --collection artists --out /data/dump/music/artists.json
+
+- If you find that you can't run mongoexport, be sure that you've either exited the mongo utility, or opened a new Terminal/Command Prompt window before running mongoexport, as it is a separate utility.
+
+- The above command assumes that the MongoDB bin directory is in your PATH. If it's not, you will need to use the full path to the mongoexport file. For example, /mongodb/bin/mongoexport or wherever your MongoDB deployment is installed.
+
+- The above command assumes that the MongoDB bin directory is in your PATH. If it's not, you will need to use the full path to the mongoexport file. For example, /mongodb/bin/mongoexport or wherever your MongoDB deployment is installed.
+
+- If you don't provide a file path for the exported file, it will be created wherever you are located when you run the command. Either provide the full path, or navigate to where you'd like the data file to be written before you run the command.
+
+- Export a Collection to a CSV File
+CMD - mongoexport --db music --collection artists --type=csv --fields _id,artistname --out /data/dump/music/artists.csv
+
+- Export the results of a Query
+CMD - mongoexport --db music --collection artists --query '{"artistname": "Miles Davis"}' --out /data/dump/music/miles_davis.json
+
+The --limit Option
+CMD - mongoexport --db music --collection artists --limit 3 --out /data/dump/music/3_artists.json
+
+The --sort Option
+CMD - mongoexport --db music --collection artists --limit 3 --sort '{_id: 1}' --out /data/dump/music/3_artists_sorted.json
+
+The --skip Option
+CMD - mongoexport --db music --collection artists --limit 3 --sort '{_id: 1}' --skip 2 --out /data/dump/music/3_artists_sorted_skipped.json
+
+The --pretty Option
+CMD - mongoexport --db music --collection artists --query '{"artistname": "Miles Davis"}' --pretty --out /data/dump/music/miles_davis_pretty.json
+
+11. MongoDB - Delete a Document
+
+- MongoDB provides three methods for deleting documents:
+1.db.collection.deleteOne()
+
+- The db.collection.deleteOne() deletes only one document, even if more than one document matches the criteria.
+
+CMD - db.artists.deleteOne( { artistname: { $in: [ "The Kooks", "Gang of Four", "Bastille" ] } } )
+Resulting message:
+
+{ "acknowledged" : true, "deletedCount" : 1 }
+
+
+2. db.collection.deleteMany()
+
+- The db.collection.deleteMany() method deletes all documents that match the criteria.
+
+CMD - db.artists.deleteMany( { artistname: { $in: [ "The Kooks", "Gang of Four", "Bastille" ] } } )
+Result - { "acknowledged" : true, "deletedCount" : 2 }
+
+3. db.collection.remove() 
+
+- The db.collection.remove() method deletes a single document or all documents that match the specified criteria.
+
+CMD - db.artists.remove( { artistname: "AC/DC" } )
+
+The justOne Option
+You can use the justOne parameter to limit the remove operation to just one document (just like using db.collection.deleteOne()).
+
+CMD- db.musicians.remove( { born: { $lt: 1950 } }, { justOne: 1 } )
+
+- Delete all Documents in a Collection
+CMD - db.artists.remove( {} )
+If you receive a Error: remove needs a query error, check that you haven't forgotten to include the curly braces. You still need to include these.
+
+12. MongoDB - Drop a Collection
+
+- To drop a collection in MongoDB, use the db.collection.drop() method.
+
+- In MongoDB, the db.collection.drop() method removes the collection from the database. If the collection exists, it will return true, if it doesn't exist, it will return false.
+
+13. MongoDB - Create a Backup
+
+- To create a backup in MongoDB, either copy the files directly, or use one of several backup/management tools.
+
+- There are several ways to backup a MongoDB database:
+
+Copy the data files
+Use mongodump
+Use MongoDB Cloud Manager
+Use Ops Manager
+
+14. MongoDB - Drop a Database
+ 
+- In MongoDB, you can drop a database by switching to that database and running either the db.dropDatabase() method or the dropDatabase command.
+
+
+
+
+
+
+
+
+
+
