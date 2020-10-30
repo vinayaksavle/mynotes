@@ -1,0 +1,862 @@
+Notes from Tania Rascia
+https://www.taniarascia.com/getting-started-with-react/
+
+- Best site to learn HTML CSS basics
+https://www.internetingishard.com/
+
+- Best site to learn reactjs and reactjs native
+https://reactrouter.com/web/api/Route/component
+
+- nice blogs of React and Angular.
+https://daveceddia.com/
+
+- Essential things need to know
+<script src="https://unpkg.com/react@^16/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@16.13.0/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+React - the React top level API
+React DOM - adds DOM-specific methods
+Babel - a JavaScript compiler that lets us use ES6+ in old browsers
+
+- To set up create-react-app, run the following code in your terminal, one directory up from where you want the project to live.
+
+	npx create-react-app react-tutorial
+	cd react-tutorial && npm start
+
+- If you look into the project structure, you'll see a /public and /src directory, along with the regular node_modules, .gitignore, README.md, and package.json.
+
+*Public
+In /public, our important file is index.html, which is very similar to the static index.html file we made earlier - just a root div. This time, no libraries or scripts are being loaded in. The /src directory will contain all our React code.
+
+- JSX: JavaScript + XML
+We've been using what looks like HTML in our React code, but it's not quite HTML. This is JSX, which stands for JavaScript XML. With JSX, we can write what looks like HTML, and also we can create and use our own XML-like tags. Here's what JSX looks like assigned to a variable.
+E.g. const heading = <h1 className="site-heading">Hello, React</h1>
+
+Using JSX is not mandatory for writing React. Under the hood, it's running createElement, which takes the tag, object containing the properties, and children of the component and renders the same information. The below code will have the same output as the JSX above.
+E.g. without JSX
+const heading = React.createElement('h1', {className: 'site-heading'}, 'Hello, React!')
+
+JSX is actually closer to JavaScript, not HTML, so there are a few key differences to note when writing it.
+
+*className is used instead of class for adding CSS classes, as class is a reserved keyword in JavaScript.
+*Properties and methods in JSX are camelCase - onclick will become onClick.
+*Self-closing tags must end in a slash - e.g. <img />
+
+JavaScript expressions can also be embedded inside JSX using curly braces, including variables, functions, and properties.
+const name = 'Tania'
+const heading = <h1>Hello, {name}</h1>
+
+- Components
+Almost everything in React consists of components, which can be class components or simple components.
+
+Most React apps have many small components, and everything loads into the main App component. Components also often get their own file.
+
+*Class Components
+We capitalize custom components to differentiate them from regular HTML elements.
+We could reuse this component over and over. 
+
+*Simple Components
+The other type of component in React is the simple component, which is a function. This component doesn't use the class keyword. 
+
+*Compare a simple component with a class component
+Simple Component
+const SimpleComponent = () => {
+  return <div>Example</div>
+}
+
+Class Component
+class ClassComponent extends Component {
+  render() {
+    return <div>Example</div>
+  }
+}
+
+Note that if the return is contained to one line, it does not need parentheses.
+
+- Props
+Right now, we have a cool Table component, but the data is being hard-coded. One of the big deals about React is how it handles data, and it does so with properties, referred to as props, and with state.
+
+ES6 property shorthand to create a variable that contains this.props.characterData.
+E.g. const {characterData} = this.props
+
+You should always use keys when making lists in React, as they help identify each list item.
+Props are an effective way to pass existing data to a React component, however the component cannot change the props - they're read-only. 
+
+- State
+Right now, we're storing our character data in an array in a variable, and passing it through as props. This is good to start, but imagine if we want to be able to delete an item from the array. With props, we have a one way data flow, but with state we can update private data from a component.
+
+You can think of state as any data that should be saved and modified without necessarily being added to a database - for example, adding and removing items from a shopping cart before confirming your purchase.
+
+You must use this.setState() to modify an array. Simply applying a new value to this.state.property will not work.
+filter does not mutate but rather creates a new array, and is a preferred method for modifying arrays in JavaScript.
+
+
+- Submitting Form Data
+
+If you just want to compile all the React code and place it in the root of a directory somewhere, all you need to do is run the following line:
+
+npm run build
+This will create a build folder which will contain your app. Put the contents of that folder anywhere, and you're done!
+
+
+
+
+
+
+1. Getting Started
+
+- React is a JavaScript library for building user interfaces. 
+- React is
+1. Declarative - Declarative views make your code more predictable and easier to debug.
+2. Component-Based - Build encapsulated components that manage their own state, then compose them to make complex UIs.
+3. Learn Once, Write Anywhere - We don’t make assumptions about the rest of your technology stack, so you can develop new features in React without rewriting existing code.
+
+- Learn basics of React from below site
+https://www.taniarascia.com/getting-started-with-react/
+
+- Learn JavaScript from below site
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript
+
+- If you haven’t worked with JavaScript in the last few years, these three points should give you enough knowledge to feel comfortable reading the React documentation:
+
+We define variables with let and const statements. For the purposes of the React documentation, you can consider them equivalent to var.
+We use the class keyword to define JavaScript classes. There are two things worth remembering about them. Firstly, unlike with objects, you don't need to put commas between class method definitions. Secondly, unlike many other languages with classes, in JavaScript the value of this in a method depends on how it is called.
+We sometimes use => to define "arrow functions". They're like regular functions, but shorter. For example, x => x * 2 is roughly equivalent to function(x) { return x * 2; }. Importantly, arrow functions don't have their own this value so they're handy when you want to preserve the this value from an outer method definition.
+
+- Introducing JSX
+const element = <h1>Hello, world!</h1>;
+*This funny tag syntax is neither a string nor HTML. It is called JSX, and it is a syntax extension to JavaScript. 
+*Instead of artificially separating technologies by putting markup and logic in separate files, React separates concerns with loosely coupled units called “components” that contain both.
+Watch later - https://www.youtube.com/watch?v=x7cQ3mrcKaY
+*Since JSX is closer to JavaScript than to HTML, React DOM uses camelCase property naming convention instead of HTML attribute names.
+For example, class becomes className in JSX, and tabindex becomes tabIndex.
+*JSX Prevents Injection Attacks
+const title = response.potentiallyMaliciousInput;
+// This is safe:
+const element = <h1>{title}</h1>;
+By default, React DOM escapes any values embedded in JSX before rendering them. Thus it ensures that you can never inject anything that’s not explicitly written in your application. Everything is converted to a string before being rendered. This helps prevent XSS (cross-site-scripting) attacks.
+
+*JSX is an Expression Too
+This means that you can use JSX inside of if statements and for loops, assign it to variables, accept it as arguments, and return it from functions:
+
+* JSX Represents Objects
+Babel compiles JSX down to React.createElement() calls.
+These two examples are identical:
+
+const element = (
+  <h1 className="greeting">
+    Hello, world!
+  </h1>
+);
+
+const element = React.createElement(
+  'h1',
+  {className: 'greeting'},
+  'Hello, world!'
+);
+
+- Rendering Elements
+
+*Elements are the smallest building blocks of React apps. Elements are what components are “made of”. React elements are immutable. Once you create an element, you can’t change its children or attributes. An element is like a single frame in a movie: it represents the UI at a certain point in time.
+
+*React DOM compares the element and its children to the previous one, and only applies the DOM updates necessary to bring the DOM to the desired state.
+
+- Components and Props
+
+* Components let you split the UI into independent, reusable pieces, and think about each piece in isolation. Conceptually, components are like JavaScript functions. They accept arbitrary inputs (called “props”) and return React elements describing what should appear on the screen.
+
+* Function component 
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+This function is a valid React component because it accepts a single “props” (which stands for properties) object argument with data and returns a React element. We call such components “function components” because they are literally JavaScript functions.
+
+* Class component 
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+
+* Note: Always start component names with a capital letter.
+
+React treats components starting with lowercase letters as DOM tags. For example, <div /> represents an HTML div tag, but <Welcome /> represents a component and requires Welcome to be in scope.
+
+* Props are Read-Only. 
+Whether you declare a component as a function or a class, it must never modify its own props. Consider this sum function:
+
+function sum(a, b) {
+  return a + b;
+}
+Such functions are called “pure” because they do not attempt to change their inputs, and always return the same result for the same inputs.
+
+In contrast, this function is impure because it changes its own input:
+
+function withdraw(account, amount) {
+  account.total -= amount;
+}
+
+All React components must act like pure functions with respect to their props.
+
+
+- State and Lifecycle
+
+*State is similar to props, but it is private and fully controlled by the component.
+
+* Lifecycle Methods to a Class - (componentDidMount, componentWillUnmount)
+In applications with many components, it’s very important to free up resources taken by the components when they are destroyed.
+The componentDidMount() method runs after the component output has been rendered to the DOM.
+
+* Using State Correctly
+
+ - Do Not Modify State Directly
+For example, this will not re-render a component:
+
+// Wrong
+this.state.comment = 'Hello';
+Instead, use setState():
+
+// Correct
+this.setState({comment: 'Hello'});
+
+ - The only place where you can assign this.state is the constructor.
+
+State Updates May Be Asynchronous
+React may batch multiple setState() calls into a single update for performance.
+Because this.props and this.state may be updated asynchronously, you should not rely on their values for calculating the next state.
+
+For example, this code may fail to update the counter:
+
+// Wrong
+this.setState({
+  counter: this.state.counter + this.props.increment,
+});
+To fix it, use a second form of setState() that accepts a function rather than an object. That function will receive the previous state as the first argument, and the props at the time the update is applied as the second argument:
+
+// Correct
+this.setState((state, props) => ({
+  counter: state.counter + props.increment
+}));
+
+ - State Updates are Merged
+When you call setState(), React merges the object you provide into the current state.
+
+For example, your state may contain several independent variables:
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      posts: [],
+      comments: []
+    };
+  }
+Then you can update them independently with separate setState() calls:
+
+  componentDidMount() {
+    fetchPosts().then(response => {
+      this.setState({
+        posts: response.posts
+      });
+    });
+
+    fetchComments().then(response => {
+      this.setState({
+        comments: response.comments
+      });
+    });
+  }
+  
+  The merging is shallow, so this.setState({comments}) leaves this.state.posts intact, but completely replaces this.state.comments.
+
+ - The Data Flows Down
+ Neither parent nor child components can know if a certain component is stateful or stateless, and they shouldn’t care whether it is defined as a function or a class.
+
+This is why state is often called local or encapsulated. It is not accessible to any component other than the one that owns and sets it.
+
+A component may choose to pass its state down as props to its child components:
+
+<FormattedDate date={this.state.date} />
+The FormattedDate component would receive the date in its props and wouldn’t know whether it came from the Clock’s state, from the Clock’s props, or was typed by hand:
+
+function FormattedDate(props) {
+  return <h2>It is {props.date.toLocaleTimeString()}.</h2>;
+}
+This is commonly called a “top-down” or “unidirectional” data flow.
+
+- Handling Events
+React events are named using camelCase, rather than lowercase. With JSX you pass a function as the event handler, rather than a string.
+E.g. 
+<button onClick={activateLasers}>
+  Activate Lasers
+</button>
+
+- Conditional Rendering
+In React, you can create distinct components that encapsulate behavior you need. Then, you can render only some of them, depending on the state of your application.
+
+E.g.
+{
+unreadMessages.length > 0 &&
+        <h2>
+          You have {unreadMessages.length} unread messages.
+        </h2>
+}
+It works because in JavaScript, true && expression always evaluates to expression, and false && expression always evaluates to false. Therefore, if the condition is true, the element right after && will appear in the output. If it is false, React will ignore and skip it.
+Note that returning a falsy expression will still cause the element after && to be skipped but will return the falsy expression. In the example below, <div>0</div> will be returned by the render method.
+E.g.
+render() {
+  const count = 0;
+  return (
+    <div>
+      { count && <h1>Messages: {count}</h1>}
+    </div>
+  );
+}
+
+- Lists and Keys
+* Keys help React identify which items have changed, are added, or are removed. Keys should be given to the elements inside the array to give the elements a stable identity:
+E.g, 
+const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  <li key={number.toString()}>
+    {number}
+  </li>
+);
+
+The best way to pick a key is to use a string that uniquely identifies a list item among its siblings. Most often you would use IDs from your data as keys:
+
+* When you don’t have stable IDs for rendered items, you may use the item index as a key as a last resort. But not best practice to use index.
+E.g, 
+const todoItems = todos.map((todo, index) =>
+  // Only do this if items have no stable IDs
+  <li key={index}>
+    {todo.text}
+  </li>
+);
+
+- Forms
+
+- Lifting State Up
+Often, several components need to reflect the same changing data. We recommend lifting the shared state up to their closest common ancestor. Let’s see how this works in action.
+
+- Composition vs Inheritance
+React has a powerful composition model, and we recommend using composition instead of inheritance to reuse code between components.
+Props and composition give you all the flexibility you need to customize a component’s look and behavior in an explicit and safe way. Remember that components may accept arbitrary props, including primitive values, React elements, or functions.
+
+What is the difference between state and props?
+props (short for “properties”) and state are both plain JavaScript objects. While both hold information that influences the output of render, they are different in one important way: props get passed to the component (similar to function parameters) whereas state is managed within the component (similar to variables declared within a function).
+
+Advanced Guides
+- Accessibility
+Why Accessibility?
+Web accessibility (also referred to as a11y) is the design and creation of websites that can be used by everyone. Accessibility support is necessary to allow assistive technology to interpret web pages. React fully supports building accessible websites, often by using standard HTML techniques.
+
+
+Thapa technical Notes:
+1. Introduction to React | ReactJS Tutorial for Beginners in Hindi 2020 #1
+
+About React
+- React is component based approach. A component is one of the core building blocks of React. In ohter words, we can say that every application you will develop in react will be made up of pieces called components. Component make thet task of building UIs much easier.
+
+- Uses a Declarative Approach
+Declarative programming is a programming paradigm that expresses the logic of a computation without describing its control flow.
+
+- DOM updates are handled gracefully.
+- Reusable Code
+- React is designed for speed, speed of implementing the application simplicity and scalability.
+
+
+2. #2: What Should you Know before Learning ReactJS in Hindi in 2020
+
+What should you know before learning ReactJS in Hindi? Prerequisites for ReactJS
+1: Basic knowledge of HTML, CSS, and JavaScript.
+2: Basic understanding of ES6 features.
+3: Basic understanding of how to use npm.
+
+3. #3: Download & Install VS Code IDE for ReactJS in Hindi in 2020
+
+VSCode extensions for ReactJS:
+1: Babel javascript.
+2: JavaScript (ES6) code snippets
+3: VScode icons
+
+4. #4: ReactJS Environment Setup | ReactJS Installation & Creating Our First React App in Hindi in 2020
+
+To Create React App 
+
+COPY
+npm install -g create-react-app
+If successful, you should be able to get version:
+
+COPY
+create-react-app --version
+Create react project:
+
+COPY
+create-react-app <projectname>
+Run project:
+ 
+or 
+ npx create-react-app my-app
+
+COPY
+cd <projectname>
+npm start
+
+-What is package.json
+package.json is used to store the metadata associated with the project as well as to store the list of dependancy packages.
+
+
+5. #5: ReactJS Hello World Program | React Folder Structure | JS Babel & Webpack in Hindi
+
+1. node_modules - node_modules folder is the repository of modules/library which you are using inside your project. Whatever you are importing in your project that module or library should present inside the node_module folder. When you do npm install that time module or library install inside the node_module folder and one entry added in package.json file.
+
+2. robot.txt - For SEO purpose it is used.
+
+3. manifest.json - It provides the information about our app in a place json text file.
+
+-When should we use <noscript></noscript>?
+While using our app on browser if javascript is not installed then if you want to show some message. You can use this tag.
+
+- ReactDOM.render('parameter 1', 'parameter 2', 'parameter 3')
+
+parameter 1: What you want to show?
+parameter 2: Where you want to show?
+parameter 3: Callback function.
+
+- What is Babel
+Babel is a javascript compiler. Modern browsers do not understand ECMA script. So we need one compiler which can compiler the code which we have written which can be understandable by browser. So Babel do that work a a javascript compiler.
+
+6. JSX in React JS in Hindi in 2020 #6
+
+What is JSX?
+- JSX stands for JavaScript XML or JavaScript extension.
+- JSX allows us to write HTML in React.
+- JSX makes it easier to write and add HTML to React.
+- JSX is an extension of the JavaScript language based on ES6 and is translated into regular JavaScript at runtime.
+-Why we use 'import React from "react"'?
+If we comment out above line we will get this error - 'React' must be in scope when using JSX.
+
+7. How to Render Multiple Elements inside ReactDOM.render() in ReactJS in Hindi #7
+
+- In React, we can only render one element. Even if we have multiple elements to render, there can only be a single root element. This means if we want to render two or more elements, 
+we have to wrap them in another element or component. Commonly, the element used for this is a div tag.
+
+
+
+8. Understanding React Fragment in React JS in Hindi in 2020 #8
+
+A common pattern in React is for a component to return multiple elements. Fragments let you group a list of children without adding extra nodes to the DOM.
+
+- We can separate JSX elements using array or div also. But div it will create extra layer div and array will create comma separated elements. Solution for that is :
+E.g.
+<React.Fragment>
+<h1>Hi!</h1>
+</React.Fragment>
+
+- React 16.2 also introduced a syntactical sugar for Fragments.
+<>
+<h1>Hi!</h1>
+</>
+
+10. JavaScript Expressions in JSX in ReactJs in Hindi in 2020 #10
+
+- You can put any valid JavaScript expression inside the curly braces in JSX. With JSX you can write expressions inside curly braces { }. The expression can be a React variable, or property, or any other valid JavaScript expression. We cannot use statements (if-else, for loop) in curly braces.
+E.g. 
+const fname = "Vinayak";
+<h1>My name is {fname} </h1>
+
+
+11. ES6 Template Literals in JSX in ReactJS in Hindi #11
+- Template literals are string literals allowing embedded expressions inside JSX in React. You can use multi-line strings and string interpolation features with them.  
+E.g. 
+const fname = "Vinayak";
+<h1>{` My name is ${fname} `}</h1>
+
+12. React JS Challenge #2: Display Current Date and Time in JSX in React JS in Hindi #12
+13. JSX Attributes in ReactJS in Hindi | HTML Attribute Vs JSX Attribute in React | #13
+
+- In HTML anchor <a></a> tag we use href which is html attribute. We write image tag (<img />) in this way not open close tag because it don't have any children thats why it is known as self closing tag.
+- In similar way JSX has attributes which is known as JSX attributes which are little different that HTML attribute. It follows camelCase format.
+
+14. CSS Styling & Importing CSS Files in React JS | Class Vs ClassName in React JS in Hindi in 2020 #14
+
+15. How to use Google fonts in React JS Application in Hindi in 2020 #15
+17. React JS Mini-Project #1: Creating Simple Greeting Website using React JS in Hindi in 2020 #17
+18. React Components in Hindi | Functional Component in React JS Hindi in 2020 #18
+-  In React components are the building blocks of any React app. Components are independent and reusable bits of code. They serve the same purpose as JavaScript functions, but work in isolation and returns HTML via a render function.
+Components come in two types, Class components, and Function components
+
+20. ES6 Modules Import Export in React JS in Hindi #20
+- ES6 provides two ways to export a module from a file: named export and default export. 
+With named exports, one can have multiple named exports per file. Then import the specific exports they want to be surrounded in braces. 
+The name of the imported module has to be the same as the name of the exported module.
+We can import everything as an object using import * as <obj> for instance.
+
+22. #22: Props in React Js in Hindi | React JS Project Netflix App Part #1 in Hindi in 2020
+Components need to communicate (send data to each other) and the way to pass data between components is by using props. “Props” is a special keyword in React, which stands for properties and is being used for passing data from one component to another. React props are like function arguments in Javascript and attributes in HTML.
+
+27. React Developer Tools | Debugging & Error Handling in React JS in Hindi #25
+ 
+Keys - Keys help react to identify which items have changed  (added/ removed/ re-ordered). To give uinique identity to every element inside the array, a key is required.
+
+32. ES6 Tutorial #5: Array Destructuring in ES6 in JavaScript in Hindi 2020
+- The destructuring assignment syntax is a JavaScript expression that makes it possible to unpack values from arrays, or properties from objects, into distinct variables.  
+E.g,
+const lang = ['js','c','python'];
+var top1 = lang[0];
+
+With destructuring,
+let [top1,top2,top3] = lang;
+console.log(top1);
+
+33. #30: Hooks in React JS in Hindi | useState in Hook in React JS in Hindi in 2020
+- Hooks are functions that let you “hook into” React state and lifecycle features from function components. Hooks don’t work inside classes — they let you use React without classes. React provides a few built-in Hooks like useState. The useState hook allows us to make our function components stateful.  
+
+When called, useState returns an array of two items. The first being our state value and the second being a function for setting or updating that value. The useState hook takes a single argument, the initial value for the associated piece of state, which can be of any Javascript data type.
+
+- Hooks are the new feature introduced in the React 16.8 version.
+- It allows you to use state and other React feature without writing a class. Hooks are the functions which "hook into" React state and lifecycle features from function components. Thats why you see in many interviews it is said that why we use react hooks in functional component vs class component.
+- It does not work inside classes.
+- Hooks should always be used at top level of the React functions.
+- Node version 6 or above. NPM version 5.2 or above.
+- useState() is a function which returns an array with two items. First one is state object (current data) and second one is updated data/function (initial data).
+
+E.g.
+const App = () => {
+  const state = useState();
+  const [count, setCount] = useState(0);
+	//count -> current data,
+	//setCount -> updated function which will update count value.
+  const IncNum = () => {
+    setCount(count + 1);
+  };
+  
+  return (
+    <>
+      <h1>{count}</h1>
+      <button onClick={IncNum}>Inc</button>
+    </>
+  )
+}
+
+36. #33: Handling Events in ReactJS in Hindi in 2020
+
+- It's actually simple, Just like HTML, React can perform actions based on user events.
+React has the same events as HTML: click, change, mouseover etc.
+
+- Handling events with react have some syntactic differences from handling events on DOM. These are:
+
+- React events are written in camelCase syntax:
+onClick instead of onclick.
+
+- React event handlers are written inside curly braces:
+onClick={shoot}  instead of onClick="shoot()".
+
+37. Forms in React JS in Hindi | React Controlled Vs Uncontrolled Component in Hindi in 2020 #34
+
+- An input form element whose value is controlled by React in this way is called a "controlled component".
+
+- In a controlled component, form data is handled by a React component. The alternative is uncontrolled components, where form data is handled by the DOM itself. To write an uncontrolled component, 
+instead of writing an event handler for every state update, you can use a ref to get form values from the DOM.
+
+42. React Bonus #38: What does "..." three dots do in ReactJS | Spread Operator in ReactJS in Hindi
+
+- JavaScript ES6 introduced the spread operator. The syntax is three dots(...) followed by the array (or iterable*).
+
+- Spread Operator using destructuring
+E.g. var shooterGames = ['COD','Far Cry','ResEvil'];
+var [first, ...remaining] = shooterGames;
+console.log(first); // COD
+console.log(remaining); //['Far Cry','ResEvil']
+
+48. NPM (Node Package Manager) in 10 Minutes with One Mini Project in Hindi in 2020 | React Bonus - #44
+
+- npm is the worlds largest Software Industry.
+- The registry contains over 8 lakh code packages.
+- Open-source developers use npm to share software.
+- Full form is Node Package Manager. Basically it is warehouse for programmers.
+- npm is a package manager for the JavaScript programming language. It is the default package manager for the JavaScript runtime environment Node.js. It consists of a command-line client, also called npm, and an online database of public and paid-for private packages called the npm registry.
+
+
+51. Context API in React JS in Hindi in 2020 #51
+
+- React hooks provide a concept call Context.
+
+- React Context API allows you to easily access data at different levels of the component tree, without passing prop to every level.
+
+- React Context API is a way to essentially create global variables that can be passed around in a React app. This is the alternative to "prop drilling", or passing props from grandparent to parent to child, and so on. Context is often touted as a simpler, lighter solution to using Redux for state management.
+
+- In a typical React application, data is passed top-down (parent to child) via props, but this can be cumbersome for certain types of props (e.g. locale preference, UI theme) that are required by many components within an application. Context provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.
+
+52. useContext Hook in React | How useContext Hook Works in ReactJS in Hindi In 2020 #52
+
+- React's Function Components come with React Hooks these days. Not only can React Hooks be used for State in React but also for using React's Context in a more convenient way. This tutorial shows you how to use React's useContext Hook.
+
+- 
+
+53. useEffect Hook in React JS in Hindi in 2020 #54
+
+- By using useEffect hook you tell react that your component needs to do something after render. React will remember the fuction you passed (we'all refer to it as our "effect") and call it later after performing the DOM updates.
+
+- Axios is a library that helps us make HTTP Requests to external resources.
+- In our React applications, we often need to retrieve data from external APIs so it can be displayed in our web pages.
+Axios is designed to handle HTTP requests and responses. Axios deals with responses using Promises, so it's streamlined and easy to use in our code. Axios uses methods like get() and post() that perform HTTP GET and POST requests for retrieving or creating resources.
+
+56. React Router Tutorial in Hindi | React Router Dom in Hindi in 2020 #56
+
+https://www.freecodecamp.org/news/react-router-in-5-minutes/
+
+- npm install react-router-dom
+
+- When page is reloading that means it is using server side routing.
+
+- If page is not reloading then it is client side rendering. 
+
+- Many modern websites are actually made up of a single page, they just look like multiple pages because they contain components that render like separate pages. These are usually referred to as SPAs - single-page applications. At its core, what React Router does is conditionally render certain components to display depending on the route being used in the URL (/ for the home page, /about for the about page, etc.).
+
+57. React Route Render Method | Difference between Render and Component Prop on React Router in Hindi
+
+https://medium.com/@migcoder/difference-between-render-and-component-prop-on-react-router-v4-368ca7fedbec
+
+https://reactrouter.com/web/api/Route/component
+
+https://stackoverflow.com/questions/48150567/react-router-difference-between-component-and-render
+
+- When you use components (instead of render or children, below) the router uses React.createElement to create a new React element from the given component. That means if you provide an inline function to the component prop, you would create a new component every render. This results in the existing component unmounting and the new component mounting instead of just updating the existing component. When using an inline function for inline rendering, use the render
+
+- We all know that Route component will re-render when the location changed, and react will compare the old and new virtual DOM tree, get some diff result and apply to the real DOM.
+
+- And react will try it’s best to reuse the DOM node, unless the type or key prop of the new ReactElement is changed.
+
+E.g.
+// 1.
+const componentA = React.createElement(AppComponent, props)
+const componentB = React.createElement(AppComponent, props)
+console.log(componentA.type === componentB.type)             // true
+// 2.
+const componentA = React.createElement(() => <AppComponent />, props)
+const componentB = React.createElement(() => <AppComponent />, props)
+console.log(componentA.type === componentB.type)             // false
+
+ - Because there is always a new anonymous function created in the way 2 when the parent component’s(The component that contains Route component) render method got invoked, so the type of new&old ReactElement is two different instances of the anonymous function
+
+- So in React’s point of view, there are different types of element and should be treat with unmount old > mount new operation when an re-render happen, that means every state or changes you made on the old component got loss everytime the parent component re-render.
+
+- So the conclusion is, there is not performance different between component and render prop if you are use component={AppComponent} directly, if you want to assign some props to AppComponent, use render={() => <AppComponent {...props}/> } instead of component={() => <AppComponent {...props}/> }
+
+- Example:
+
+The source code tells the difference:
+
+if (component)
+  return match ? React.createElement(component, props) : null
+
+if (render)
+  return match ? render(props) : null
+When you use component prop, the component is instantiated per every call of Route#render. It means that, for your component that you pass to component prop of Route, constructor, componentWillMount, and componentDidMount will be executed every time the route is rendered.
+
+For example, if you have
+
+<Route path="/:locale/store" component={Store} />
+and the user navigates to /en/store, then goes elsewhere, and then navigates back to /en/store, the Store component will be mounted, then unmounted, and then mounted again. It is similar to doing
+
+<Route path="/:locale/store">
+  <Store />
+</Route>
+Compared to that, if you use render prop, the component is evaluated on every Route#render. Remember that every component is a function? This function will be executed as is, without any lifecycle methods. So when you have it like
+
+<Route path="/:locale/store" render={Store} />
+you can think of it as
+
+<Route path="/:locale/store">
+  {Store()}
+</Route>
+It saves you runtime because no lifecycle methods are run, but it also has a downside in case Store component has some post-mount lifecycle methods like shouldComponentUpdate that may increase performance as well. So when you are using props in component use render. When you don't want to pass any props use component in Route.
+
+57. useParams Hooks in React Router in Hindi in 2020 #57
+
+- useParams returns an object of key/value pairs of URL parameters. Use it to access match.params of the current Route. It provides access to search parameters in the URL. This was possible earlier only using match.params 
+
+58. useLocation Hook in React Router in Hindi in 2020 #60
+
+- The useLocation hook returns the location object that represents the current URL. You can think about it like a useState that returns a new location whenever the URL changes.
+
+Provides access to the location prop in React Router.
+It is similar to window. location in the browser itself, but this is accessible everywhere as it represents the Router state and location.
+A primary use case for this would be to access the query params or the complete route string.
+
+61. useHistory Hook in React Router in Hindi in 2020 #61
+
+-  It provides access to the history prop in React Router.
+This refers to the history package dependency that the router uses.
+A primary use case would be for programmatic routing with functions, like push , replace , etc.
+useHistory. The useHistory hook gives you access to the history instance that you may use to navigate. useLocation. The useLocation hook returns the location object that represents the current URL. useParams. useParams returns an object of key/value pairs of URL parameters. The history object is mutable. Therefore it is recommended to access the location from the render props of <Router> not from history.location.
+
+
+React Redux
+
+1. React Redux Tutorials - 1 - Introduction
+
+- Redux is predictable state container for Javascript apps.
+
+- Redux is for JavaScript applications
+* Redux is not tied to react.
+* Can be used with React, Angular, Vue or even vanilla Javascript.
+* Redux is library for Javascript applications.
+
+- Redux is a state container
+* Redux stores the state of your application.
+* Consider a React app- state of a component.
+Ex. LoginFormComponent
+state = {username:'',password:'',submitting:false}
+
+UserListComponent state = { users:[] }
+
+* State of an app is the state represented by all the individual components of that app.
+* Redux will store and manage application state.
+
+-  Redux is predictable
+* Redux is a state container. The state of the application can change. 
+Ex: todo list app - item (pending) -> item (completed)
+
+In redux, all state transitions are explicit and it is possible to keep track of them. The changes to your applications state become predictable.
+
+-  Why redux?
+Because the state of your application in a predictable way, redux can help you.
+
+- Why React + Redux ? Why would we want to use redux in a react application?
+Components in React have their own state. 
+
+Why do we need another tool to help manage that state?
+It is cumbersome to pass state from one component to other component if multiple components are present and unnecessarily we need to pass data from components which is not necessary.
+
+- React-Redux is the official Redux UI binding library for React.
+
+2. React Redux Tutorials - 2 - Getting Started
+
+- Command to install redux
+npm install redux
+
+3. React Redux Tutorials - 3 - Three Core Concepts
+
+- Store 
+A store that holds the state of your application. Holds the state of your application
+
+- Action
+An action that describes the changes in the state of the application. Describes what happened
+
+- Reducer
+A reducer which actually carries out the state transition depending on the action. Ties the store and actions together.
+
+4. React Redux Tutorials - 4 - Three Principles
+
+- First Principle
+The state of your whole application is stored in an object tree within a single store. Maintain our application state in a single object which would be managed by the Redux store.
+
+- Second Principle
+The only way to change the state is to emit an action, an object describing what happened. To update the state of your app, you need to let Redux know about that with an action Not allowed to directly update the state object.
+
+- Third Principle
+To specify how the state tree is transformed by actions, you write pure reducers.
+Reducers are pure functions which creates new state. It does not update previousState.
+Reducer - (previousState,action) => newState
+
+Overview -
+The state of the Application is stored in Redux Store (State). Our Application is always subscribed to the redux store. However the app directly cannot update the state. If application wants to update state it has to emit or dispatch an Action. Once the action is dispatched Reducer handles the Action and updates the current state. As soon as value is updated it will reflect in Application as State is subscribed to Application.
+
+5. React Redux Tutorials - 5 - Actions
+
+- The only way your application can interact with the store.
+- Carry some information from your app to the redux store.
+- Plain Javscript objects. 
+- Have a 'type' property that indicates the type of action being performed.
+- The 'type' property is typically defined as string constants.
+-  An Action is an object with type property and Action creator is a function which returns Action object.
+
+Ex. const BUY_CAKE = 'BUY_CAKE'
+
+function buyCake() {
+return {
+type: BUY_CAKE,
+info: 'First redux action'
+}
+}
+
+6. React Redux Tutorials - 6 - Reducers
+
+- It specifies how the app's state changes in response to actions sent to the store. 
+
+- Function that accepts state and action as arguments, and returns the next state of the application.
+
+Ex.// (previousState, action) => newState 
+
+const initialState = {
+numOfcakes: 10
+}
+
+const reducer = (state = initialState, action) => {
+switch(action.type) {
+case BUY_CAKE: return {
+...state,
+numOfcakes: state.numOfcakes - 1
+}
+
+default: return state
+}
+}
+
+7. React Redux Tutorials - 7 - Store
+
+- One store for the entire application.
+- Responsibilities:
+Holds application state.
+Allows access to state via getState()
+Allows state to be updated via dispatch(action).
+Registers listeners via subscribe(listener)
+Handles unregistering of listeners via the function returned by subscribe(listener).
+
+Ex. const store = createStore(reducer)
+console.log(store.getState());
+const unsubscribe = store.subscribe(() => console.log(store.getState());
+store.dispatch(buyCake())
+store.dispatch(buyCake())
+store.dispatch(buyCake())
+unsubscribe();
+
+
+11. React Redux Tutorials - 11 - Middleware
+
+npm install react-logger
+
+- It is the suggested way to extend Redux with custome functionality.
+- Provides a third-party extension point between dispatching an action, and the moment it reaches the reducer.
+- Use middleware for loggin, crash reporting, performing asynchronous tasks etc.
+
+12. React Redux Tutorials - 12 - Async Actions
+
+- Synchronous Actions
+As soon as action was dispatched, the state was immediately updated.
+
+- Async Actions
+Asynchronous API calls to fetch data from an end point and use that data in your application.
+
+- Async Action creators
+npm install axios redux-thunk
+
+axios - Requests to an API end point
+redux-thunk - Define async action creators, Middleware.
+
+
+npm i fuse.js@6.4.1
+npm i normalize.css
+npm i react-router-dom
+npm i styled-components
+
+1: 02: 59
+2: 04: 30
+3: 01: 54
+4: 02: 32
+5: 02: 53
+6: 34: 00
