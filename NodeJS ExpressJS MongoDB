@@ -1,0 +1,153 @@
+1. 🔴 #1: Introduction to Node JS in Hindi | Node.JS Tutorial for Beginners in Hindi in 2020
+
+* What is Node JS ?
+- Node.js is a Javscript runtime built on Chrom  e V8 Javascript engine. The runtime environment is literally just the environment your application is running in. V8 engine is a javscript engine which converts Javscript code into machine understandable so that it should run on outside browser. 
+
+- Node.js is a javascript running on the server. NodeJS is not a framework nor a language nor a library. It is just a runtime environment.
+
+* When to use Node JS?
+- I/O bound ( Node JS is single threaded also it can handle multiple thread request and it is non blocking meaning you can send multiple request at same time asynchronous output.)
+
+- Data Streaming Applications (Applications like instagram whose data is non ending when you scroll data is there always.)
+- Real time chat Applications (Like whatsapp etc.)
+
+2. Node.JS #2: Install Node JS, NPM, VS Code IDE & Running our First Node.JS Script in Hindi in 2020
+
+- Always install which has LTS (Long Term Support)
+
+- console.log isn’t in the JavaScript language. It is supported in chrome V8 engine. We can run in terminal not in browser.
+JavaScript Environment = JavaScript Runtime + Event Loop + External API + Callback Queue
+
+4. Node.JS #4: 📑 Complete REPL in NodeJS | READ, Eval, Print & Loop in NodeJS in Hindi in 2020
+
+* Node JS REPL
+- REPL stands for Read Eval Print Loop and it represents a computer environment like a Windows console or Unix/Linux shell where a command is entered and the system responds with output in an interactive mode.
+
+- The REPL feature of Node is very useful in experimenting with Node.JS codes and to debug Javscript codes.
+
+Read - Reads user's input, parses the input into JavaScript data-structure, and stored in memory.
+
+Eval - Takes and evaluates the data-structure.
+
+Print - Prints the result.
+
+Loop - Loops the above command until the user presses ctrl-c twice.
+
+- To run nodejs project use command
+node index.js
+
+- To enter in REPL you have run command
+node
+
+Now you have entered in REPL then use .help to know more commands. You can exit repl using following command.
+.exit
+
+- REPL
+1. js Expression
+2. use variables
+3. Multiline code
+4. use (_) to get the last result 
+Ex. 10 + 5
+> 15
+_ + 5
+> 20
+
+5. we can use editor mode.
+
+5. 🔴 #5: Mastering the Node.js Core Modules | File System Node.js Module in Hindi in 2020
+
+* NodeJS Core Module.
+- Consider modules to be same as Javascript libraries. A set of functions you want to include in your applications.
+
+- Node.js has a set of built in modules which you can use without any further installation.
+
+- The Node.js file system module allows you to work with the file system on your computer.
+
+To include the File System module, use the require() method:
+var fs = require('fs');
+
+- A common use for the File System module:
+
+Read files
+Create files
+Update files
+Rename files
+
+- Node.js includes an additional data type called buffer which is not available in browser's javascript.
+Buffer is mainly used to store binary data.
+While reading from a file or receiving packets over the network.
+
+8. NODE.JS #8: Synchronous vs Asynchronous Programming in NODE JS in Hindi
+
+11. 📁 PATH Module In Node.JS in Hindi in 2020 | Node JS Tutorial #11
+
+13. 🔴 Complete NPM In 20Mintues | Import NPM Module in Node.JS in Hindi in 2020 #13
+
+- npm is a package manager for the JavaScript programming language. It is the default package manager for the Javascript runtime environment Node.js
+
+- To initialize npm for root folder you need to use 
+npm init
+It will create package.json file.
+
+- Install nodemon so when save javascript file it will automatically run.
+npm i nodemon -g
+nodemon -v
+nodemon index.js
+
+15. Node JS #15: Module Wrapper Function in Node.JS in Hindi in 2020
+
+16. 🔴 #16: Creating Our Own Web Server in Node.JS | HTTP Module in Node JS in Hindi in 2020
+
+- To access web pages of any web application, you need a web server. The web server will handle all the http requests for the web application.
+
+- IIS is a web server for ASP.NeT web application and Apache is web server for PHP or Java web applications.
+
+- Node.js provides capabilities to create your own web server which will handle HTTP requests asynchronously. You can use IIS or Apache to run Node.js web application but it is recommended to use Node.js web server. 
+
+- A web server is a software program which serves web pages to web users (browsers).
+
+21. Streams and Buffer in Node JS
+
+- Streams are objects that let you read data from a source or write data to a destination in continuos fashion. In Node.JS there are four types of streams.
+
+Streaming means listening to music or watching video in 'real time', instead of downloading a file to your computer and watching later.
+
+Readable - Stream which is used for write operation.
+
+Writable - Stream which is used for write operation.
+
+Duplex - Stream which can be used for both read and write operation.
+
+Transform - A type of duplex stream where the output is consumed based on input.
+
+- Each type of Stream is an EventEmitter instance and throws several events at different instance of times. For rxample some of the commonly used events are - 
+
+data - This event is fired when there is data is available to read.
+
+end - This event is fired when there is no more data to read.
+
+error - This event is fired when there is any error receiving or writing data.
+
+finish - This event is fired when all the data has been flushed to underlying system.
+
+- stream.pipe(), the method used to take a readable stream and connect it to a writeable stream.
+
+
+Express JS
+
+1. 🔴 #1: Express JS Introduction, Setup, IDE & First Program in Express JS Tutorial in Hindi in 2020
+
+- What is Express.JS
+* Express.js is a Node.js framework. It's the most popular framework as of now (the most starred on NPM).
+
+* ExpressJS is a web application framework that provides you with a simple API to build websites, web apps and back ends.
+
+- Why do we actually need Express.js? How it is useful for us to use with Node.js?
+
+* Try to write a small REST API server in plain Node.js, using only core modules and then in ExpressJS. The latter will take you 5-10x less time and lines of code.
+
+- Difference between res.json() and res.send()?
+* The methods are identical when an object or array is passed, but res.json will also convert non-objects, such as null and undefined, which are not valid JSON.
+
+- Use of express.static()
+- Use of template engines (Pug, hbs, EJS, handlebar.js)
