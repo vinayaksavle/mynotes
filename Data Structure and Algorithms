@@ -1,0 +1,450 @@
+Data Structure and Algorithms using Javascript
+
+Link refered - https://www.youtube.com/watch?v=LuXCJxY7nPE&list=PLn2ipk-jqgZiAHiA70hOxAj8RMUeqYNK3&index=1&t=19s
+
+1. Big O Notation / Time Complexity Introduction
+ 
+- Big O Notation gives ua a precise, numeric and objective way of judging the performance of our code.
+
+-  Why does Big O Notation/ Time Complexity Matter?
+It helps you write better code and becomes important as your inputs get bigger (EG Users/Posts for an app).
+
+2. Big O Notation: How do we measure Code Performance?
+
+- What does "better" implementation mean?
+Better means faster time to finish and to use less memory (RAM), although there is a much stronger emphasis on the former.
+
+- Readability of the code does NOT factor at all. Performance is King!
+
+- Why not hard time measuremments?
+Computers differ widely in their processors, so you will often get different times for each computer, hard to standardize!
+
+Manually testing the time of your code with each new implementation is not practical.
+
+What if there was a way to quickly meansure the performance of your code by just looking at it, rather than manually timing it?
+
+3. Big O Notation: Counting Operations
+
+- Counting Operations for Big O Notation
+Let's measure the performance of our code by counting the operations it has, rather than manually timing it!
+
+The number of operations in your code is easy to standardize and remains consistent regardless of computer, compared to manually timing our code!
+
+- Counting Operations
+
+Ex - 1
+const sumUpto = n => {
+return (n * (n+1)) / 2;
+}
+
+Result - Always just 3 operations, no matter how large N is! So it is O(3) which will simplify to O(1).
+
+Ex - 2
+const sumUpTo = n => {
+let total = 0;
+
+for(let i = 1; i<=n;i++){
+total += i;
+}
+
+return total;
+}
+
+Result - 1* N Operations
+1 for one for loop operation and N for it will iterate N times.
+variable declaration not considered as operation. So it is O(n)
+
+4. Big O Notation: Official Introduction
+
+Ex - 1
+function showWordPairs(arr) {
+for(let i=0;i<arr.length;i++){
+for(let j=0; j< arr.length; j++) {
+console.log(arr[i]+""+arr[j]);
+}
+}
+}
+showWordPairs(["abc","mno","xyz"]);
+
+Result - O(n^2)
+The for loops iterate over the same array of length N. For each N words, do N pairing operations.
+
+Ex - 2
+function showWordPairs(arr, arr2) {
+for(let i=0;i<arr.length;i++){
+for(let j=0; j< arr2.length; j++) {
+console.log(arr[i]+""+arr2[j]);
+}
+}
+}
+showWordPairs(["abc","mno","xyz"],["pqr","tvs","lmn"]);
+
+Result - O(n*m)
+ The outer loop iterates over array of length N, the inner loop iterates over array of length M.
+ 
+ - Identifying Runtime Complexity (Rules of Thumb)
+ 
+ * Iterating over a collection OR using N as a pointer with a for loop - O(n)
+ 
+ * Iterating over the same collection with nested for loops - O(n^2)
+ 
+ * Iterating over different collection with nested for loops. - O(n*m)
+ 
+5. Big O Notation: Simplifying
+
+- Constants do NOT matter
+Simplifing the big O notation
+O(12) -> O(1)
+O(2n) -> O(n)
+O(n/2) -> O(n)
+O(13n^2) -> O(n^2)
+
+- Smalled terms do NOT matter
+O(n + 10) -> O(n)
+O(1337n + 50) -> O(n)
+O(n^2 + 13n + 8) -> O(n^2)
+
+- Why do we simplify Big O?
+* Constants do NOT matter:
+Imagine that Big O only cares about Graph Shape in the long run. 
+
+* Smaller terms do Not matter:
+Big O only cares about the number of operations to do as N approaches infinity.
+
+O(n^2 + n + 8) -> O(n^2)
+
+- Quiz
+function shoutOut(n) {
+	for(var i = 1; i< = Math.max(5, n); i++) {
+	console.log(`number is ${i}`);
+	}
+}
+
+Comlexity of this function so in this for loop it runs i math.max is less than or equal to 5 or n whichever is bigger. In latmans terms run which will do at least 5 shoutouts.
+
+Result - O(n)
+
+But we would have used Math.min(5,n) the big O notation will be O(5) which will simplify to O(1).
+
+- Other terms for Big O Notation/ Time Complexity
+
+O(1) -> Constant Time
+O(n) -> Linear Time
+O(n^2) -> Quadratic time
+
+- Arithmetic Operations have constant time complexity of O(1):
+It takes your processor the same amount of time to do 1+1 as million + 1
+
+- variable Assignment has constant time complexity of O(1):
+It takes your processor the same aount of time to do var x = 1 as var x = million
+
+6. Big O Notation: Space Complexity
+
+- Space Complexity vs Time Complexity
+
+Space Complexity: How much more memory use (RAM) do we need as the inputs provided to the Code gets larger?
+
+Time Complexity: How much more runtime do we need as the inputs provided to the Code gets larger?
+
+Both of the above still use Big O Notation.
+
+- Space Complexity Rules of Thumb
+* Storing values in variables always takes up memory.
+
+* Most Primitives (Booleans and Numbers) take up O(1)/Constant Space.
+var x = 100 & var x = 200  take up same amount of memory.
+
+* Stings, Arrays and Objects take up O(n)/Linear Space.
+An array with 4 elements takes up twice the memory of Array with 2 elements.
+
+- Why is Time Comlexity Prioritized over Space Complexity?
+
+Costs to produce and run processors are much higher compared to RAM.
+
+Better use of time writing code that is easier on the processor.
+
+Consumers/Users in general care more about speed than RAM usage.
+
+7. Big O Notation: Logarithmic Time Complexity
+
+- log(n) operation
+log2(8) = 3 and log2(16) = 4
+If the input/N is doubled then we only have to do one more operation.
+
+Or
+
+Everytime we do an "operation" like guessing , we can eliminate half the remaining operations.
+
+Link followed AcadeMind: https://www.youtube.com/watch?v=41GSinwoMYA
+
+- What are "Data Structures"?
+Data structures allow you to manage data (add, update, delete etc.).
+E.g. Arrays, Objects, Maps, Sets
+
+- Different tasks Require Different Data Structures.
+* Ordered List of data, Duplicates Allowed
+* Unordered List of Data, No Duplicates Wanted
+* Key-value Pairs of Unordered Data.
+* Key-value Pairs of Ordered, iterable Data.
+
+- Arrays - A Closer Look
+Ex - 1 [1, 3, 6, 2]
+* Insertion order is kept/memorized by javscript so the element three will always be the second element.
+
+* Element access via index.
+* It is Iterable means you can use the for-of loop.
+* Size (length) adjusts dynamically.
+* Duplicate values are allowed.
+* You can mix types in array.
+* Deletion and finding elements can require "extra work".
+
+- Sets - A Closer Look
+* We don't have shortcut like arrays in square bracket instead we have to use the set constructor function. Then on the created object we can use the add method to add item to the set.
+
+E.g.
+new Set()
+set.add('pizza')
+set.add('burger')
+
+* Duplicates are not allowed. Even if you added two time three time it will added just once i.e, unique values only.
+
+* Insertion order is not stored/memorized.
+* Element access and extraction via method.
+* Iterable (= you can use the for-of loop)
+* Size (length) adjust dynamically.
+* Deletion and finding elements is trivial and fast.
+* Use sets when you need lists of data but you don't want the duplicate values and you don't care so much about the order and the position instead if you manage something like lets say ids where you only care about whether an id is already stored or not for example then sets might be a great choice.
+
+- Arrays vs Sets
+* Arrays
+You can always use arrays. Must-use if order matters and/or duplicates are wanted.
+
+*Sets
+Only usable if order does not matter and you only need unique values. Can simplify data access (e.g. finding, deletion) compared to arrays.
+
+- Objects - A Closer Look
+Ex - {
+name: 'Max', age: 31, greet() { console.log('Hi '+ this.name); }
+}
+
+* Unordered key-value pairs of data.
+* Element access via key (property name).
+* Not iterable (only with for-in)
+* Keys are unique, values are not.
+* Keys have to be strings, numbers or symbols.
+* Can store data and "functionality" (methods).
+
+- Maps - A Closer Look
+Ex - new Map()
+map.set('name','Max');
+map.set(true,true) //boolean key
+
+* Ordered key-value pairs of data.
+* Elements access via key.
+* Iterable you can use the for-of loop.
+* Keys are unique, values are not.
+* Keys can be anything (incl. reference values like arrays.)
+* Pure data storage, optimized for data access.
+
+- Objects vs maps
+* Objects
+Very versatile construct and data storage in javascript. Must-use if you want to add extra functionality.
+
+* Maps
+Focused on data storage and access. Can simplify and improve data access compared to objects.
+
+- Custom Data structures WeakSet & WeakMap
+
+* WeakSet & WeakMap are variations of Set and Map 
+
+* values and keys are only "weekly referenced".
+
+* Garbage collection can delete values and keys if not used anywhere else in the app.
+
+- A Custom data Structure: "Linked List"
+* A linked list in the end as the name implies is a list data structure so bit like an array.  
+* We don't work with indexes as in an array and you also don't just have unique values like in a set but instead every element in the linked list does not just know its value but is also has a pointer at the next element in line. 
+
+*So linked list is a list full of elements  that are linked each other so every elements knows about the next element in line and only about that element.
+
+* Why we need then ?
+They are very flexible when it came to resizing the list and for memory management and insertion at start and end of the list.
+
+1. Arrays
+https://www.geeksforgeeks.org/array-data-structure/#rotation
+
+* Array Data Structure
+- An array is a collection of items stored at contiguous memory locations. The idea is to store multiple items of the same type together. This makes it easier to calculate the position of each element by simply adding an offset to a base value, i.e., the memory location of the first element of the array (generally denoted by the name of the array).
+
+- The base value is index 0 and the difference between the two indexes is the offset.
+
+* Advantages of using arrays: 
+
+- Arrays allow random access of elements. This makes accessing elements by position faster.
+- Arrays have better cache locality that can make a pretty big difference in performance.
+
+- Cache locality also known as principle of locality which  is the tendency of a processor to access the same set of memory locations repetitively over a short period of time.
+
+* Disadvantages of using arrays: 
+- You can’t change the size i.e. once you have declared the array you can’t change its size because of static memory allocated to it. 
+Now if take an example of implementation of data structure Stack using array there are some obvious flaw. 
+
+Let’s take the POP operation of the stack. The algorithm would go something like this. 
+
+1. Check for the stack underflow
+2. Decrement the top by 1 
+ 
+So there what we are doing is that the pointer to the topmost element is decrement meaning we are just bounding our view actually that element stays there talking up of the memory space if you have any primitive datatype then it might be ok but the object of an array would take a lot of memory.
+
+- Usually, an array of characters is called a ‘string’, whereas an array of ints or floats is called simply an array.
+
+- In C# the allocation of memory for the arrays is done dynamically. And arrays are kind of objects, therefore it is easy to find their size using the predefined functions. The variables in the array are ordered and each has an index beginning from 0. Arrays in C# work differently than they do in C/C++.
+
+- Important Points to Remember About Arrays in C#
+
+In C#, all arrays are dynamically allocated.
+Since arrays are objects in C#, we can find their length using member length. This is different from C/C++ where we find length using sizeof operator.
+A C# array variable can also be declared like other variables with [] after the data type.
+The variables in the array are ordered and each has an index beginning from 0.
+C# array is an object of base type System.Array.
+Default values of numeric array and reference type elements are set to be respectively zero and null.
+A jagged array elements are reference types and are initialized to null.
+Array elements can be of any type, including an array type.
+Array types are reference types which are derived from the abstract base type Array. These types implement IEnumerable and for it, they use foreach iteration on all arrays in C#.
+
+- Syntax :
+
+< Data Type > [ ] < Name_Array >
+Here,
+< Data Type > : It define the element type of the array.
+[ ] : It define the size of the array.
+< Name_Array > : It is the Name of array.
+
+Example :
+
+int[] x;  // can store int values
+string[] s; // can store string values
+double[] d; // can store double values
+Student[] stud1; // can store instances of Student class which is custom class
+
+- Initialization of an Array after Declaration
+
+Arrays can be initialized after the declaration. It is not necessary to declare and initialize at the same time using the new keyword. However, Initializing an Array after the declaration, it must be initialized with the new keyword. It can’t be initialized by only assigning values.
+
+https://www.geeksforgeeks.org/array-data-structure/#rotation
+* Program for array rotation
+https://www.geeksforgeeks.org/array-rotation/
+
+* Program to find GCD or HCF of two numbers
+
+36 = 2 * 2* 3* 3
+60 = 2* 2* 3 * 5
+GCD = 2 * 2* 3 = 12
+
+// Recursive function to return
+    // gcd of a and b
+    static int gcd(int a, int b)
+    {
+         
+        // Everything divides 0 
+        if (a == 0)
+          return b;
+        if (b == 0)
+          return a;
+     
+        // base case
+        if (a == b)
+            return a;
+     
+        // a is greater
+        if (a > b)
+            return gcd(a - b, b);
+             
+        return gcd(a, b - a);
+    }
+     
+    // Driver method
+    public static void Main() 
+    {
+        int a = 98, b = 56;
+        Console.WriteLine("GCD of "
+          + a +" and " + b + " is "
+                      + gcd(a, b));
+    }
+
+A more efficient solution is to use modulo operator in Euclidean algorithm . 
+
+// Recursive function to return
+    // gcd of a and b
+    static int gcd(int a, int b)
+    {      
+       if (b == 0)
+          return a;
+       return gcd(b, a % b); 
+    }
+     
+    // Driver method
+    public static void Main() 
+    {
+        int a = 98, b = 56;
+        Console.WriteLine("GCD of "
+          + a +" and " + b + " is "
+                      + gcd(a, b));
+    }
+	
+- Euclidean algorithms (Basic and Extended)
+https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
+
+- GCD of more than two (or array) numbers
+https://www.geeksforgeeks.org/gcd-two-array-numbers/
+
+2. Linked List
+
+- In simple words, a linked list consists of nodes where each node contains a data field and a reference(link) to the next node in the list.
+
+- Like arrays, Linked List is a linear data structure. Unlike arrays, linked list elements are not stored at a contiguous location; the elements are linked using pointers.
+
+- Why Linked List?
+Arrays can be used to store linear data of similar types, but arrays have the following limitations.
+1) The size of the arrays is fixed: So we must know the upper limit on the number of elements in advance. Also, generally, the allocated memory is equal to the upper limit irrespective of the usage.
+2) Inserting a new element in an array of elements is expensive because the room has to be created for the new elements and to create room existing elements have to be shifted.
+
+For example, in a system, if we maintain a sorted list of IDs in an array id[].
+
+id[] = [1000, 1010, 1050, 2000, 2040].
+
+And if we want to insert a new ID 1005, then to maintain the sorted order, we have to move all the elements after 1000 (excluding 1000).
+Deletion is also expensive with arrays until unless some special techniques are used. For example, to delete 1010 in id[], everything after 1010 has to be moved.
+
+- Advantages over arrays
+1) Dynamic size
+2) Ease of insertion/deletion
+
+Drawbacks:
+1) Random access is not allowed. We have to access elements sequentially starting from the first node. So we cannot do binary search with linked lists efficiently with its default implementation. Read about it here.
+2) Extra memory space for a pointer is required with each element of the list.
+3) Not cache friendly. Since array elements are contiguous locations, there is locality of reference which is not there in case of linked lists.
+
+- Representation:
+A linked list is represented by a pointer to the first node of the linked list. The first node is called the head. If the linked list is empty, then the value of the head is NULL.
+Each node in a list consists of at least two parts:
+1) data
+2) Pointer (Or Reference) to the next node
+In C, we can represent a node using structures. Below is an example of a linked list node with integer data.
+In Java or C#, LinkedList can be represented as a class and a Node as a separate class. The LinkedList class contains a reference of Node class type.
+
+
+
+3. Stack
+4. Queue
+5. Binary Tree
+6. Binary Search Tree
+7. Heap
+8. Hashing
+9. Graph
+10. Advance Data Strructures
+11. Matrix
+12. String
+13. All Data Structures
+
+ 
