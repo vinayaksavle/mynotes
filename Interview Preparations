@@ -1,1 +1,82 @@
+* Nameste Javascript series Akshay Saini
 
+* How JavaScript Works 🔥& Execution Context
+- Everything in JavaScript happens inside an Execution Context. Execution context is like a big box and it has two components in it. 
+
+The first component is also known as Memory Component. So in Memory Component all the variables and functions are stored as key value pairs. Memory component is also known as Variable environment.
+
+The second component is the Code component. SO this is the place where code is executed one line at a time. It is also known as Thread of  execution. It is just like thread in which whole code is executed one line at a time.
+
+* JavaScript is a synchronous single-threaded language.
+
+- When we single-threaded that means javascript execute one command at a time and when I say synchronous single threaded that means one command at a time in a specific order.
+
+* How JavaScript Code is executed? ❤️& Call Stack | Namaste JavaScript Ep. 2
+
+- When you run JavaScript code Global Execution Cotext is created. 
+
+In first phase, Memory creation happens and in that JavaScript will allocate memory to all the variables and functions.In Memory allocation phase to variables special value undefined to it. For function whole code is copied.
+
+In second phase i.e, Code execution phase. Also now value is assigned to the variables.
+
+When it reaches to end of the line the whole Global Execution Context gets deleted (goes off).
+
+As you can see it is very much complicated because for every function it is creating Global Execution context. JavaScript manages all this using call stack.
+
+In Call stack, whenever a new function is invoked Global Execution Context (GEC) is created and add in stack.
+
+Call Stack maintains the order of execution of execution contexts. Call Stack also known as Execution Context Stack, Program Stack, Control Stack, Runtime Stack, Machine Stack.
+
+
+* Hoisting in JavaScript 🔥(variables & functions) | Namaste JavaScript Ep. 3
+
+- Hoisting is a phenomena in JavaScript by which you can access the variables and functions even before you have initialized it. You can access it without any error.
+
+E.g,
+1. 
+getName();
+console.log(x);
+
+var x = 7;
+function getName() {
+console.log("Namaste");
+}
+
+O/P:
+Namaste
+undefined
+
+2. 
+getName();
+console.log(x);
+
+//var x = 7;
+function getName() {
+console.log("Namaste");
+}
+
+O/P:
+Error
+
+You must be thinking in first it has given undefined and in 2nd it is giving error. Is undefined and non-defined are same? No both are different.
+
+-  If we console.log(getName) it will give whole function code even if we write before and after declaration which is very weird compary to variable as variable giving undefined. This is because in last concept you might have got it. First it will create GEC and it will assign undefined to variables and for functions whole code is copied thats why it is giving undefined value. Even before code starts executing the memory is allocated to the variable and functions.
+
+- Take another example of function using arrow.
+
+E.g.
+getName()
+
+var getName = () => {
+console.log("Namaste");
+}
+
+O/P - Error getName is not a function
+
+Because now here getName function is acting as variable so first it will be assigned with undefined value. Thats why we get error like getName is not a function.
+
+- If you want to see call stack practically you can check while debugging left side of console you can see Call Stack tab and down to that GEC stack.
+
+* How functions work in JS ❤️ & Variable Environment | Namaste JavaScript Ep. 4
+
+https://www.youtube.com/watch?v=gSDncyuGw0s&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=5
