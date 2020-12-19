@@ -80,3 +80,44 @@ Because now here getName function is acting as variable so first it will be assi
 * How functions work in JS ❤️ & Variable Environment | Namaste JavaScript Ep. 4
 
 https://www.youtube.com/watch?v=gSDncyuGw0s&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=5
+
+
+- Whenever a function is invoked in JavaScript a functional Execution Context is created and memory is allocated. Once the memory is allocated to the variables and functions, then the code is executed synchronously, one line at a time.
+
+* SHORTEST JS Program 🔥window & this keyword | Namaste JavaScript Ep. 5
+
+- Shotest JS Program is empty index.js file. yes ieven if it is empty JS creates Global execution context.
+
+- JavaScript Engine creates a global object whenever you run any JS code. In the case of browsers, this global object is known as `window`
+
+-  So at Global level this === window meaning value of this is equal to window.
+
+- What is Global Space ?
+Anything which is not inside function is Global space or everything you see on top level it is Global Space. 
+
+-  So whenever you create any variable or function in Global Space it gets attached to window.
+E.g.
+var a = 10;
+function b(){
+var x=10;
+}
+
+In above example a and function b are in Global Space and x is not in Global Space you can check in console.
+
+To prove you can write value in console.log(window.a); or console.log(a) //10
+
+If you write console.log(x)
+// Error : Reference x is not defined.
+Because x is not in Global Space. Thats why getting error. Anything which is in Global can be accessible using window. or variable or function.
+
+
+* undefined vs not defined in JS 🤔 | Namaste JavaScript Ep. 6
+
+- undefined is a special keyword in JavaScript and `undefined !== not defined`. JS is a loosely typed language (weakly typed language). Loosely typed meaning it does not attaches its variable to any specific data type. Meaning if you assigned string to variable later you assign number also so type constraint is not there in Javascript.
+
+-  It is a special keyword in JS and it acts as a placeholder for variables until they are assigned any value in them. Many developers assume that undefined is exactly the same as not defined, but that's not true. undefined is a value in JavaScript and in fact, it also takes up memory space.
+
+- Its not good practice to assign undefined to any variable.
+
+
+* The Scope Chain, 🔥Scope & Lexical Environment | Namaste JavaScript Ep. 7
