@@ -121,3 +121,55 @@ Because x is not in Global Space. Thats why getting error. Anything which is in 
 
 
 * The Scope Chain, 🔥Scope & Lexical Environment | Namaste JavaScript Ep. 7
+
+- Take one example:
+Ex1 - 
+
+function a() {
+console.log(b);
+}
+
+var b = 10;
+a();
+
+O/P - 10
+
+When JS executes program at console JS will check whether b is present in local memory space or not. Which is local memory of a's execution context.
+
+Ex2 - If we try to access b outside function then we will get error
+
+Ex - 
+
+function a() {
+var b = 10;
+}
+
+console.log(b);
+a();
+
+O/P - Error: b is not defined 
+
+- Here comes Scope into picture. Scope is where you can access specific variable or function in our code.
+
+-  Whenever execution context is created lexical environment is created. So lexical environment is a local memory along with its lexical environment of its parent. 
+
+-  Lexical meaning hierarchy or in a sequence. In code terms, function c is lexically inside a.
+Ex - function a(){
+var b = 10;
+c();
+function c(){
+console.log(b);
+}
+} 
+
+In above program when it gets executed in function c it will check whether b is present in local memory of c. It is not present there so it will go to lexical environment of parent function of c which is function a. So now it will try to find out in lexical environment of a. So there it found out b value and b's value is printed. Even if b was not defined in function a it would have checked inside lexical environment of Global Space. So this way of finding is known as Scope chain.
+
+-  So,
+Lexical environment is created whenever execution context is created. So lexical environment is a local environment + reference to lexical environment of parent. Parent meaning lexical parent. Like c is lexically inside a so c's lexical parent is a.
+
+And this whole chain of lexical environment is known as Scope chain and it defines whether a variable or function is present inside a scope or not. If scope chain is exhausted it has not found the variable is not inside scope chain.
+
+
+* let & const in JS 🔥Temporal Dead Zone | | Namaste JavaScript Ep. 8
+
+https://www.youtube.com/watch?v=BNC6slYCj50&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=9
