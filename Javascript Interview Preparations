@@ -173,3 +173,227 @@ And this whole chain of lexical environment is known as Scope chain and it defin
 * let & const in JS 🔥Temporal Dead Zone | | Namaste JavaScript Ep. 8
 
 https://www.youtube.com/watch?v=BNC6slYCj50&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=9
+
+* let and const declarations are Hoisted. But they are hoisted in very different way than var. This are in the Temporal Dead Zone for the time being. 
+
+Ex - 
+
+console.log(a); // Reference error Cannot access a before initialization.
+console.log(b); // undefined
+
+let a = 10;
+var b = 100;
+
+Now here we are getting error so which creates confusion as we are saying let is hoisted but giving error. Because they are hoisted in temporal zone. If you debug in browser you can see var is declared as undefined in Global Scope and let is declarated as undefined in Script.
+
+* Temporal Dead Zone - It is time since when this let variable is hoisted and till it is initialized value that time between that is known as temporal dead zone.
+
+* Whenever you try to access a variable inside a temporal dead zone it gives you a reference error. So after initialization we can access the value.
+
+* let is not accessible using window object or using this or we can say Global object. So we can let is little strict than var.
+
+* Example1:
+
+console.log("HI");
+
+let a = 10;
+let a = 100;
+
+O/P - Syntax error.
+
+You cannot redeclare let with same name. It will not even log the console message upfront it will throw error. But with var we can do it. var will not give error.
+
+* Ex2:
+
+let a = 10;
+var a = 100;
+
+O/P - Syntax error.
+
+You cannot use the same name in same scopea gain.
+
+* In case of const we have to initialize the value of const at the time of declaration and where as in case of let we can assign value later.
+
+Ex1-
+
+const a = 100;
+a = 1000;
+
+O/P - TypeError
+
+Because you have declared a with const type and again you are trying to access with some other type value thats why Type error.
+
+Ex2 -
+
+const a;
+
+O/P - Syntax error
+
+Because const type expects that it should initialized while declaration so syntax is missing thats why syntax error.
+
+* Interview Question
+Difference between Reference Error - Syntax Error - Type Error
+
+* Best way to avoid Temporal Dead Zone error is to put all your declaration and initialization at the top.
+
+9 - BLOCK SCOPE & Shadowing in JS 🔥| Namaste JavaScript 🙏 Ep. 9
+
+Block and Block Scope are little different.
+
+* Block is also know as Compound Statement. We group multiple things together in block so that we can use it where Javascript expects one statement.
+
+* Block Scope - What all variables and functions we can access inside this Block that is know as Block Scope.
+
+* let and const are Block Scoped. If you debug in Browser below program you will see let and const in Block scope where as var in Global Scope. Thats the reason let and const are not accessible outside the block.
+
+Ex -
+{
+var a = 23;
+let b = 21;
+const c = 34;
+}
+
+console.log(a);
+console.log(b);
+console.log(c);
+
+O/P - 
+23
+Reference error.
+
+* Shadowing - 
+Ex1. -
+var a = 100;
+{
+var a = 10;
+let b = 20;
+const c = 30;
+
+console.log(a);
+console.log(b);
+console.log(c);
+}
+
+console.log(a);
+
+O/P - 
+10
+20
+30
+10
+
+Here, In this example var a = 10 shadows the value of var a = 100. It modifies the value of a. But this is not same with let as it is block scoped.
+
+Ex2. -
+let b = 100;
+{
+var a = 10;
+let b = 20;
+const c = 30;
+
+console.log(a);
+console.log(b);
+console.log(c);
+}
+
+console.log(b);
+
+O/P - 
+10
+20
+30
+100
+
+Here, in this example let b = 100 shadowed the let b = 20 because let b=20 is in block scope and let b = 100 in different scope (Scipt Scope). so thats why it shadows the value of let b = 20
+
+Same in case of const.
+
+* Illegal Shadowing - You cannot shadow let variable using var. But you can shadow var using let.
+
+Ex1 -
+let a = 20;
+{
+	var a = 20;
+}
+
+O/P - Error
+
+Ex2 -
+let a = 20;
+function x() {
+var a = 20;
+}
+
+O/P - No Error. As var is function scoped.
+
+Ex - 
+var a = 20;
+{
+	let a = 20;
+}
+
+O/P - No Error
+
+* Lexical scope works same inside block scope also. Block Scope has a lexical behavior and also follows rules of the Lexical Scope chain.
+
+10. Closures in JS 🔥 | Namaste JavaScript Episode 10
+
+* Closure - A function binds together with its lexical environment or closure along with its lexical scope together bundle is known as closure. Function along with its lexical scope bundles together forms a closure.
+
+* In JavaScript we can pass function as a parameter and also return function by function. When we return a function and pass it to a variable and run that variable as a function it still remembers its lexical environment. 
+
+Ex1 - 
+
+function x() {
+	var a = 7;
+		function y(){
+			console.log(a);
+		}
+		return y;
+}
+
+var z = x();
+
+console.log(z);
+z();
+
+O/P -
+f y(){
+}
+7
+
+Ex2 !important -
+function x() {
+	var a = 7;
+		function y(){
+			console.log(a);
+		}
+		a = 100;
+		return y;
+}
+
+var z = x();
+
+console.log(z);
+z();
+
+O/P -
+f y(){
+}
+100
+
+Because when z() is called it will check for reference a's value which will be 100. So thats why it is printing 100 not 7.
+
+* Use of Closures:
+- Module Design Pattern
+- Currying
+- Functions like once
+- memoize
+- maintaining state in async world
+- setTimeouts
+- Iterators
+-  and many more...
+
+
+11. setTimeout + Closures Interview Question 🔥 | Namaste 🙏 JavaScript Ep. 11
+ https://www.youtube.com/watch?v=eBTBG4nda2A&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=13
