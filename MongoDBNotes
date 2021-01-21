@@ -1,7 +1,7 @@
 MongoDB Notes:
 
 https://www.quackit.com/mongodb/tutorial/
-yes
+
 1. About MongoDB
 
 - MongoDB is an open source database management system (DBMS) that uses a document-oriented data model. It is considered a NoSQL database, as it doesn't use the relational model, and therefore doesn't use SQL as its query language.
