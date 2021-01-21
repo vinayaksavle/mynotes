@@ -397,4 +397,103 @@ Because when z() is called it will check for reference a's value which will be 1
 
 11. setTimeout + Closures Interview Question 🔥 | Namaste 🙏 JavaScript Ep. 11
  https://www.youtube.com/watch?v=eBTBG4nda2A&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=13
-Continue...
+ 
+ - Example 1:
+ 
+ function x(){
+ var i=1;
+ setTimeout(function(){
+ console.log(i);
+ },3000);
+ 
+ console.log("NamasteJS"); 
+ }
+ 
+ x();
+ 
+ O/p :
+ NamasteJS
+ 1 (After 3 second)
+ 
+ - Function inside setTimeout which creates closure so this function remembers the reference to i (not value). So wherever this function goes it takes the reference of i along with it thats what closure is. JS takes this function and store it somewhere and attaches a timer to it. And once the timer gets expired it takes that function put it in callstack and runs the function.
+ 
+ Important best question
+ Example 2: Print 1 to 5 numbers with 1 in 1 sec , 2 in 2 sec respectively.
+ 
+ You might write below code for that which will give wrong o/p.
+ 
+ function x(){
+ 
+ for(var i=1; i<=5;i++){
+	setTimeout(function() {
+		console.log(i);
+	},i * 1000);
+ }
+ 
+ console.log("NamasteJS");
+}
+
+O/P:
+NamasteJS
+6		//(after 1 sec)
+6		//(after 2 sec)
+6		//(after 3 sec)
+6		//(after 4 sec)
+6		//(after 5 sec)
+
+- Strange right? It is behaving like this because of closure. As function inside setTimeout remembers the reference of i. It is refering to same memory space which var i. We can resolve this problem using let as it is block scope.
+
+Important question.
+Ex:
+function x(){
+ 
+ for(let i=1; i<=5;i++){
+	setTimeout(function() {
+		console.log(i);
+	},i * 1000);
+ }
+ 
+ console.log("NamasteJS");
+}
+
+O/P:
+NamasteJS
+1		//(after 1 sec)
+2		//(after 2 sec)
+3		//(after 3 sec)
+4		//(after 4 sec)
+5		//(after 5 sec)
+
+So whenever loop runs the value of i will be new everytime it is a new copy of i.
+
+- But what if interviewer is smart and he said I want using var. We can solve it is using closure only. Previously it was not working because value of i was refering to same memory location due to var. So somehow we have to give new copy everytime.
+
+Solution - 
+function x(){
+ 
+ for(var i=1; i<=5;i++){
+ 
+ function close(x) {
+		setTimeout(function() {
+			console.log(x);
+		},x * 1000);
+	} 
+	close(i);
+ }
+ 
+ console.log("NamasteJS");
+}
+
+O/P:
+NamasteJS
+1		//(after 1 sec)
+2		//(after 2 sec)
+3		//(after 3 sec)
+4		//(after 4 sec)
+5		//(after 5 sec)
+
+- It is creating a new copy of i or x.
+
+12. CRAZY JS INTERVIEW 🤯ft. Closures | Namaste 🙏 JavaScript Ep. 12
+
+ https://www.youtube.com/watch?v=t1nFAMws5FI&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=14&pbjreload=101
