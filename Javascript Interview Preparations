@@ -600,3 +600,64 @@ A function without name is Anonymous Function.
 
 - Function Statement vs Function Expression vs Function Declaration ?
 
+=> Main difference between Function Statement vs Function Expression is hoisting
+. Lets call both and see difference in o/p.
+
+a();
+b(); // will give error becasue it is assigned to avariable and you are calling before direction.
+
+* function Statement a.k.a. Function Declaration
+function a() {
+	console.log("a called");
+}
+
+
+* function Expression
+var b = function () {
+	console.log("b called");
+}
+
+O/P - 
+a called
+Error : b is not a function
+
+ 
+* Anonymous function
+function () {
+
+}
+
+O/p- function statement require a function name.
+
+If you run above code it will give error as 
+function statement require a function name. It is similar to function Statement. So why we are using Anonymous function is becasue when we want to use function as value we use Anonymous function.
+
+* Named function Expression
+It is similar to function expression but little difference is here instead of anonymous function we use named function.
+
+Ex-
+var b = function xyz() {
+	console.log("b called");
+	//console.log(xyz); this won't give error 
+}
+
+xyz();
+
+O/P - Error: xyz is not defined.
+We cannot call like this.
+
+* Difference between parameters and arguments
+
+function a(param1,param2){
+
+}
+a(arg1,arg2);
+param1, param2 are parameters. while arg1,arg2 are arguments.
+
+* first class Functions
+- The ability to use functions as values is known as first class Functions. As you know we can pass function as an argument or as we can return function.
+It is also known as First Class Citizens.
+
+14. Callback Functions in JS ft. Event Listeners 🔥| Namaste JavaScript Ep. 14
+
+https://www.youtube.com/watch?v=btj35dh3_U8&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=16 
