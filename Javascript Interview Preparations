@@ -497,3 +497,106 @@ NamasteJS
 12. CRAZY JS INTERVIEW 🤯ft. Closures | Namaste 🙏 JavaScript Ep. 12
 
  https://www.youtube.com/watch?v=t1nFAMws5FI&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=14&pbjreload=101
+ 
+ Q1. Closure in Javascript
+ - A function along with a reference to its outer environment like together forms a closure. In other words you can say that closure is a combination of function and its lexical scope bundles together forms a closure. Its like each and every function in JavaScript has access to its outer lexical environment. Access to the variables and function which is present in the environment of its parents so it has each and every function has an access to them. So even when this function is like executed in some other scope not in its original scope but even if it executed in other scope it still remembers its outer lexical environment where it was originally present in the code.
+ 
+ Example: 
+ function outest() {
+	var c = 20;
+	function outer(b) {
+	
+	function inner() {
+		console.log(a, b, c);
+	}
+	let a = 10; // if this gets commented it will access outside value of a.
+	return inner;
+	}
+	return outer;
+ }
+ 
+ // let a = 100;
+ var close = (outest())("hellow");
+ close();
+ 
+ O/p -
+ 10"hellow"20
+ 
+ 
+ - outest()() will call its inner function which is same as
+ outest()() is same as below
+ 
+ var close = outest();
+ close();
+ 
+ watch video for tricky question.
+ 
+ Q2. Advantages of Closure ?
+ 
+ - I would say closure is most beatiful part of JS. It is used in module pattern, function currying also used in functions like memoize and once. One more imp is used in data hiding and encapsulation.
+ 
+ Data hiding - Other part of code or function cannot have access to that particular data. That is know as data hiding or data privacy. We can encapsulate data so that other function cannot access to it.
+ 
+ Example - 
+ 
+ function Counter() {
+	 var count = 0;
+	 this.incrementCounter = function () {
+		count++;
+		console.log(count);
+	 }
+	 this.decrementCounter = function() {
+		count--;
+		console.log(count);
+	 }
+ }
+ 
+ var counter1 = new Counter(); //function constructor
+ 
+ counter1.incrementCounter();
+ counter1.incrementCounter();
+ counter1.decrementCounter();
+ 
+ O/p -
+ 1
+ 2
+ 1
+ 
+ 
+ Q3. Disadvantages of Closure?
+ - There could be overconsumption of closure in memory becasue every time closure is found it consumes a lot of memory and sometimes those closed over varibles are not garbage collected till the program expires that means it is accumulating lot of memory if we create lot of closures. If it is not handled properly that can lead to memory leaks it can freeze the browser if not handled properly.
+ 
+ 
+ Q4. What is garbage collector and what does it do ?
+ - It is a program in browser or JS engine which kind of free the unutilized memory. JS is high level programing language so in programming languages like c or c++ it is upto developer how to allocate or deallocate memory but high level languages it is done by JS engine so in Garbage collector removes unused variables takes it out of memory.
+
+Q5. How is relation between Garbage collector and closure ?
+
+- Take one example
+
+function a() {
+	var x = 0, z= 10;
+	return function b(){
+		console.log(x);
+	}
+} 
+
+var y = a();
+
+y();
+
+In this, now here x is not garbage collected because until we know y is not being used so if you create more closures it accumulates more memory. But some of modern browser if they found out that it has not been used then they will be smartly garbage collected.
+
+Smartly - In above example if we run in browser and put debugger and try to access 
+console.log(x) it govees 0 but same if you try to access z it will give reference error as it is garbage collected becasue no longer in use so which is smartly garbage collected.
+
+
+13. FIRST CLASS FUNCTIONS 🔥ft. Anonymous Functions | Namaste JavaScript Ep. 13
+
+- What is an Anonymous Function ?
+A function without name is Anonymous Function.
+
+- What are First Class Functions ?
+
+- Function Statement vs Function Expression vs Function Declaration ?
+
