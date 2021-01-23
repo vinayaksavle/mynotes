@@ -1,0 +1,141 @@
+Backup OF pinunpin sp
+ALTER PROCEDURE [dbo].[usp_UpdatePinUnpinstatus] 
+  @TransactionId INT, 
+  @AssociateId   VARCHAR(15), 
+  @CountryCode   VARCHAR(15), 
+  @JobFamily     VARCHAR(15), 
+  @SourceId      INT, 
+  @PinMessage    VARCHAR(50) output 
+AS 
+  BEGINBEGIN try 
+      BEGIN TRANSACTION t1 
+      SET nocount ON; 
+      DECLARE @IsPinned BIT, 
+        @ActivityId     INT, 
+        @PinnedCount    INT, 
+        @MaxPinCount    INT 
+      SELECT @MaxPinCount = Cast(configvalue AS INT) 
+      FROM   tbl_usagetrackingconfig WITH(nolock) 
+      WHERE  configid = 4 
+      SELECT @PinnedCount = Count(transactionid) 
+      FROM   tbl_associatetransusage WITH(nolock) 
+      WHERE  associateid = @AssociateId 
+      AND    isfav = 1 
+      IF EXISTS 
+      ( 
+             SELECT transactionid 
+             FROM   tbl_associatetransusage WITH(nolock) 
+             WHERE  associateid = @AssociateId 
+             AND    transactionid = @TransactionId) 
+      BEGIN 
+        SELECT @IsPinned = isfav 
+        FROM   tbl_associatetransusage WITH(nolock) 
+        WHERE  associateid = @AssociateId 
+        AND    transactionid = @TransactionId 
+        IF @IsPinned = 0 
+        BEGIN 
+          IF @PinnedCount >= @MaxPinCount 
+          BEGIN 
+            SET @PinMessage = 'Max '+Cast(@MaxPinCount AS VARCHAR) + ' activities can be pinned';
+            --RETURN @PinMessage 
+          END 
+          ELSE 
+          BEGIN 
+            UPDATE tbl_associatetransusage 
+            SET    isfav = 1, 
+                   modifieddate = Getdate() 
+            WHERE  associateid = @AssociateId 
+            AND    transactionid = @TransactionId 
+            SET    @PinMessage = 'Pinned as Favorite'; 
+             
+            SET @ActivityId =1 
+          END 
+        END 
+        ELSE 
+        BEGIN 
+          UPDATE tbl_associatetransusage 
+          SET    isfav = 0, 
+                 modifieddate = Getdate() 
+          WHERE  associateid = @AssociateId 
+          AND    transactionid = @TransactionId 
+          SET    @PinMessage = 'Pinned as UnFavorite'; 
+           
+          SET @ActivityId =2 
+        END 
+      END 
+      ELSE 
+      BEGIN 
+        IF @PinnedCount >= @MaxPinCount 
+        BEGIN 
+          SET @PinMessage = 'Max '+Cast(@MaxPinCount AS VARCHAR) + ' activities can be pinned';
+          --SET @PinMessage = CONCAT('Cannot Add more than',@MaxPinCount); 
+          PRINT @PinMessage; 
+          --RETURN @PinMessage 
+        END 
+        ELSE 
+        BEGIN 
+          INSERT INTO tbl_associatetransusage 
+                      ( 
+                                  associateid, 
+                                  transactionid, 
+                                  launchcount, 
+                                  isfav, 
+                                  createddate 
+                      ) 
+                      VALUES 
+                      ( 
+                                  @AssociateId, 
+                                  @TransactionId, 
+                                  0, 
+                                  1, 
+                                  Getdate() 
+                      ) 
+          SET @PinMessage = 'Pinned as Favorite'; 
+          SET @ActivityId =1 
+        END 
+      END 
+      --SET @ActivityId = 1 
+      IF(@PinMessage!='Max '+Cast(@MaxPinCount AS VARCHAR) + ' activities can be pinned') 
+      BEGIN 
+        --EXEC [usp_UpdatePreferenceinQA]  @TransactionId,@AssociateId,@ActivityId 
+        INSERT INTO tbl_usagetracking 
+                    ( 
+                                associateid, 
+                                associateregion, 
+                                transactionid, 
+                                sourceid, 
+                                activityid, 
+                                activitydate, 
+                                isported, 
+                                jobfamily 
+                    ) 
+                    VALUES 
+                    ( 
+                                @AssociateId, 
+                                @CountryCode, 
+                                @TransactionId, 
+                                @SourceId, 
+                                @ActivityId, 
+                                Getdate(), 
+                                0, 
+                                @JobFamily 
+                    ) 
+      END 
+      COMMIT TRANSACTION t1 
+    END try
+    BEGIN catch 
+      DECLARE @ErrorMessage  VARCHAR(4000); 
+      DECLARE @ErrorSeverity INT; 
+      DECLARE @ErrorState    INT; 
+      SELECT @ErrorMessage = Error_message(), 
+             @ErrorSeverity = Error_severity(), 
+             @ErrorState = Error_state(); 
+       
+      RAISERROR (@ErrorMessage,-- Message text. 
+      @ErrorSeverity,          -- Severity. 
+      @ErrorState              -- State. 
+      ); 
+      ROLLBACK TRANSACTION 
+      t1 
+    END catch
+END
