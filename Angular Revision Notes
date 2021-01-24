@@ -1036,4 +1036,58 @@ numberObservable.subscribe(value => console.log(value));
 // prints 5 and 10
 
 
-2. 
+Angular interview questions
+
+Properties of object writable enumarable...
+How to make object constant...
+
+Difference between Map, filters, Reduce
+
+Object destruction and how could we change key from object...
+
+How to do groupby elements from array
+
+Difference between async await and promises and observable
+
+Rxjx operators
+
+Difference between rest and spread.
+
+Difference between let and const and var
+
+What is arrow function how it removes the problem of this keyword
+
+SetTimeout and setInterval and impact of using them inside for Loop
+
+Object Prototype in details.
+
+Ways to set or Passing default parameters and optional parameters how we make them strictly typed
+
+Interface in a typescript
+
+Typescript generics
+
+Generator functions from es6
+
+Optional chainning
+
+Change detection
+
+Angular life cycle
+
+NgModule
+
+Component communication in angular
+
+What is production mode in angular
+
+How to deploy application on server
+
+What is node modules
+
+Merge map, switch map and concat map
+
+Interceptors in angular
+
+Zip in rxjx
+
