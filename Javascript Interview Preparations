@@ -661,3 +661,32 @@ It is also known as First Class Citizens.
 14. Callback Functions in JS ft. Event Listeners 🔥| Namaste JavaScript Ep. 14
 
 https://www.youtube.com/watch?v=btj35dh3_U8&list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP&index=16 
+
+* What is callback function in JavaScript ?
+- Functions are first class citizens in JS. That means you can pass function to another function. When you do so that function which you have passed is know as callback function.
+
+- JavaScript is a synchronous and single threaded language that means it can do one thing at a time and in a specific order. But due to callback we can do asynchrous things.
+
+Ex - function x(y) {} 
+Here we have pass y() as parameter in function x so x can callback y at any time later in the code thats why y is callback function.
+
+* Interview Question Why do we need to remove EventListeners.
+
+- EventListeners are heavy meaning it consumes more memory. So when you attaches eventlistener it forms a closure. So because of this it consumes memory because it remembers all of its variable which are in scope and we may have many eventlistener in code, if didn't removed page may go slow. Thats why remove eventlistener.
+
+
+15. Asynchronous JavaScript & EVENT LOOP from scratch 🔥 | Namaste JavaScript Ep.15
+
+- Callstack is present inside javascript engine and all the code executed inside this callstack.
+
+- To access users location, db access, timer etc and many more functionalities we need help of browser. So there should be something JS engine can access and use this functionalities.
+
+- setTimeout, DOM APIs (document.getElementById) are not part of JavaScript. Its heart broken but its true.
+So setTimeout(), DOM API's, fetch(), localstorage, console, location this all are not part of JavaScript. This are some superpower which browser have it. So browser gives this access to all these superpowers to JS Engine/Callstack throgh a keyword known as window which is also known as Global object in form of Web APIs.
+
+- Job of event loop is it act as a gatekeeper It checks or monitors the callback queue (setTimeout function, eventlistener etc.) if callstack is empty and there is function in callback queue then it puts the function inside callback queue into the callstack.
+
+- Just like Call queue we have something called MicroTask Queue. It is similar to callback queue but MicroTask Queue has higher priority.
+
+- As we said MicroTask Queue has higher priority then question arises here what comes under MicroTask Queue?
+All the callback functions which comes through promises will go inside MicroTask Queue and also Mutation observer. But apart from this two (setTimeout, DOM API's etc) are go inside Callback queue.
