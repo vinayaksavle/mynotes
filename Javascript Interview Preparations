@@ -690,3 +690,84 @@ So setTimeout(), DOM API's, fetch(), localstorage, console, location this all ar
 
 - As we said MicroTask Queue has higher priority then question arises here what comes under MicroTask Queue?
 All the callback functions which comes through promises will go inside MicroTask Queue and also Mutation observer. But apart from this two (setTimeout, DOM API's etc) are go inside Callback queue.
+
+16. JS Engine EXPOSED 🔥 Google's V8 Architecture 🚀 | Namaste JavaScript Ep. 16
+
+- JavaScript Runtime Environment consist of JS Engine, set of APIs to connect to the outer environment, Event Loop, Callback Queue, MicroTask Queue. Every browser has JavaScript Runtime Environment without this it cannot run JavaScript.
+
+- List of EcmaScript/JS engine 
+In Microsoft Edge - Chakra JS Engine.
+Firefox - SpiderMonkey (Very First JS Engine)
+Chrome, Node.JS,Deno,V8.NET - V8
+
+- JS Engine is not a machine it is just a piece of code.
+
+- How JS Engine executes its code.
+CODE -> PARSING -> COMPILATION -> EXECUTION
+
+PARSING - During Parsing your code is broken down into TOKENS. In that Syntax Parser converts this into AST (Abstract Syntax Tree). If you want to see how Syntax parser converts in to AST you can visit.
+astexplorer.net
+
+* Interpretter - In many interpreted languages code is executed using interpretter. So this interpretter takes your code and it start executing code line by line in the order it does not what will happen in the next line.
+
+* Compiler - In compiler your whole code is compiled even before executing. So code is compiled and it forms new code which optimized version of this code the it is executed. So that optimized code runs fast.
+
+- Interpretter is fast as code is executed line by line and it does require to compile first and then convert it into its optimized form. So in case compiler it has more efficiency.
+JS behaves like an interpretted language and compiler language it depends on JS Engine. Initially JS comes as interpreted language as it runs on browser so no time to compile and convert but in modern browsers JS Engine use interpreter and compiler both. So it totally depends on JS Engine whether it purely interpretter or it is JUST in Time Compiled (JIT Compilation) 
+
+- JIT Compilation (Just in Time Compilation) - JavaScript in general can use Interpretter along with compiler and that makes it as a Just in Time compiled language.
+
+- AOT (Ahead of Time Compilation) - In some JS engine compiledr takes piece of code which is going to be executed later and tries to optimize it as much it can and it also produces the byte code which is then goes to execution phase.
+
+HW - Mark and Sweep algorithm
+
+So every browser tries to make there JS Engine better so that they can save your micro seconds. Currently Google's V8 engine is fast amongst the other JS Engines.
+
+17. TRUST ISSUES with setTimeout() | Namaste JavaScript Ep.17
+
+Important question: 
+
+- setTimeout(func1,5000) has trust issues. It might take 6 sec or 7 sec it all depends on the callstack.
+
+Take one example - 
+console.log("Start");
+
+setTimeout(function cb(){
+console.log("Callback");
+}, 5000);
+
+console.log("End");
+// assume it has million lines of codes which will take 10 sec to execute
+
+let startDate = new Date().getTime();
+let endDate = startDate;
+
+while (endDate < startDate + 10000) {
+endDate = new Date().getTime();
+}
+
+console.log("While expires");
+
+O/p - 
+Start
+End
+While expires
+Callback // it called after 10 secs
+
+- So in above program you might be thinking setTimeout will execute after 5 sec but answer is NO. Because at first GEC (Global execution context) is created and it add in callstack as it will 10 sec to run GEC and setTimeout will register in Callback Queue and event loop will call setTimeout function only after callstack is empty so thats why setTimeout has trust issues. So thats how whole concurrency model works.
+
+Ex2 -
+console.log("Start");
+
+setTimeout(function cb(){
+console.log("Callback");
+}, 0);
+
+console.log("End");
+
+O/P - 
+Start
+End
+Callback
+
+In above example you can see setTimeout was in callback queue and it will called oly after callstack is empty which will be after Start and End print log.
