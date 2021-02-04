@@ -1,0 +1,264 @@
+Angular Revision Notes
+
+* Angular Versions
+
+Angular 9
+- The Angular 9 is released on 06.02.2020. The Angular 9 is a major release. This release switches to ivy compiler and runtime by default. The ivy brings smaller bundle sizes, faster & better testing debugging, Improved type checking, build times, etc
+- The Ivy compiler: The default use of the Ivy compiler is the most important feature of Angular 9, Ivy is what actually designed to solve the major problems of Angular i.e the performance and large file size
+
+* Components
+- The Component is the main building block of an Angular Application. A Component contains the definition of the View and the data that defines how the View looks and behaves.  The Angular Components are plain javascript classes and defined using @component Decorator. This Decorator provides the component with the View to display & Metadata about the class
+
+- The Component passes the data to the view using a process called Data Binding. This is done by Binding the DOM Elements to component properties. Binding can be used to display component class property values to the user, change element styles, respond to a user event, etc.
+
+1. Introduction to Angular Components
+2. Data Binding in Angular
+3. Interpolation in Angular
+4. Property Binding in Angular
+5. Event Binding in Angular
+6. Two way Binding & ngModel in Angular
+7. ngModelChange & Change Event
+8. Adding Child Component in Angular
+
+* Directives
+- The Angular directive helps us to manipulate the DOM. You can change the appearance, behavior, or layout of a DOM element using the directives. They help you to extend HTML.
+
+- The Angular directives are classified into three categories based on how they behave.  
+1. Component, 
+2. Structural (ngFor, ngIf, ngSwitch) and 
+3. Attribute Directives (ngClass, ngStyle)
+
+1.Angular Directives
+2.ngFor 
+3.ngSwitch
+4.ngIf
+5.ngClass
+6.ngStyle
+7.ngFor Trackby
+8.Custom Directive
+
+* Pipes
+- The Angular pipes are used to Transform the Data. For Example, the Date pipe formats the date according to locale rules. We can pass arguments to pipe and chain pipes. The Angular also allows us to create the Custom Pipe
+
+1. Angular Pipes
+2. Angular Custom Pipes
+3. Date Pipe
+4. Async Pipe
+5. KeyValue Pipe
+6. Using Pipes in Components & Services
+
+* Component Communication
+- Parent Component communicates with the child component using the @Input Annotation. The child components detect changes to these Input properties using OnChanges life Cycle hook or with a Property Setter.
+
+1.Passing data to child component 
+2.Passing Data to Parent Component
+
+* Component Life Cycle Hook
+- The life cycle hooks are the methods that angular invokes on directives and components as it creates, changes, and destroys them. Using life-cycle hooks we can fine-tune the behavior of our components during creation, update, and destruction.
+
+1.Component Life Cycle
+2.OnInit & OnDestroy
+3.Onchanges
+4.DoCheck
+
+* Angular Forms
+
+1.Angular Forms Tutorial: Fundamental & Concepts
+2.Template Driven Forms in Angular
+3.Set Value in Template Driven forms in Angular
+4.Reactive Forms in Angular
+5.FormBuilder in Reactive Forms
+6.SetValue & PatchValue in Angular
+7.StatusChanges in Angular Forms
+8.ValueChanges in Angular Forms
+9.FormControl
+10.FormGroup
+11.FormArray Example
+12.Build Dynamic or Nested Forms using FormArray
+13.SetValue & PatchValue in FormArray
+14.Select Options Dropdown
+
+* Services & Dependency Injection
+- Services allow us to create reusable code and use it every component that needs it. The Services can be injected into components and other services using the dependency injection system. The dependencies are declared in the Module using the Provider’s metadata. The Angular creates a tree of injector & Providers that resembles the Component Tree. This is called the hierarchical pattern.
+
+1.Services
+2.Dependency injection
+3.Injector, @Injectable & @Inject
+4.Providers
+5.Hierarchical Dependency Injection
+
+* Angular Forms Validation
+
+1.Validations in Reactive Forms in Angular
+2.Custom Validator in Reactive Forms
+3.Passing Parameter to Custom Validator in Reactive Forms
+4.Inject Service into Custom Validator
+5.Validation in Template Driven Forms
+6.Custom Validator in Template Driven Forms
+7.Angular Async Validator
+8.Cross Field Validation
+9.Adding Validators Using SetValidators
+
+*  HTTP 
+- The newly designed HttpClient Module allows us to query the Remote API source to get data into our Application. It requires us to Subscribe to the returned response using RxJs observables.
+
+1.Angular HTTP Client Tutorial
+2.HTTP GET Example
+3.HTTP POST Example
+4.Passing URL Parameters (Query strings)
+5.HTTP Headers Example
+6.HTTP Interceptor
+
+
+* Angular Router
+- The Router module handles the navigation & Routing in Angular. The Routing allows you to move from one part of the application to another part or one View to another View. 
+
+1. Routing and Navigation in Angular
+2. Location Strategies in Angular Router
+3. Passing Parameters to Route
+4. Child Routes / Nested Routes
+5.Passing Optional (Query) Parameters to a route
+6.Navigation between Routes
+7.Angular Route Guards
+8.CanActivate Guard
+9.CanActivateChild Guard
+10.CanDeactivate Guard
+11.Angular Resolve Guard
+12.Angular Pass data to route
+13.RouterLinkActive
+14.Router Events
+
+* Angular Module
+- The Angular Modules help us to organize our code into manageable parts or block. Each block implements a specific feature. The Components, Templates, Directives, Pipes, and Services, which implements that feature become part of the module.
+
+1.Introduction to Angular Modules
+2.Routing Between Angular Modules
+3.Angular folder structure: Best Practices
+4.Lazy Loading in Angular
+5.Preloading Strategy
+6.CanLoad Guard
+
+* Advanced Components
+
+1.Ng-Content & Content Projection in Angular
+2.Angular @input, @output & EventEmitter
+3.Template Reference Variable in Angular
+4.ng-container in Angular
+5.ng-template & TemplateRef in angular
+6.ngtemplateoutlet in angular
+7.HostBinding & HostListener
+8.ViewChild, ViewChildren & QueryList
+9.ElementRef
+10.Renderer2
+11.ContentChild & ContentChildren
+12.AfterViewInit, AfterViewChecked, AfterContentInit & AfterContentChecked
+
+* Observable in Angular
+
+1.Angular Observable Tutorial
+2.Create Observable from a string, array. object, collection
+3.Observable from events using fromEvent
+4.Observable pipe
+5.Map Operator
+6.Filter Operator
+7.Tap Operator
+8.SwitchMap
+9.MergeMap
+10.ConcatMap
+11.ExhaustMap
+12.take, takeUntil, takeWhile, takeLast
+13.First, last & Single
+14.Skip, SkipWhile, SkipUntil & SkipLast
+15.Scan & Reduce
+16.DebounceTime & Debounce
+17.Delay & DelayWhen
+18.ThrowError
+19.CatchError
+20.ReTry & ReTryWhen
+21.Unsubscribe from an observable
+
+* Styling the Application
+
+- The Angular uses several different ways to style the Application. You can style the app globally and then override it locally in the component very easily. The component styles have local scope, which is achieved using the various View Encapsulation strategies. Learn all these in the section
+
+1.Angular Global Styles
+2.View Encapsulation
+3.Style binding in Angular
+4.Class Binding in Angular
+5.Component Styles
+6.How to Install & Use Angular FontAwesome
+7.How to Add Bootstrap to Angular
+
+* Others
+1.Location Service
+
+* Configuration
+- The apps usually need some sort of Run-time configuration information like URL endpoint etc, which it needs to load at startup. Also, different environments like development, production & testing require different environments, etc.
+
+1.How to use APP_INITIALIZER
+2.Run time configuration
+3.Environment Variables
+
+*  Handling Errors
+- We handle errors by setting up a Global Error handler or custom error handler. Also,.whenever the error occurs in an HTTP operation, the Angular wraps it in an httpErrorResponse Object. Learn how to handle the HTTP Errors also.
+
+1.Error Handling in Angular
+2.HTTP Error Handling
+
+* Angular CLI
+
+1.Angular CLI Tutorial
+2.Upgrading Angular App to the latest version
+3.Multiple App in One Project
+
+* SEO & Angular
+
+- You need to set up Title & Meta Tags for each page. Ensure that the search engines can crawl and read your page. Set the correct Canonical URL for each page etc.
+
+1.Title Service Example
+2.Dynamic Title based on Route
+3.Meta Service
+4.Dynamic Meta Tags
+5.Canonical URL
+6.Lazy Load Images in Angular
+
+* Angular Universal
+
+The following Angular Universal Tutorial explains how to achieve Server Side Rendering using Angular Universal. The rendering the App on the server side makes it load quickly and also ensures that the search engines can crawl the content
+
+1. Server-Side Rendering Angular Universal Tutorial
+
+* Building & Hosting
+
+1. Requested URL Not found on this server
+
+* Angular Resources
+
+1.Angular Examples & Projects
+2.The Angular Learning Resources
+
+* Angular how-to guides
+
+1.How to get the current Route
+2.ExpressionChangedAfterItHasBeenCheckedError in Angular
+3.Angular CLI Check Version
+
+* Module Loaders
+
+The Angular application can use either SystemJs or Webpack module loader. We will demonstrate how to make use of both the Loader by building a small application.
+
+1.Create Angular Application using SystemJS
+2.Create Angular Application using Webpack
+
+* Features of Angular
+- Two-Way Data Binding
+- Powerful Routing Support
+- Expressive HTML (Enables us to use programming constructs like if conditions, for loops, etc.(*ngIf,*ngFor) to render and control how the HTML pages)
+- Modular by Design
+- Built-in Back End Support
+- Active Community
+
+* Key differences between AngularJs & Angular
+- Support for ES6
+- Components are new controllers
+- 
