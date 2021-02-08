@@ -163,3 +163,17 @@ Warning: Using goto is bad programming style. We should avoid goto all means.
 - Static method is involved using the class name, where as an instance method is involved using an instance of the class.
 
 - The difference between instance methods and static methods is that multiple instances of a class can be created (or instantiated) and each instance has its own seperate method. However when a method is static, there are no isntance of that method, and you can involve only that one defination of the static method. 
+
+17. Part 17 - C# Tutorial - Method parameters.avi
+
+* Method parameter types
+
+a. Value Parameters: Creayes a copy of the parameter passed, so modification does not affect each other.
+
+b. Reference Parameters: The ref method parameter keyword on a method parameter causes a method to refer to the same variable that was passed into the method. Any changes made to the parameter in the method will be relected in that variable when control passes back to the calling method.
+
+c. Out Parameters: Use when you want a method to return more than one value.
+
+d. Parameter Arrays: The params keyword lets you specify a method parameter that takes a variable number of arguments. You can send a comma-separated list of arguments, or an array, or no arguments. Params keyword should be the last one in a method declaration, and only one params keyword is permitted in an method declaration.
+
+- The parameters which are passed in method declaration are know as Method parameters and the one passed while invoking are known as arguments.
