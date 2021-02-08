@@ -149,3 +149,17 @@ Warning: Using goto is bad programming style. We should avoid goto all means.
 15. Part 15 - C# Tutorial - for and foreach loops in c#.avi
 
 - A foreach loop is used to iterate throgh the items in a collection. For example, foreach loop can be used with arrays or collections such as ArrayList, HashTable and Generics.
+
+16. Part 16 - C# Tutorial - Methods in c#.avi
+
+- Methods are extremely useful because they allow you to define your logic once, and use it, at many pieces.
+
+- Methods make the maintenance of your application easier.
+
+* Static vs Instance methods
+
+- When a method declaration includes a static modifier, that method is said to be a static method. When no static modifier is present, the method is said to be an instance method.
+
+- Static method is involved using the class name, where as an instance method is involved using an instance of the class.
+
+- The difference between instance methods and static methods is that multiple instances of a class can be created (or instantiated) and each instance has its own seperate method. However when a method is static, there are no isntance of that method, and you can involve only that one defination of the static method. 
