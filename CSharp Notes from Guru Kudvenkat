@@ -177,3 +177,38 @@ c. Out Parameters: Use when you want a method to return more than one value.
 d. Parameter Arrays: The params keyword lets you specify a method parameter that takes a variable number of arguments. You can send a comma-separated list of arguments, or an array, or no arguments. Params keyword should be the last one in a method declaration, and only one params keyword is permitted in an method declaration.
 
 - The parameters which are passed in method declaration are know as Method parameters and the one passed while invoking are known as arguments.
+
+18. Part 18 - C# Tutorial - Namespaces.avi
+
+- Namespaces are used to oraganize your programs. They also provide assistance in avoiding name clashes.
+
+- Namespaces don't correspond to file, directory or assembly names. They could be written in separate files and/or separate assemblies and still belong to the same namespace.
+
+- Namespaces can be nested in 2 ways. Namespace alias directives. Sometimes you may encounter a long namespace and wish to have it shorter. This could improve readability and still avoid name clashes with similarly named methods.
+
+- To avoid ambiguity between namespace names can use alias
+using PTA = ProjectA.TeamA;
+
+19. Part 19 - C# Tutorial - Introduction to classes.avi
+
+* What is a class ?
+- If you want to create complex custom types, then we can make use of classes. A class consists of data and behavior. Class data is represented by its field and behavior is represented by its methods.
+
+* Purpose of a class constructor
+- The purpose of a class constructor is to initialize class fields. A class constructor is automatically called when an instance of a class is created.
+
+- Constructors do not have return values and always have the same name as the class.
+
+- Constructors are not mandatory. If we do not provide a constructor, a default parameter less constructor is automatically provided.
+
+- Constructors can be overloaded by the number and type of parameters.
+
+* Destructors
+
+- Destructors have the same name as the class with ~ symbol in front of them.
+
+- They don't take any parameters and do not return a value.
+
+- Destructors are places where you could put code to release any resources your class was holding during its lifetime. They are normally called when the c# garbage collector decides to clean your object from memory.
+
+-  
