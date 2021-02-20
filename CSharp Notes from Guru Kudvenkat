@@ -211,4 +211,182 @@ using PTA = ProjectA.TeamA;
 
 - Destructors are places where you could put code to release any resources your class was holding during its lifetime. They are normally called when the c# garbage collector decides to clean your object from memory.
 
--  
+
+20. Part 20 - C# Tutorial - Static and instance class members.avi
+
+* Static and Instance class members
+
+- When a class member includes a static modifier, the member is called as static member. When no static modifier is present the member is called as non static member or instance member.
+
+- Static members are invoked using class name, where as instance members are invoked using instances (objects) of the class.
+
+- An instance member belongs to specific instance(object) of a class. If I create 3 objects of a class, I will have 3 sets of instance members in the memory, where as there will ever be only one copy of a static member, no matter how many instances of a class are created.
+
+Note: Class members = fields, methods, properties, events indexers, constructors.
+
+* Static constructor
+
+- Static constructors are used to initialize static fields in a class.
+
+- You declare a static constructor by using the keyword static in front of the constructor name. Because, it just need to initialize static field once it will be shared by all the objects you create. Where as instance constructor is called every time you create instance of class. 
+
+- Static constructor is called only once, no matter how many instances you create. Static construuctors are called before instance constructors.
+
+
+21. Part 21 - C# Tutorial - Inheritance in c#.avi
+
+* Why Inheritance
+
+Pillars of Object Oriented Programming
+1. Inheritance
+2. Encapsulation
+3. Abstraction
+4. Polymorphism
+
+- Inheritance is one of the primary pillars of object oriented programming.
+- It allows code reuse.
+- Code reuse can reduce time and errors.
+
+* Note: You will specify the common fields, properties, methods in the base class, which allows reusability. In the derived class you will only have fields, properties and methods, that are specific to them.
+
+- Syntax:
+public class ParentClass 
+{
+	// Parent Class implementation
+}
+
+public class DerivedClass : ParentClass
+{
+	// Child Class implementation
+}
+
+- In above example derived class inherits from ParentClass.
+- C# supports only single class inheritance so multiple class inheritance is not supported but multi - level inheritance is supported.
+- C# supports multiple interface inheritance.
+- Child class is a specialization of base class.
+- Base classe are automatically instantiated before derived classes.
+- Parent Class constructor executes before Child Class constructor.
+
+22. Part 22 - C# Tutorial - Method hiding in c#.avi
+
+- Use the new keyword to hide a base class member. You will get a compiler warning. If you miss the new keyword.
+
+- Different ways to invoke a hidden base (Parent) class member from derived class 
+1. Use base keyword
+2. Cast child type to parent type and invoke the hidden member
+3.  A parent class reference varibale can point to child class Object. But vice versa not possible.
+
+ParentClass PC = new ChildClass();
+   PC.HiddenMethod();
+
+1) Use new keyword when hiding base class's method in child class.
+2) Can call base class's method in child class using base keyword. (base.ParentClassMethod)
+Or
+Cast it to Parent type:
+((BaseClass) ChildClassObject). BaseClassMethod
+Or
+BaseClass baseClassObj = New ChildClass childclassobj
+baseClassObj.baseClassMethodname
+
+Note: ChildClass childclassObj =New BaseClass Obj (WRONG!!!)
+
+23. Part 23 - C# Tutorial - Polymorphism in c#.avi
+
+- Polymorphism basically enables you to invoke derived class methods through base class reference variable at runtime thats nothing but polymorphism by using override keyword in Child/Derived class and virtual in Parent/Base class. In base class the method is declared virtual and in the derived class we override the same method.
+
+- The virtual keyword indicates the method can be overridden in any derived class. If you don't override in derived class it will invoke base class method.
+
+- I think this is simplier way to explain polymorphism:
+
+Employee FTE = new FullTimeEmployee();
+FTE.PrintFullName();
+
+Employee E = new Employee();
+E.PrintFullName();
+
+BaseClass bObj = New ChildClass()
+bObj.commonMethodName
+
+1> If Base method 'virtual'(Or 'override' in case on multi level inheritance) and child method 'override' -> child method executes
+2> If Base method is not 'virtual'(Or 'override' in case on multi level inheritance) and child method 'new'(optional, vs prompt) -> base method executes (Also called method hiding)
+
+- As in run time if you choose the reference of base class and the object with new keyword is of child .... and the method u declared in the base class is virtual or abstract , and u have derived it in child class... now the instance u are generating is of type child but the reference is of parent ... so compiler is gonna look parent for the method u defined and then in child the particular method u have defined... it' not easy for compiler for to do so ...so what happens is that at run time which function is to be chosen is decided when the object is passed... this is run time polymorphism
+
+24. Part 24 - C# Tutorial - Difference between method overriding and method hiding.avi
+
+* Method Overriding
+
+public class BaseClass
+{
+	public virtual void Print()
+	{
+		Console.WriteLine("Base Class Print Method");
+	}
+}
+
+public class DerivedClass : BaseClass
+{
+	public override void Print()
+	{
+		Console.WriteLine("Child Class Print Method");
+	}
+}
+
+public class Program
+{
+	public static void Main()
+	{
+		BaseClass B = new DerivedClass();
+		B.Print();
+	}
+}
+
+O/P - 
+Child Class Print Method
+
+- In method overriding a base class reference variable pointing to a child class object, will invoke the overridden method in the Child class.
+
+* Method Hiding
+public class BaseClass
+{
+	public virtual void Print()
+	{
+		Console.WriteLine("Base Class Print Method");
+	}
+}
+
+public class DerivedClass : BaseClass
+{
+	public new void Print()
+	{
+		Console.WriteLine("Child Class Print Method");
+	}
+}
+
+public class Program
+{
+	public static void Main()
+	{
+		BaseClass B = new DerivedClass();
+		B.Print();
+	}
+}
+
+O/P - 
+Base Class Print Method
+
+- In method hiding a base class reference variable pointing to a child class object, will invoke the hidden method in the Base class.
+
+25. Part 25 - C# Tutorial - Method overloading in c#.avi
+
+- Function overloading and Method overloading terms are used interchangeably.
+
+- Method overloading allows a class to have multiple methods with the same name but, with a different signature. So, in C# functions can be overloaded based on the number, type (int, float etc.) and kind (Value, Ref or Out) of parmaeters.
+
+- The signature of a method consists of the name of the method and the type, kind (Value, Ref or Out) and number of its formal parameters. The signature of a method does not include return type and the params modifier. So, it is not possible to overload a function, just based on the return type or params modifier.
+
+26. Part 26 - C# Tutorial - Why Properties.avi
+
+- Marking the class fields public and exposing to the external world is bad, as you will not have control over what gets assigned and returned. Suppose if you want id to be non-negative and if you kept id as public it is bad so by using properties getter setter methods we can handle that.
+
+- Programming languages that does not have properties use getter and setter methods to encapsulate and protect fields.
