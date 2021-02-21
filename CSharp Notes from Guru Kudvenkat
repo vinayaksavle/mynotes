@@ -490,11 +490,165 @@ c2.Print();
 - Value types are destroyed immediately after the scope is lost, where as for reference types only the reference variable is destroyed after the scope is lost. The object is later destroyed by garbage collector. 
 - When you copy a struct into another struct, a new copy of that struct gets created and modifications on one struct will not affect the values contained by the other struct.
 - When you copy a class into another class we only get a copy of the reference variable. Both the reference variables point to the same object on the heap. So operations on one variable will affect the values conatined by the other reference variables.
+- Structs can't have destructors, but classes can have destructors.
+- Structs cannot have explicit parameter less constructor where as class can.
+- Struct can't inherit from another class where as a class can. Both structs and classes can inherit from an interface.
+-  A class or struct cannot inherit from another struct. Struct are sealed types.
+If class is sealed it cannot act as a base/parent class.
 
 Ex - 
-1. int is a struct which is alias of struct System.Int32.
+1. int is a struct which is alias of struct System.Int32 also double System.Double etc.
 2. Customer c1 = new Customer();
 c1.Id = 101;
 c1.Name = "VVS";
 
 Here, c1 is object reference variable which is stored on Stack. and Id, Name are actual customer object which is stored on Heap.
+
+
+30. Part 30 - C# Tutorial - Interfaces in c#.avi
+
+- We create interfaces using interface keyword. Just like classes, interfaces also contains properties, methods, delegates or events but only declaration and no implementations.
+
+- It is a compile time error to provide implementation for any interface member.
+
+- Interface members are public by default, and they don't allow explicit access modifiers.
+
+- Interfaces cannot contain fields.
+- If a class or a struct inherits from an interface, it must provide implementation for all interface members. Otherwise we get a compiler error.
+
+- A class or a struct can inherit from more than one interface at the same time, but where as, a class cannot inherit from more than one class at the same time.
+
+- Interfaces can inherit from other interfaces. A class that inherits this interface must provide implementation for all interface members in the entire interface inheritance chain.
+
+- We cannot create an instance of an interface, but an interface reference variable can point to a derived class object.
+
+Ex - 
+public class Customer : ICustomer 
+{
+	public void Print() {}
+}
+
+ICustomer c1 = new Customer();
+c1.Print();
+
+31. Part 31 - C# Tutorial - Explicit interfaces implementation.avi
+
+* Q. A class inherits from 2 interfaces and both the interfaces have the same method name. How sould the class implement the method for both the interfaces ?
+
+Ex-
+interface I1
+{
+	void IMethod();
+}
+interface I2
+{
+	void IMethod();
+}
+
+class Program : I1,I2
+{
+	static void Main()
+	{
+		Program p = new Program();
+		((I1)P).IMethod();
+		((I2)P).IMethod();
+		
+		or 
+		I1 i1 = new Program();
+		I1 i2 = new Program();
+		i1.IMethod();
+		i2.IMethod();
+	}
+	void I1.IMethod()
+	{
+		Console.WriteLine("I1");
+	}
+	void I2.IMethod()
+	{
+		Console.WriteLine("I2");
+	}
+}
+
+We are using Explicit interface implementation techinique to solve this problem.
+
+Note: WHen a class explicitly implements and interface member,  the interface member can no longer be accessed through class reference variable, but only through the interface reference variable.
+
+Access modifiers are not allowed on explicit implemented interface members.
+
+- If you want to make one of the interface method, the default, then implement that method normally and the other interface method explicitly. This makes the default method to be accessible through class instance.
+
+32. Part 32 - C# Tutorial - Abstract classes in c#.avi
+
+- The abstract keyword is used to create abstract classes.
+- An abstract class is incomplete and hence cannot be instantiated.
+- An abstract class can only be used as base class.
+- An abstract class cannot be sealed.
+- An abstract class may contain abstract members (methods, properties, indexers and events) but not mandatory.
+- A non-abstarct class derived from an abstract class must provide implementations for all inherited abstract members.
+
+- If a class inherits an abstract class, there are 2 options available for that class.
+Option 1: Provide implementation for all the abstract members inherited from the base abstract class.
+Option 2: If the class does not wish to provide implementation for all the abstract members inherited from the abstract class, then class has to be marked as abstract.
+
+33. Part 33 - C# Tutorial - Difference between abstract classes and interfaces.avi
+
+- Abstract classes can have implementation for some of its members (Methods), but the interface can't have implementation for any of its members.
+
+- Interfaces cannot have fields where as an abstract class can have fields.
+
+- An interface can inherit from another interface only and cannot inherit from an abstarct class, where as an abstract class can inherit from another abstract class or another interface.
+
+- A class can inherit from multiple interfaces at the same time, where as a class cannot inherit from multiple classes at the same time.
+
+- Abstract class members can have access modifiers where as interface members cannot have access modifiers.
+
+34. Part 34 - C# Tutorial - Problems of multiple class inheritance.avi
+
+* Diamond Problem
+
+Example:
+class A
+{
+	public virtual void Print()
+	{
+		Console.WriteLine("Class A");
+	}
+}
+
+class B : A
+{
+	public override void Print()
+	{
+		Console.WriteLine("Class B");
+	}
+}
+
+class C : A
+{
+	public override void Print()
+	{
+		Console.WriteLine("Class C");
+	}
+}
+class D : B, C
+{
+
+}
+
+class Program
+{
+	public static void Main()
+	{
+		D d = new D();
+		d.Print();
+	}
+}
+
+- Class B and Class C inherit from Class A.
+- Class D inherits from both B and C.
+- If a method in D calls a method defined in A (and does not override the method), and B and C have overridden that method differently, then from which class does it inherit B or C ?
+
+This ambiguity is called as Diamond Problem.
+
+35. Part 35 - C# Tutorial - Multiple class inheritance using interfaces.avi
+
