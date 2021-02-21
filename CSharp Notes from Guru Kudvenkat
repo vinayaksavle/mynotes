@@ -652,3 +652,79 @@ This ambiguity is called as Diamond Problem.
 
 35. Part 35 - C# Tutorial - Multiple class inheritance using interfaces.avi
 
+
+36. Part 36 - C# Tutorial - Delegates in c#.avi
+
+- A delegate is a type safe function pointer. That is, it holds a reference (Pointer) to a function. type safe meaning signature of delegate should match signature of the method which we are using in delegate.
+
+- The signature of the delegate must match the signature of the function, the delegate points to, otherwise you get a compiler error. This is the reason delegates are called as type safe function pointers.
+
+- A Delegate is similar to a class. You can create an instance of it and when you do so, you pass in the function name as a parameter to the delegate constructor and it is to this function the delegate will point to.
+
+Example:
+
+public delegate void HelloFunct(string msg);
+
+class Program
+{
+	public static void Main()
+	{
+		HellowFunct del = new HelloFunct(Hello);
+		del("Hi")
+	}
+	
+	public static void Hello(string msg)
+	{
+		Console.WriteLine(msg);
+	}
+}
+
+37. Part 37 - C# Tutorial - Delegates usage in c#.avi
+
+
+39. Part 39 C# Tutorial Multicast Delegates in C#
+
+* Multicast Delegates
+- A Multicast delegate is a delegate that has references to more than one function. When you invoke a multicast delegate, all the functions the delegate is poniting to are invoked.
+
+- There are 2 approaches to create a multicast delegate. Depending on the approach you use 
+
++ or += to register a method with the delegate
+
+- or -= to unregister a method with the delegate
+
+Note: A multicast delegate, invokes the methods in the invocation list, in the same order in which they are added.
+
+- If the delegate has return type other than void and if the delegate is a multicast delegate, only the value of the last invoked method will be returned. Along the same lines, if the delegate has an out parameter, the value of the output parameter will be the value assigned by the last method.
+
+- where do you use multicast delegates ?
+Multicast delegate makes implementation of observer design pattern very simple. Observer pattern is also called as publish/subscribe pattern.
+
+40. Part 40 C# Tutorial Exception Handling in C#
+
+- An exception is an unforeseen error that occurs when a program is running.
+
+- Example:
+Trying to read from a file that does not exist, throws FileNotFountException.
+Trying to read from a database table that does not exist, throws a SqlException.
+
+- Showing actual unhandled exceptions to the end user is bad for two reasons.
+1. Users will be annoyed as they are cryptic and does not make much sense to the end users.
+2. Exceptions contain information, that can be used for hacking into your application.
+
+- An exception is actually a class that derives from System.Exception class. The System.Exception class has several useful properties, that provide valuable information about the exception.
+- Message: Gets a message that describes the current exception
+Stack Trace: Provides the call stack to the line number in the method where the exception occured.
+
+* Releasing System Resources:
+- We use try, catch and finally blocks for exception handling.
+try - The code that can possible cause an exception will be in the try block.
+catch - Handles the exception.
+finally - Clean and free resources that the class was holding onto during the program execution. Finally block is optional.
+
+Note: It is a good practice to always release resources in the finally block, because finally block is guaranteed to execute, irrespective of whether there is an exception or not.
+
+- Specific exceptions will be caught before the base general exception, so specific exception blocks should always be on top of the base exception block. Otherwise, you will encounter a compiler error.
+
+41. Part 41 C# Tutorial Inner Exceptions in C#
+
