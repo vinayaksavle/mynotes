@@ -390,3 +390,111 @@ Base Class Print Method
 - Marking the class fields public and exposing to the external world is bad, as you will not have control over what gets assigned and returned. Suppose if you want id to be non-negative and if you kept id as public it is bad so by using properties getter setter methods we can handle that.
 
 - Programming languages that does not have properties use getter and setter methods to encapsulate and protect fields.
+
+27. Part 27 - C# Tutorial - Properties in C#.avi
+
+- In C# to encapsulate and protect fields we use properties.
+- We use get and set accessors to implement properties.
+- A property with both get and set accessor is a Read/write property.
+- A property with only get accessor is a Read only property.
+- A property with only set accessor is a Write only property.
+
+Note: The advantage of properties over traditional Get() and Set() methods is that, you can access them as if they were public fields.
+
+- Example:
+
+public class Student 
+{
+	private int _id;
+	public int Id
+	{
+		set
+		{
+			if(value <= 0)
+			{
+				throw new Exception("Student Id cannot be negative");
+			}
+			this._id = value
+		}
+		get
+		{
+			return this._id;
+		}
+	}
+}
+
+Student s = new Student();
+s.Id = 101; //set
+Console.WriteLine(s.Id); //get
+
+* Auto Implemented Properties
+
+- If there is no additional logic in the property accessors, then we can make use of auto implemented properties introduced in C# 3.0
+
+- Auto implemented properties reduce the amount of code that we have to write.
+
+- When you use auto-implemented properties, the compiler creates a private, anonymous field that can only be accessed through the properties get and set accessors.
+
+Example:
+
+private string _email;
+public string Email
+{
+	get
+	{
+		return this._email;
+	}
+	set
+	{
+		this._email = value;
+	}
+}
+
+In auto implementation Will be written as,
+
+public string Email { get; set; }
+
+- Compiler will create a backing private fields.
+
+28. Part 28 - C# Tutorial - Structs in C#.avi
+
+- Just like classes structs can have
+1. Private Fields
+2. Public Properties
+3. Constructors
+4. Methods
+
+- Object initializer syntax, introduced in C# 3.0 can be used to initialize either a struct or a class.
+
+Example:
+Previously,
+Customer c1 = new Customer();
+c1.Id = 101;
+c1.Print();
+
+Object initializer syntax,
+Customer c2 = new Customer
+{
+	Id = 102,
+	Name = "VVS"
+};
+c2.Print();
+
+29. Part 29 - C# Tutorial - Difference between classes and structs in c#.avi
+
+* Classes Vs Structs
+- A struct is a value type where as a class is a reference type.
+- All the differences that are applicable to value types and reference types are also applicable to class and structs.
+- Structs are stored on stack, where as classes are stores on the heap.
+- Value types hold their value in memory where they are declared, but reference types hold a reference to an object in memory.
+- Value types are destroyed immediately after the scope is lost, where as for reference types only the reference variable is destroyed after the scope is lost. The object is later destroyed by garbage collector. 
+- When you copy a struct into another struct, a new copy of that struct gets created and modifications on one struct will not affect the values contained by the other struct.
+- When you copy a class into another class we only get a copy of the reference variable. Both the reference variables point to the same object on the heap. So operations on one variable will affect the values conatined by the other reference variables.
+
+Ex - 
+1. int is a struct which is alias of struct System.Int32.
+2. Customer c1 = new Customer();
+c1.Id = 101;
+c1.Name = "VVS";
+
+Here, c1 is object reference variable which is stored on Stack. and Id, Name are actual customer object which is stored on Heap.
