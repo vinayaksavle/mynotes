@@ -728,3 +728,87 @@ Note: It is a good practice to always release resources in the finally block, be
 
 41. Part 41 C# Tutorial Inner Exceptions in C#
 
+- The InnerException property returns the Exception instance that caused the current exception.
+- To retain the original exception pass it as a parameter to the constructor, of the current exception.
+- Always check if inner exception is not null before accessing any property of the inner exception object, else you may get Null Reference Exception
+- To get the type of InnerException use GetType() method.
+
+42. Part 42 C# Tutorial Custom Exceptions in C#
+
+* When do you usually go for creating your own custom exceptions ?
+- If none of the already dotnet exceptions adequately describes the problem.
+
+Example: If application should allow the user to have only one logged in session and if user already logged in then application should throw exception as he already logged in. Here you can create custom exception.
+
+* Custom Exception - Steps
+- Create a class that derives from System.Exception class. As a convention, end the class name with Exception suffix. All .NET exceptions end with exception suffix.
+
+- Provide a public constructor, that takes in a string parameter. This constructor simple passes the string parameter, to the base exception class constructor.
+
+- Using InnerExceptions you can also track back the original exception. If you want to provide the capability for your custome exception class, then overload the constructor accordingly.
+
+- If you want your Exception class object to work across application domains. then the object must be serializable. To make your exception class serializable mark it with serializable attribute and provide a constructor that invokes the base exception class constructor that takes in SerializationInfo and StreamingContext object as parameters.
+
+43. Part 43 C# Tutorial Exception handling abuse
+
+- Exceptions are unforeseen errors that occur when a program is runnning. For example, when an application is executing a query, the database connection is lost. Exception handling is generally used to handle these scenarios.
+
+- Using exception handling to implement program logical flow is bad and is termed as exception handling abuse.
+
+44. Part 44 C# Tutorial Preventing exception handling abuse
+
+45. Part 45 C# Tutorial Why Enums
+
+- Enums are strongly typed constants.
+- If a program uses a set of integral numbers, consider replacing them with enums. Otherwise the program becomes less Readable, Maintainable
+
+46. Part 46 C# Tutorial Enums Example
+
+47. Part 47 C# Tutorial Enums in c#
+
+- If a program uses set of integral numbers, consider replacing them with enums which makes the program more readable.
+
+- Enums are enumerations.
+- Enums are strongly typed constants. Hence, an explicit cast is needed to convert from enum type to an integral type and vice versa. Also, an enum of one type cannot be implicitly assigned to an enum of another type over through the underlying value of their members are the same.
+- The default underlying type of an enum is int.
+- The default value for first element is ZERO and gets incremented by 1.
+- It is possible to customize the underlying type and values.
+- Enums are value types.
+- enum keyword (all small letters) is used to create enumeration, where as Enum class, contains static GetValues() and GetNames() methods which can be used to list Enum underlying type values and Names.
+
+48. Part 48 C# Tutorial Difference between Types and Type Members
+
+- In general classes, structs, enums, interfaces, delegates are called as types and fields, properties, constructors, methods etc. that normally reside in a type are called as type members.
+
+- In C# there are 5 different access modifiers:
+1. Private
+2. Protected
+3. Internal
+4. Protected Internal
+5. Public
+
+- Type members can have all the access modifiers where as types can have only 2 (internal, public) of the 5 access modifiers.
+
+- Note: Using regions you can expand and collapse sections of your code either manually, or using visual studio Edit -> Outlining -> Toggle All Outlining.
+
+49. Part 49 C# Tutorial Access Modifiers in C#
+
+- In C# there are 5 different access modifiers:
+1. Private (Only with in the containing class)
+2. Protected (With in the containing type and to the types that derive from conataining type)
+3. Internal
+4. Protected Internal
+5. Public (Anywhere no restrictions)
+
+- Private members are available only with in the containing type, where as public members are available anywhere. There is not restriction
+
+- Protected Members are available, with in the containing type and to the types that derive from conataining type.
+
+50. Part 50 C# Tutorial Internal and Protected Internal Access Modifiers in C#
+
+- A member with internal access modifiers is available any where with in the containing assembly. It's a compile time error to access, an internal members from outside the containing assembly.
+
+- Protected Internal members can be accessed by any code in the assembly in which it is declared or from within a derived class in another assembly. It is a combination of protected and internal. If you have understood protected and internal, this should be very easy to follow.
+
+51. Part 51 C# Tutorial Access Modifiers for types
+
