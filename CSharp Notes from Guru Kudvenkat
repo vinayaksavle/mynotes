@@ -813,3 +813,54 @@ Example: If application should allow the user to have only one logged in session
 51. Part 51 C# Tutorial Access Modifiers for types
 
 - types by default have internal access modifiers where as type members have private access modifiers.
+
+52. Part 52 C# Tutorial Attributes in C#
+
+- Attributes allow you to add declaration information to your programs. This information can then be queried at runtime using reflection.
+
+- There are several Predefined Attributes provided by .NET. It is also possible to create your own Custom Attributes.
+
+- A few predefined attributes withing the .NET framework:
+
+Obsolete - Marks types and type members outdated
+WebMethod - To expose a method as an XML Web service method.
+Serializable - Indicates that a class can be serialized.
+
+- It is possible to customize the attribute using parameters.
+
+- An attribute is a class that inherits from System.Attribute base class.
+
+53. Part 53 C# Tutorial Reflection in C#
+
+- Reflection is the ability of inspecting an assemblies metadata at runtime. It is used to find all types in an assembly and/or dynamically invoke methods in an assembly.
+
+- Uses of reflection:
+1. When you drag and drop a button on an win forms or asp.net application. The properties window uses reflection to show all the properties of the Button class. So, reflection is extensively used by IDE or a UI designers.
+
+2. Late binding can be achieved by using reflection. You can use reflection to dynamically create an instance of a type, about which we don't have any information at compile time. So, reflection enables you to use code that is not available at compile time.
+
+3. Consider an example wehre we have two alternate implementations of an interface. You want to allow the user to pick one or the other using a config file. With reflection, you can simply read the name of the class whose implementation you want to use from the config file and instantiate an instance of that class. This is another example for late binding using reflection.
+
+54. Part 54 C# Tutorial Reflection Example
+
+55. Part 55 C# Tutorial Late binding using reflection
+
+* Difference between early and late binding :
+- Early binding can flag errors at compile time. With late binding there is a risk of run time exceptions.
+- Early binding is much better for performance and should always be preferred over late binding. Use late binding oly when working with an objects that are not available at compile time.
+
+Example of early binding :
+Customer c1 = new Customer();
+string fullName = c1.GetFullName("Pragim","Tech");
+Console.WriteLine(fullName);
+
+Example of late binding:
+Assembly executingAssembly = Assembly.GetExecutingAssembly();
+Type customerType = executingAssembly.GetType("Pragim.Customer");
+object customerInstance = Activator.CreateInstance(customerType);
+MethodInfo getFullName = customerType.GetMethod("GetFullName");
+string[] methodParameters = new string[2];
+methodParameters[0] = "Pragim";
+methodParameters[1] = "Tech";
+string fullName = (string)getFullName.Invoke(customerInstance, methodParameters);
+Console.WriteLine(fullName);
