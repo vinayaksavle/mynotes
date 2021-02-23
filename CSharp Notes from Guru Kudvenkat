@@ -812,3 +812,4 @@ Example: If application should allow the user to have only one logged in session
 
 51. Part 51 C# Tutorial Access Modifiers for types
 
+- types by default have internal access modifiers where as type members have private access modifiers.
