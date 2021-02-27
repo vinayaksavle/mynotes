@@ -867,6 +867,134 @@ Console.WriteLine(fullName);
 
 56. Part 56 C# Tutorial Generics in C#
 
-- Generics are introduced in C# 2.0. Generics allows us to design classes and methods decoupled from the data types.
+- Generics are introduced in C# 2.0. Generics allows us to design classes and methods decoupled from the data types. Generics makes your code type independent and that way you can reuse your code with any type.
 
-- 
+- Generic classed are extensively used by collection classes available in System.Collection.Generic namespace.
+
+Example: public static bool AreEqual(object v1, object v2){
+return v1 == v2;
+}
+
+- Converting value type to reference type is called boxing.
+
+- One way of making AreEqual() method reusable, is to used object type parameters. Since, every type in .NET directly or indirectly inherit from System.Object type, AreEqual() method works with any data type, but the problem is performance degradation due to boxing and unboxing happening.
+
+- Also, AreEqual() method is no longer type safe. It is now possible to pass integer for the first parameter, and a string for the second parameters. It doesn't really make sense to compare strings with integers.
+
+- So, the problem with using System.Object type is that
+1. Are Equal() method is not type safe
+2. Performance degradation due to boxing and unboxing.
+
+Solution:
+- To make AreEqual() method generic, we specify a type parameter using angular brackets as shown below.
+E.g, public static bool AreEqual<T>(T v1,T v2)
+
+- At the point, When the client code wants to invoke this method, they need to specify the type, they want the method to operate on. If the user wants the AreEqual() method to work with integers, they can invoke the method specifying int as the datatype using angular brackets as shown below.
+E.g, bool Equal = Calculator.AreEqual<int>(2,1);
+
+- To operate with string data type
+bool Equal = Calculator.AreEqual<string>("A","B");
+
+- In this example, we made the method generic. ALong the same lines, it is also possible to make classes, interfaces and delegates generic.
+
+57. Part 57 C# Tutorial Why should you override ToString Method
+
+- If we convert class instance to string what it will print.
+Customer C1 = new Customer();
+Console.WriteLine(C1.ToString());
+
+O/P - Pragim.Customer (namespaceName.className)
+
+To solve this, To give your complex types string representation remaining rather than using the default base class implementation which will give you the type full name (namespaceName.className).
+
+Solution - 
+public override string ToString();
+{
+	return this.LasName + ", " + this.FirstName;
+} 
+
+Customer c1 = new Customer();
+c1.FirstName = "VVS";
+c1.LastName = "TVS";
+
+Console.WriteLine(c1.ToString());
+
+O/P - TVS, VVS
+
+Part 58 C# Tutorial Why should you override Equals Method
+
+- If two reference variables pointing to the same object we have reference equality there and the same time values equality as well.
+
+E.g. 
+Customer c1 = new Customer()
+Customer c2 = c1;
+
+c1 == c2 //true
+c1.Equal(c2) //true
+c1.FirstName == c2.FirstName //true
+c1.FirstName.Equals(c2.FirstName);
+
+But,
+Customer c1 = new Customer();
+Customer c2 = new Customer();
+
+c1 == c2 //false
+c1.Equals(c2) //false
+
+Solution:
+Override Equals method.
+
+Customer c1 = new Customer();
+c1.FirstName = "A";
+c1.LastName = "B";
+Customer c2 = new Customer();
+c2.FirstName = "A";
+c2.LastName = "B";
+
+Console.WriteLine(c1 == c2) //false
+Console.WriteLine(c1.Equals(c2)) //true
+
+public override bool Equals(object obj)
+{
+	if(obj == null)
+	{
+		return false;
+	}
+	
+	if(!(obj is Customer))
+	{
+		return false;
+	}
+	
+	return this.FirstName == ((Customer)obj).FirstName && this.LasName == ((Customer)obj).LasName;
+}
+
+public overridde int GetHashCode()
+{
+	return this.FirstName.GetHashCode() ^ this.LastName.GetHashCode();
+}
+
+// Also you will get warning saying override HashCode as well so we will do that as well
+
+59. Part 59 C# Tutorial Difference between Convert ToString and ToString
+
+- Convert.ToString() handles null, while ToString() doesn't and throws a NULL reference exception.
+
+- Depending on the type of the application, architecture and what you are trying to achieve, you choose one over the other.
+
+You cannot say one is better over the other on this depending on situation you can use one over the other.
+
+60. Part 60 C# Tutorial Difference between String and StringBuilder
+
+- System.String is immutable where as StringBuilder is Mutable.
+
+- As StringBuilder objects are mutable, they offer better performance that string objects of type System.String, when heavy string manipulation is invoked.
+
+Example:
+string ex = "C# ";
+ex += "video ";
+Here it is creating separate object first "c#" then "c# video". where as stringbuilder are mutable it will discard previous object and keep it mutable.
+
+So anytime when heavy string manipulation is there always use stringbuilder over string.
+
+61. Part 61 Partial classes in c#
