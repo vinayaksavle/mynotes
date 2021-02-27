@@ -864,3 +864,9 @@ methodParameters[0] = "Pragim";
 methodParameters[1] = "Tech";
 string fullName = (string)getFullName.Invoke(customerInstance, methodParameters);
 Console.WriteLine(fullName);
+
+56. Part 56 C# Tutorial Generics in C#
+
+- Generics are introduced in C# 2.0. Generics allows us to design classes and methods decoupled from the data types.
+
+- 
