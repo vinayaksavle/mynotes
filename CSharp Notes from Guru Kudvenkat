@@ -998,3 +998,50 @@ Here it is creating separate object first "c#" then "c# video". where as stringb
 So anytime when heavy string manipulation is there always use stringbuilder over string.
 
 61. Part 61 Partial classes in c#
+
+- Partial classed allow us to split a class into 2 or more files. All these parts are then combined into a single class, when the application is compiled. The partial keyword can also be used to split a struct or an interface over two or more files.
+
+Advantages of partial classes
+1. The main advantage is that, visual studio uses partial classes to separate, automatically generated system code from the developer's code. For ex, when you add a webform, two .cs files are generated.
+
+a) WebForm1.aspx.cs - Contains the developer code
+b) WebForm1.aspx.designer.cs - Contains the system generated code. For example, declarations for the controls that you drag and drop on the webform.
+
+2. When working on large projects. spreading a class over separate files allows multiple programmers to work on it simultaneosly. Though, Microsoft claims this as an advantage, I haven't really seen anywhere, people using partial classes, just to work on them simultaneosly.
+
+
+62. Part 62 Creating partial classes in c#
+- All the parts spread across different files, must use the partial keyword.
+
+- All the parts spread across different files must have the same access modifiers.
+
+- If any of the parts are declared abstract, then the entire type is considered abstract.
+
+- If any of the parts are declared sealed, then the entire type is considered sealed.
+
+- If any of the parts inherit a class, then the entire type inherits that class.
+
+- C# does not support multiple class inheritance. Different parts of the partial class, must not specify different base classes.
+
+- Different parts of the partial class can specify different base interfaces, and the final type implements all of the interfaces listed by all of the partial declarations.
+
+- Any members that declared in a partial defination are available to all of the other parts of the partial classes.
+
+
+63. Part 63 Partial methods in c#
+
+- A partial class or a struct can contain partial methods.
+- A partial method is created using the partial keyword.
+- A partial method declaration consists of two parts.
+i)The defination (only the method signature)
+ii)The implementation
+
+These may be in separation parts of a partial class, or in the same part.
+
+- The implementation for a partial method is optional. If we don't provide the implementation, the compiler removes the signature and all calls to the method.
+
+- Partial methods are private by default, and it is a compile time error to include any access modifiers, including private.
+
+- It is a compile time error, to include declaration and implementation at the same time for a partial method.
+
+- A partial method return type must be void. Including any other return type is compile time error.
