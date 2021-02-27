@@ -1045,3 +1045,47 @@ These may be in separation parts of a partial class, or in the same part.
 - It is a compile time error, to include declaration and implementation at the same time for a partial method.
 
 - A partial method return type must be void. Including any other return type is compile time error.
+
+- Signature of the partial method declaration, must match with the signature of the implementation.
+
+- A partial method must be declared within a partial class or partial struct. A non partial class or struct cannot include partial methods.
+
+- A partial method can be implemented only once. Trying to implement a partial method more tahn once, raises a compile time error.
+
+64. Part 64 - C# Tutorial - How and where are indexers used in .net
+
+- To store or retrieve data from session state or application state variables, we use indexers.
+
+- If you view the metadata of HttpSessionState class, you can see that there s an integral and string indexer defined. We use "this" keyword to create indexers in c#. We will discuss about creating indexers in our next video session.
+
+- Indexers allow instances of a class to be indexed just like arrays.
+E.g, Session["Login"] = "Username";
+
+65. Part 65 - C# Tutorial - Indexers in c#
+
+- Use "this" keyword to create an indexer.
+- Just like properties indexers have get and set accessors.
+- Indexers can also be overloaded.
+
+Ex-
+public string this[int id]
+{
+	get
+	{
+		return listEmployees.FirstOrDefault(x => x.Id == id).Name;
+	}
+	set
+	{
+		listEmployees.FirstOrDefault(x => x.Id == id).Name = value;
+	}
+}
+
+Customer cust = new Customer();
+Response.Write(cust[0]);
+
+66. Part 66 - C# Tutorial - Overloading indexers in c#
+
+- Indexers are overloaded based on the number and type of parameters.
+
+67. Part 67 Optional parameters in c#
+
