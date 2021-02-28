@@ -1222,3 +1222,76 @@ Main benefit of using TryGetValue is it will not give exception.
 - FindLast() - Searches for an element that matches the conditions defined by the specified lambda expression and returns the Last matching item from the list.
 
 - FindAll() - Returns all the items from the list that match the conditions specified by the lambda expression.
+
+- FindIndex() - Returns the index of the first item, that matches the condition specified by the lambda expression. There are 2 other overloads of this method which allows us to specify the range of elements to search, within the list.
+
+- FindLastIndex() - Returns the index of last item, that matches the conditon specified by the lambda expression. There are 2 other overloads of this method which allows us to specify the range of element to search, within the list.
+
+76. Part 76 Working with generic list class and ranges in c#
+
+- AddRange() - Add() method allows you to add one item at a time to the end of the list, where as AddRange() allows you to add another list of item, to the end of the list.
+
+- GetRange() - Using an item index, we can retrieve only one item at a time from the list, if you want to et a list of items from the list, then use GetRange() function. This function expects 2 parameters, i.e, the start index in the list and the number of elements to return.
+
+- InsertRange() - Insert() method allows you to insert a single item into the list at a specified index. where as InsertRange() allows you to insert another list of items to your list at the specified index.
+
+- RemoveRange() - Remove() function removes only the first matching item from the list. RemoveAt() function, removes the item at the specified index in the list. RemoveAll() function removes all the items that matches the specified condition. RemoveRange() method removes a range of elements from the list. This function expects 2 parameters, i.e, the start index in the list and the number of elements to remove. If you want to remvoe all the elements from the list without specifying any conditions, then use Clear() function.
+
+77. Part 77 Sort a list of simple types in c#
+
+* How is the sort functionality working for simple types like int, string, char etc and not for complex type like Customer class ?
+- That is because these types (int, string, decimal, char etc.) have implemented IComparable interface already.
+
+78. Part 78 Sort a list of complex types in c#
+
+- To sort a list of complex types without using LINQ, the complex type has to implement IComparable interface and provide implementation for CompareTo method. CompareTo() method returns an integer, and the meaning of the return value is shown below. RETURN VALUE is 
+
+Greater than ZERO - The current instance is greater than the object being companred with.
+
+Less than ZERO - The current instance is equal to the object being compared with.
+
+Example - 
+public class Customer : IComparable<Customer>
+{
+	public int ID {get; set;}
+	
+	public int CompareTo(Customer obj)
+	{
+		return this.Salary.CompareTo(obj.Salary);
+	}
+}
+
+Alternatively you can also invoke CompareTo() method. Salary property of the Customer object is int. COmpareTo() method is already implemented on integer type, so we can invoke this method and return it's value.
+
+- If you prefer not to use the Sort functionality provided by the class, then you can provide your own, by implementation IComparer interface. For ex. if I want the customers to sorted by name instead of salary.
+
+Step 1: Implement IComparer interface
+public class SortByName : IComparer<Customer>
+{
+	public int Compare(Customer x,Customer y)
+	{
+		return x.Name.CompareTo(y.Name);
+	}
+}
+
+Step 2: Pass an instance of the class that implements IComparer interface, as an argument to the Sort() method.
+SortByName sort = new SortByName();
+cust.Sort(sort);
+
+79. Part 79 Sort a list of complex types using Comparison delegate
+
+- One of the overloads of the Sort() method in List class expects COmparison delegate to be passed as an argument.
+public void Sort(Comparison<T> comparison);
+
+80. Part 80 Some useful methods of List collection class
+
+- TrueForAll() - Returns true or false depending on whether if every element in the list matches the condition defined by the specified predicate.
+
+- AsReadOnly() - Returns a read only wrapper for the current collection. Use this method, if you don't want the client code to modify the collection i.e, add or reverse any elements from the collection. The ReadOnlyCollection will not have methods to add or remove items from the collection. You can only read items from this collection.
+
+- TrimExcess() - sets the capacity to the actual number of elements in the List, if that number is less than a threshold value.
+
+Acc to MSDN:
+This method can be used to minimize a collections memory overhead if no new elements will be added to the collection. The cos t of reallocating and copying a large List<T>  can be considerable. So the TrimExcess method does nothing if the list is at more than 90 percent of capacity. This avoids incurring a large reallocation cost for a relatively small gain. The current threshold is 90 percent, but this could charge in the future.
+
+81. Part 81 When to use a dictionary over list in c#
