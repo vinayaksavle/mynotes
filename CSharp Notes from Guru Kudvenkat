@@ -1089,3 +1089,136 @@ Response.Write(cust[0]);
 
 67. Part 67 Optional parameters in c#
 
+- There are 4 ways that can be used to make method parameters optional
+1. Use parameter arrays (params)
+2. Method overloading
+3. Specify parameter defaults
+4. Use OptionalAttribute that is present in System.Runtime.InteropServices namespace.
+
+Note: A parameter array must be the last parameter in a formal parameter list.
+
+Ex - 
+public static void AddNumbers(int first, int second, params object[] rest){}
+
+Here, rest is optional becasue we have used params keyword.
+
+68. Part 68 Making method parameters optional using method overloading
+
+Ex - 
+public static void AddNumber(int first, int second) {}
+
+public static void AddNumber(int first, int second, int[] rest) {}
+
+69. Part 69 Making method parameters optional by specifying parameter defaults
+
+Ex - 
+public static void AddNumber(int first, int second, int[] rest = null) {}
+
+- Optional parameters must appear after all required parameters.
+
+* Named Parameters
+- In the following method, parameters "b" & "c" are optional.
+
+public static void Test(int a, int b = 10, int c = 20)
+{}
+
+- Test(1, 2);
+When we invoke this method as shown below. "1" is passed as the argument for parameter "a" and "2" is passed as the argument for parameter "b" by default.
+
+- Test(1, c: 2);
+My intention is to pass "2" as the argument for parameter "c". To achieve this we can make use of named parameters, as shown below. Notice that, I have specified the name of the parameter for which value "2" is being passed.
+
+70. Part 70 Making method parameters optional by using OptionalAttribute
+
+Ex - 
+using System.Runtime.InteropServices
+
+public static void AddNumbers(int first, int second, [Optional] int[] rest)
+{}
+
+71. Part 71 Code snippets in visual studio
+
+- Code snippets are ready-made snippets of code you can quickly insert into your code.
+1. Keyboard shortcut: CTRL K + X
+2. Right click and select "Insert Snippet.." from context menu
+3. Click on Edit - Intellisense - Insert Snippet.
+4. Use code snippets shortcut. For exampe to use "for loop" code snippet, type "for" and press TAB key twice.
+
+- Once code snippet is inserted, the editable fields are highlighted in yello and the first editable field is selected automaticaly. Upon changing the first editable field, press TAB to move to the next editable field. To come to the previous editable field use SHIFT + TAB. Press ENTER or ESC keys to cancel field editing and return the Code Editor to normal.
+
+Code Snippet Types:
+Expansion: These snippets allows the code snippet to be inserted at the cursor.
+
+SurrondsWith: These snippets allows the code snippet to be placed around a selected place of code.
+
+Refactoring: These snippets are used during code refactoring.
+
+- To access code snippet manager, click on "Tools" and then select "Code Snippet Manager". Code snippets are xml files and have .snippet extension.
+
+
+72. Part 72 What is dictionary in c#
+
+- A dictionary is a collection of (key, value) pairs.
+
+- Dictionary class is present in System.Collection.Generic namespace.
+
+- When creating a dictionary, we need to specify the types for key and value.
+
+- Dictionary provides fast lookups for values using keys.
+
+- Keys in the dictionary must be unique.
+
+Ex - 
+Dictionary<int, Customer> dcust = new Dictionary<int, Customer>();
+
+Customer cust = new Customer() { ID = 101, Name = "Mark", Salary = 5000};
+
+dcust.Add(cust.ID, cust);
+
+Customer cust101 = dcust[101];
+//cust101.Name
+
+foreach(KeyValuePair<int, Customer> c1 in dcust)
+{
+	//c1.Key
+	//Customer c = c1.Value;
+}
+
+73. Part 73 What is dictionary in c# continued
+
+- TryGetValue()
+If you are not sure if the dictionary contains a specific key that's when we use this function. It is going to return value that is associated with a key there.
+Ex - 
+Customer cust;
+if(dCust.TryGetValue(101, out cust))
+{
+	//cust.Id, cust.Name
+}
+
+Main benefit of using TryGetValue is it will not give exception.
+
+74. Part 74 List collection class in c#
+
+- List is one of the generic collection classes present in System.Collections.Generic namespace. There are several generic collection classes in System.Collection.Generic namespace is listed below.
+1. Dictionary
+2. List
+3. Stack
+4. Queue etc.
+
+- A List class can be used to create a collection of any type.
+- For example, we can create a list of integers, Strings and even complex types.
+- The object stored in the list can be accessed by index.
+- Unlike arrays, lists can grow in size automatically.
+- This class also provides methods to search, sort and manipulate lists.
+
+75. Part 75 List collection class in c# continued
+
+- Contains() function - Checks if an item exists in the list. This method returns true if the items exists, else false.
+
+- Exists() - Checks if an item exists in the list based on a condition. This method returns true if the item exists, else false.
+
+- Find() - Searches for an element that matches the conditions defined by the specified lambda expression and returns the first matching item from the list.
+
+- FindLast() - Searches for an element that matches the conditions defined by the specified lambda expression and returns the Last matching item from the list.
+
+- FindAll() - Returns all the items from the list that match the conditions specified by the lambda expression.
