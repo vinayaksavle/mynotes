@@ -1295,3 +1295,9 @@ Acc to MSDN:
 This method can be used to minimize a collections memory overhead if no new elements will be added to the collection. The cos t of reallocating and copying a large List<T>  can be considerable. So the TrimExcess method does nothing if the list is at more than 90 percent of capacity. This avoids incurring a large reallocation cost for a relatively small gain. The current threshold is 90 percent, but this could charge in the future.
 
 81. Part 81 When to use a dictionary over list in c#
+
+- Find() method of the List class loops through each object in the list until a match is found. So, if you want to lookup a value using a key dictionary is better for performance over list. So, use dictionary when you know the collection will be primarily used for lookups.
+
+82. Part 82 Generic queue collection class
+
+- 
