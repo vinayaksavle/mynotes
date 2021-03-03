@@ -1300,4 +1300,30 @@ This method can be used to minimize a collections memory overhead if no new elem
 
 82. Part 82 Generic queue collection class
 
-- 
+- Queue is a geenric FIFO (First in First Out) collection class that is present in System.Collections.Generic namespace. The Queue collection class is analogous to a queue at the ATM machine to withdraw money. The order in which people queue up, will be the order in which they will be able to get out of the queue and withdraw money from the ATM. The Queue collection class operates in a similar fashion. The first item to be added (enqueued) to the queue, will be the first time to be removed (dequeued) from the Queue.
+
+- To add items to the end of the queue, use Enqueue() method.
+
+- To remove an item that is present at the begining of the queue, use Dequeue() method.
+
+- A foreach loop iterates through the time in the queue, but will not remove them from the queue.
+
+- To check if an item, exists in the queue, use Contains() method.
+
+- What is the difference between Deque and Peek methods ?
+Dequeue() method removes and returns the item at the beginning of the queue, where as Peek() returns the item at the beginning of the queue, without removing it.
+
+83. Part 83 Generic stack collection class
+
+- Stack is generic LIFO (Last in First Out) collection class that is present in System.Collection.Generic namespace. The Stack collection class is analogous to a stack of plates. If you want to add a new plate to the stack of plates, you place it on top of all the already existing plates. If you want to remove a plate from the stack, you will first remove the one that you have last added. The stack collection class also operates in a similar fashion. The last item to be added (pushed) to the stack, will be the first item to be removed(popped) from the stack.
+
+- To insert an item at the top of the stack, use Push() method.
+
+- To remove and return the item that is present at the top of the stack, use Pop() method.
+
+- A foreach loop iterates through the items in the stack, but will not remove them from the stack. The items from the stack are retrieved in LIFO (Last in First Out) order. The last element added to the stack is the first one to be returned.
+
+- To check if an item exists in the stack, use Contains() method.
+
+- What is difference between Pop() and Peek() methods ?
+Pop() method removes and returns the item at the top of the stack, where as Peek() returns the item at the top of the stack without removing it.
