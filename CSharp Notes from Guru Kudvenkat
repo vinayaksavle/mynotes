@@ -1327,3 +1327,129 @@ Dequeue() method removes and returns the item at the beginning of the queue, whe
 
 - What is difference between Pop() and Peek() methods ?
 Pop() method removes and returns the item at the top of the stack, where as Peek() returns the item at the top of the stack without removing it.
+
+84. Part 84 Real time example of queue collection class in c#
+
+85. Part 85 Real time example of stack collection class in c#
+
+86. Part 86 Multithreading in C#
+
+* What is a Process:
+Process is what the operating system uses to facilitate the execution of a program by providing the resources required. Each process has a unique process Id associated with it. You can view the process within which a program is being executed using windows task manager.
+
+* What is Thread:
+Thread is a light weight process. A process has at least one thread which is commonly called as main thread which actually executes the application code. A single process can have multiple threads.
+
+Note: All the threading related classes are present in System.Threading namespace.
+
+Ex - 
+TimeConsumingMethod(){
+}
+Thread workerThread = new Thread(TimeConsumingMethod);
+workerThread.Start();
+
+87. Part 87 Advantages and disadvantages of multithreading
+
+* Advantages of multithreading:
+1. To maintain a responsive user interface
+2. To make efficient use of processor time while waiting for I/O operations to complete.
+3. To split large, CPU bound tasks to be processed simultaneosly on a machine that has multiple processors/cores.
+
+* DisAdvantages of multithreading
+1. On a single processor/core machine threading can affect performance negatively as there is overhead involved with context switching.
+2. Have to write more lines of code to accomplish the same task.
+3. Multithreaded applications are difficult to write, understand, debug and maintain.
+
+Note: Only use multithreading when the advantages of doing so outweigh the disadvantages.
+
+88. Part 88 ThreadStart delegate
+
+- To create a THREAD, create an instance of Thread class and to it's constructor pass the name of the function that we want the thread to execute.
+
+Ex - Thread T1 = new Thread(method);
+T.Start();
+
+We can rewrite the above line using ThreadStart delegate as shown below
+
+Thread T1 = new Thread(new ThreadStart(method));
+T1.Start();
+
+* why a delegate need to be passed as parameter to the Thread class constructor ?
+- The purpose of creating a Thread is to execute a function. A delegate is a type safe function pointer, meaning it points to a function that the thread has to execute. In short, all threads require an entry point to start execution. Any thread you create will need an explicitly defined entry point i.e, a pointer to the function where they should begin execution. So threads always require a delegate.
+
+- In the code below, we are not explicitly creating the ThreadStart delegate, then how is it working here ?
+
+Thread T1 = new Thread(method);
+T.Start();
+
+It's working in spite of not creating the ThreadStart delegate explicitly because the framework is doing it automatically for us.
+
+- We can also rewrite the same line using delegate() keyword
+Ex - 
+Thread T1 = new Thread(delegate() { Number.PrintNumbers();});
+
+- The same line rewritting using lambda expression.
+Ex - 
+Thread T1 = new Thread(() => Number.PrintNumbers());
+
+- Thread function need not be a static function always. It can also be a non-static function. In case of non-static function we have to create an instance of the class.
+
+89. Part 89 ParameterizedThreadStart delegate
+
+- Use ParameterizedThreadStart delegate to pass data to thread function.
+
+Ex - 
+method(object target){
+}
+
+ParameterizedThreadStart p1 = new ParameterizedThreadStart(method);
+Thread T1 = new Thread(p1);
+T1.Start(object);
+
+- The code in the Main() function can also be written as shown below.
+Ex - 
+object target = Console.ReadLine();
+Thread T1 = new Thread(method);
+T1.Start(target);
+
+Here we are not explicitly creating an instance of ParameterizedThreadStart delegate. Then how is it working ?
+It's working because, the compiler implicitly converts
+
+new Thread(method);
+To
+new Thread(new ParameterizedThreadStart(method));
+
+* When to use ParameterizedThreadStart over ThreadStart delegate ?
+- Use ParameterizedThreadStart delegate if you have some data to pass to the Thread function, other wise jsut use ThreadStart delegate.
+
+* Note: Using ParameterizedThreadStart delegate and Thread.Start(Object) method to pass data to the Thread function is not type safe as they operate on object datatype and any type of data can be passed.
+
+If you try to change the data type of the target parameter of PrintNumbers() function from object to int, a compiler error will be raised as the signature of PrintNumber() function does not match with the signature of ParameterizedThreadStart delegate.
+
+90. Part 90 Passing data to the Thread function in a type safe manner
+
+- To pass data to the Thread function in a type safe manner, encapsulate the thread function and the data it needs in a helper class and use the ThreadStart delegate to execute the thread function.
+
+Ex - 
+class Number
+{
+	int _target;
+	public Number(int target)
+	{
+		this._target = target;
+	}
+	
+	public void Print()
+	{
+		//_target use
+	}
+}
+
+int target = C.ToInt32(C.R());
+
+Number n = new Number(target);
+Thread t1 = new Thread(new ThreadStart(n.Print));
+t1.Start();
+
+91. Part 91 Retrieving data from Thread function using callback method
+
