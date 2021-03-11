@@ -1453,3 +1453,56 @@ t1.Start();
 
 91. Part 91 Retrieving data from Thread function using callback method
 
+- Example:
+
+- Main thread retrieves the target number from the user.
+
+- Main thread creates a child thread and pass the target number to the child thread.
+
+- The child thread computes the sum of numbers and then returns the sum of the Main thread using call back function.
+
+The callback method prints the sum of numbers
+
+Step 1: Create a callback delegate. The actual callback method signature should match with the signature of this delegate.
+
+public delegate void SumOfNumbersCallback(int sumOfNumbers);
+
+Skip...
+
+92. Part 92 Significance of Thread Join and Thread IsAlive functions
+
+- Join blocks the current thread and makes it wait until the thread on which Join method is invoked completes. Join method also has a overhead where we can specify timeout. If we don't specify the timeout the calling thread waits indefinitely, until the thread on which Join() is invoked completes. This overloeaded Join(int milliseconds Timeout) method returns boolean. True if the thread has terminated otherwise false.
+
+- Join is particularly useful when we need to wait and collect result from a thread execution or if we need to do some clean up after the thread has completed.
+
+- IsAlive returns boolean. Tue if the thread is still executing otherwise false.
+
+93. Part 93 Protecting shared resources from concurrent access in multithreading
+
+* What happens if shared resources are not protected from concurrent access in multithreaded program ?
+- The output or behavior of the program can become inconsistent program.
+
+- This program is a single threaded program. In the Main() method, AddOneMillion() method is called 3 times, and it updates the Total field correctly as expected, and finally prints the correct total i.e, 3M.
+
+- Everytime we run the program with Thread, we get a different output. The inconsistent output is because the Total field which is shared resource is not protected from concurrent access by multiple threads. The operator ++ is not thread safe. 
+
+- Using Interlocked Increment() method: Increments a specified variable and stores the result, as an atomic operation.
+Ex - 
+Interlocked.Increment(ref Total);
+
+Locking:
+lock(_lock)
+{
+	Total++;
+}
+
+* Which option is better ?
+- From a performance perspective using Interlocked class is better over using locking. Locking locks out all the other threads except single thread to read and increment the Total variable. This will ensure that the Total variable is updated safely. The downwside is that since all the other threads are locked out, there is a performance hit.
+
+- The interlocked class can be used with addition/substraction (increment,decrement,add,etc.) on and int or long field. the interlocked class has methods for incemening, decrementing, adding and reading variables atomically.
+
+94. Part 94 Difference between Monitor and lock in C#
+
+- Both Monitor class and lock provides a mechanism that synchronizes access to objects, lock is the shortcut for Monitor. Enter with try and finally.
+
+- So, in short, lock is a shortcut and it's the option for the basic usage. If you need more control to implemet advanced multithreading solutions using TryEnter() Wait(), Pulse() & PulseAll() methods then the Monitor class is your opton.
