@@ -1548,3 +1548,98 @@ Two threads never give uo their locks, hence a deadlock.
 - If two threads take 10 milli-seconds each to complete, then on a machine with 1 processor, the total time taken is 20 milli-seconds + (Thread context switching time if any)
 
 98. Part 98 Anonymous methods in c#
+
+* What is an anonymous method ?
+- Anonymous method is a method without a name. Introduces in C# 2, they provide us a way of creating delegate instances without having to write a separate method.
+
+Example - 
+// Step 1: Create a method whose signature matches
+// With the signature of Predicate<EMployee> delegate
+private static bool FindEmployee(Employee Emp)
+{
+	return Emp.ID == 102;
+}
+
+// Step 2: Create an instance of Predicate<Employee> delegate and pass the 
+// Method name as an argument to the delegate costructor
+Predicate<Employee> predicateEmployee = new Predicate<Employee>(FindEmployee);
+
+// Step 3: Now pass the delegate instance as the argument for Find() method
+Employee employee = listEmployees.Find(x => predicateEmployee(x));
+Console.WriteLine("ID = {0}, Name {1}", employee.ID, employee.Name);
+
+// Instead of doing all this steps
+// Anonymous method is being passed as an argument to the Find() method
+// This anonymous method replaces the need for Step 1, 2 and 3
+
+employee = listEmployees.Find(delegate(Employee x) { return x.ID == 102; });
+Console.WriteLine("ID = {0}, Name {1}", employee.ID, employee.Name);
+
+99. Part 99 Lambda expression in c#
+
+* What are Lambda expressions ?
+- Anonymous methods and Lambda expressions are very similar. Anonymous methods were introduced in C# 2 and Lambda expressions in C# 3.
+
+- To find an employee with Id = 102 using anonymous method.
+Employee emp = listEmployees.Find(Emp => Emp.ID === 102);
+
+- You can also explicitly specify the Input type but not required
+Employee employee = listEmployees.Find((Employee Emp) => Emp.ID == 102);
+
+- => is called lambda operator and read as GOES TO. Notice that with a Lambda expression you don't have to use the delegate keyword explicitly and don't have to specify the input parameter type explicitly. The parameter types is inferred. Lambda expressions are more convenient to use than anonymous methods. Lambda expressions are particularly helpful for writing LINQ query expressions.
+
+- In most of the cases lambda expressions supersodes anonymous methods. To my knowledge, the only time I prefer to use anonymous methods over lambdas is, when we have to omit the parameter list when it is not used within the body.
+
+- Anonymous methods allow the parameter list to be omitted entirely when it's not used within the body, where as with lambda expressions this is not the case.
+
+- For example, with anonymous method notice that we have omitted the parameter list as we are not using them within the body.
+
+Ex - 
+Button1.Click += delegate
+{
+	MessageBox.Show("Click");
+}
+
+- The above code can be rewritting using lambda expression as shown below. Notice that with lambda we cannot omit the parameter list.
+
+Ex - 
+Button1.Click += (eventSender, eventArgs) => 
+{
+	MessageBox.Show("CLicked");
+}
+
+100. Part 100 Func delegate in c#
+
+* What is Func<T,TResult> in C#?
+- In simple terms, Func<T,TResult> is just a generic delegate. Depending on the requirement, the type parameters (T and TResult) can be replaced with the corresponding type arguments.
+
+- For example, Func<Employee, string> is a delegate that represents a function expecting Employye object as an input parameter and returns a string.
+
+Ex - 
+Func<Employee, string> selector = employee => "Name = "+ employee.Name;
+
+IEnumerable<string> names = listEmployees.Select(selector);
+
+foreach(string name is names)
+{
+	C.W(name);
+}
+
+O/P -
+Name = VVS
+Name = TVS
+
+// Lambda expression can also be used to achieve the same thing
+IEnumerable<string> names = listEmployees.Select(employee => "Name = "+employee.Name);
+
+* What is difference between Func delegate and lambda expression ?
+- They are the same, just two different ways to write the same thing. The lambda syntax is newer, more concise and easy to write.
+
+* What if I have to pass two or more input paramters ?
+- As of this recording there are 17 overloaded versions of Func, which enables us to pass variable number and type of input parameters. In the example below, Func<int,int,string> represents a function that expects 2 int inputs parameters and returns a string.
+
+Ex - 
+Func<int, int, string> funcDelegate = (x, y) => "Sum - "+ (x + y).ToString();
+
+string result = funcDelegate(10,20);
+
