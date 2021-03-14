@@ -1505,4 +1505,46 @@ lock(_lock)
 
 - Both Monitor class and lock provides a mechanism that synchronizes access to objects, lock is the shortcut for Monitor. Enter with try and finally.
 
-- So, in short, lock is a shortcut and it's the option for the basic usage. If you need more control to implemet advanced multithreading solutions using TryEnter() Wait(), Pulse() & PulseAll() methods then the Monitor class is your opton.
+- So, in short, lock is a shortcut and it's the option for the basic usage. If you need more control to implemet advanced multithreading solutions using TryEnter() Wait(), Pulse() & PulseAll() methods then the Monitor class is your option.
+
+95. Part 95 Deadlock in a multithreaded program
+
+* When a deadlock can occur Let's say we have 2 threads
+a) Thread1
+b) Thread2
+
+and 2 resources
+a) Resource 1 
+b) Resource 2
+
+Thread 1 has already acquired a lock on Resource 1 and wants to acquire a lock on Resource 2. At the same time Thread 2 has already acquired a lock on Resource 2 and wants to acquire a lock on Resource 1.
+
+Two threads never give uo their locks, hence a deadlock.
+
+96. Part 96 How to resolve a deadlock in a multithreaded program
+
+* There are several techniques to avoid and resolve deadlocks. For example
+1. Acquiring locks in a specific defined order.
+2. Mutex class
+3. Monitor.TryEnter() method.
+
+97. Part 97 Performance of a multithreaded program
+
+* How to find out how many processors you have on your machine
+1. Using Task Manager
+2. Use the following code in any .net application
+- Environment.ProcessorCount
+3. On the windows command prompt window, type the following
+- echo %NUMBER_OF_PROCESSORS%
+
+* Performance Implications
+
+- On a machine that has multiple processors, multiple threads can execute application code in parallel on different cores. For example, if there are two threads and two cores, then each thread would run on an individual core. This means, performance is better.
+
+- If two threads take 10 milli-seconds each to complete i.e, total 20 milli-seconds, then on a machine with 2 processors, the total time taken is 10 milli-seconds.
+
+- On a machine that has a single processor, multiple threads execute, one after the other or wait one thread finishes. It is not possible for single processor system to execute multiple threads in parallel. Since the operating system switches between the threads so fast, it just gives us the illusion that the threads run in parallel. On a single core/processor machine multiple threads can affect performance negatively as there is overhead involved with context-switching.
+
+- If two threads take 10 milli-seconds each to complete, then on a machine with 1 processor, the total time taken is 20 milli-seconds + (Thread context switching time if any)
+
+98. Part 98 Anonymous methods in c#
