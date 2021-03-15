@@ -92,6 +92,37 @@ A class becomes a Component when Component Decorator is used. A Decorator is alw
 
 - Data binding is a technique, where the data stays in sync between the component and the view. Whenever the user updates the data in the view, Angular updates the component. When the component gets new data, the Angular updates the view.
 
+- The data binding in Angular can be broadly classified into two groups.
+i) One way binding
+- In one way binding data flows from one direction. Either from view to component or from component to view.
+
+* From Component to View
+To bind data from component to view, we make use of Interpolation & Property Binding.
+
+- Interpolation - Interpolation allows us to include expressions as part of any string literal, which we use in our HTML. The Angular uses the {{ }} (double curly braces) in the template to denote the interpolation. The content inside the double braces is called Template Expression.
+Syntax: {{ templateExpression }}
+
+- Property binding - The Property binding allows us to bind HTML element property to a property in the component. You can set the properties such as class, href, src, textContent, etc using property binding. You can also use it to set the properties of custom components or directives (properties decorated with @Input).
+Syntax: [binding-target]=”binding-source”
+<button [disabled]="isDisabled">I am disabled</button>
+
+- Attribute binding
+Sometimes there is no HTML element property to bind to. The examples are aria (accessibility) Attributes & SVG. In such cases, you can make use of attribute binding.
+Syntax: <button [attr.aria-label]="closeLabel" (onclick)="closeMe()">X</button>
+Accessible Rich Internet Applications (ARIA) is a set of attributes that define ways to make web content and web applications (especially those developed with JavaScript) more accessible to people with disabilities.
+MDN — Mozilla Developer Network
+
+* From View to Component
+- Event Binding - Event binding allows us to bind events such as keystroke, clicks, hover, touch, etc to a method in component. 
+Syntax: (target-event)="TemplateStatement"
+
+- Two Way binding
+Two-way binding means that changes made to our model in the component are propagated to the view and that any changes made in the view are immediately updated in the underlying component. The two-way binding uses the special syntax known as a banana in a box [()]
+Syntax: <someElement [(someProperty)]="value"></someElement>.
+
+- ngModel
+The Angular uses the ngModel directive to achieve the two-way binding on HTML Form elements. It binds to a form element like input, select, selectarea. etc. The ngModel directive is not part of the Angular Core library. It is part of the @angular/forms. You need to import the FormsModule package into your Angular module.
+
 3. Interpolation in Angular
 4. Property Binding in Angular
 5. Event Binding in Angular
