@@ -124,22 +124,315 @@ Syntax: <someElement [(someProperty)]="value"></someElement>.
 The Angular uses the ngModel directive to achieve the two-way binding on HTML Form elements. It binds to a form element like input, select, selectarea. etc. The ngModel directive is not part of the Angular Core library. It is part of the @angular/forms. You need to import the FormsModule package into your Angular module.
 
 3. Interpolation in Angular
+- Interpolation allows us to include expressions as part of any string literal, which we use in our HTML. The Angular uses the {{ }} (double curly braces) in the template to denote the interpolation. The syntax is as shown below.
+Ex - {{ templateExpression }}
+
+- The content inside the double braces is called Template Expression.
+
+- The Template expression should not change the state of the application. The Angular uses it to read the values from the component and populate the view. If the Template expression changes the component values, then the rendered view would be inconsistent with the model
+
+It means that you cannot make use of the following
+
+Assignments (=, +=, -=, …)
+Keywords like new, typeof, instanceof, etc
+Chaining expressions with ; or ,
+The increment and decrement operators ++ and --
+bitwise operators such as | and &
+
+- If you want to bind the expression that is other than a string (for example – boolean), then Property Binding is the best option.
+
+- Interpolation and property binding can set only properties, not attributes. For Attributes use attribute binding.
+
+- You can use interpolation to invoke a method in the component, Concatenate two string, perform some mathematical operations or change the property of the DOM element like color, etc.
+
+Ex - 
+{{getTitle()}}
+<p>{{ 'Hello & Welcome to '+ ' Angular Interpolation '}}</p>
+<p>Welcome {{firstName}}, {{lastName}}</p>
+
+- You can also use the template reference variable. The following example creates a template variable #name to an input box. You can use it get the value of the input field {{name.value}}
+Ex - 
+<label>Enter Your Name</label>
+<input (keyup)="0" #name>
+<p>Welcome {{name.value}} </p>
+
+- The Angular updates the view, when it runs the change detection. The change detection runs only in response to asynchronous events, such as the arrival of HTTP responses, raising of events, etc. In the example above whenever you type on the input box, it raises the keyup event. It forces the angular run the change detection, hence the view gets the latest values.
+
+- You can make use of Angular Pipes to transform the expression result. Like converting to an uppercase, date formats, adding currency symbols, etc
+Ex - <p>uppercase pipe: {{title | uppercase}}</p>
+
+- The Safe Navigation Operator is also known as the "Elvis Operator". This operator is very useful to protect against null and undefined values in property paths. 
+
+Ex - 
+In the first case, I am trying to retrieve the data from the object path "data.firstName" using interpolation. Here, I am not defining the data so Angular parsing throws runtime null-reference exceptions. Here, our application crashes when the data is null.
+<div> Hi, This Text will generate error!!! {{data.firstName}} </div>  
+
+Now, Using the Safe Navigation Operator. So, it is protecting against the null exception.
+<div> Hi, This Text will not generating error Console!!! {{data?.firstName}} </div> 
+
+- Alternative of Safe Navigation Operator
+1. The same behavior can be achieved using *ngIf Directive. In the following example, I have hidden the text when the "data" is null. 
+<div *ngIf="data"> Hi, This Text will not generating error Console!!! {{data.firstName.text}} - *ngIf Example </div> 
+
+2. The second alternative is to use "&& operator". Here, we first check for "data". When it is not null, then Angular will populate the data.firstname, else null.
+<div> Hi, This Text will not generating error Console!!! {{ data && data.firstName.text}} </div>  
+
+- The non-null assertion operator
+Typescript enforces the strict null checking if you enable the --strictNullChecks flag in your tsconfig.json. Under strict null check any variable not defined or null results in a compiler error. The type checker also throws an error if it can’t determine whether a variable will be null or undefined at runtime.
+
+- You can use the non-null assertion operator to inform typescript not to throw any compile errors. Note that it is a compile-time feature & not runtime.
+Ex - The item's name is: {{item!.name}}
+
 4. Property Binding in Angular
+https://www.tektutorialshub.com/angular/property-binding-in-angular/
+
+- Property binding is one way from component to view. It lets you set a property of an element in the view to property in the component. You can set the properties such as class, href, src, textContent, etc using property binding. You can also use it to set the properties of custom components or directives (properties decorated with @Input).
+
+- The Property Binding uses the following Syntax
+
+[binding-target]=”binding-source”
+ 
+The binding-target (or target property) is enclosed in a square bracket []. It should match the name of the property of the enclosing element.
+
+Binding-source is enclosed in quotes and we assign it to the binding-target. The Binding source must be a template expression. It can be property in the component, method in component, a template reference variable or an expression containing all of them.
+
+Whenever the value of Binding-source changes, the view is updated by the Angular.
+
+Ex - 
+<h1 [innerText]="title"></h1>
+<h2>Example 1</h2>
+<button [disabled]="isDisabled">I am disabled</button>
+ 
+import { Component } from '@angular/core';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title="Angular Property Binding Example"
+  
+  //Example 1
+  isDisabled= true;
+}
+
+- Property Binding is one way
+Property binding is one way as values go from the component to the template. When the component values change, the Angular updates the view. But if the values changes in the view, the Angular does not update the component.
+
+- The brackets, [], tell Angular to evaluate the template expression. If you omit the brackets, Angular treats the expression as a constant string and initializes the target property with that string:
+
+- The property binding binds to the properties of DOM elements, components, and directives and not to HTML attributes. The angular has a special syntax for attribute binding.
+
+- The Angular has a special syntax for class, styles & attribute binding.The classes & styles are special because they contain a list of classes or styles. The bindings need to be more flexible in managing them. Hence we have a class & style binding.
+
+The Property bindings cover all the properties, but there are certain HTML attributes that do not have any corresponding HTML property. Hence we have attribute binding
+
+* Class binding
+You can set the class in the following ways. Click on the links to find out more
+
+i) ClassName Property binding
+Ex -You can also add more than one class by separating them using the
+<div [className]="'red size20'">Test</div>
+
+ii) Set the Class attribute with class binding
+Ex - To dynamically or conditionally bind a class, First create a variable in the component class as shown below.
+<div [class.red]="hasError" [class.size20]="hasError">Test</div>
+
+iii) ngClass directive
+You can also use the ngClass without a square bracket. In that case, the expression is not evaluated but assigned directly to the class attribute. We also need to remove the double quote around the expression as shown below.
+
+Ex - 
+<div class="row">     
+    <div ngClass='red size20'>Red Text with Size 20px </div> 
+</div>
+
+NgClass with Array
+<element [ngClass]="['cssClass1', 'cssClass2']">...</element>
+
+* Style Binding
+i) Style Property Binding
+Ex - 
+<p [style.color]="getColor()" 
+   [style.font-size.px]="'20'"      
+   [style.background-color]="status=='error' ? 'red': 'blue'">
+   paragraph with multiple styles
+</p>
+
+ii) ngStyle directive
+Ex - 
+<input [(ngModel)]="size" /> 
+<div [ngStyle]="{'font-size.px': size}">Change my size</div>
+
+* Attribute Binding
+Sometimes there is no HTML element property to bind to. The examples are aria (accessibility) Attributes & SVG. In such cases, you can make use of attribute binding. The attribute syntax starts with attr followed by a dot and then the name of the attribute as shown below.
+
+Ex - 
+
+<button [attr.aria-label]="closeLabel" (onclick)="closeMe()">X</button>
+
+<td [attr.colspan]="2">Col 1 & 2</td> 
+<td bind-attr.colspan = "getColspan()">Col 2 & 3 </td>
+
+// component TS
+closeLabel="close";
+getColspan() {
+   return "2"
+}
+
+* Property Binding Vs Interpolation
+
+- Everything that can be done from interpolation can also be done using the Property binding. Interpolation is actually a shorthand for binding to the textContent property of an element.
+Ex - 
+For example the following interpolation
+<h1> {{ title }} </h1>
+Is same as the following Property binding
+<h1 [innerText]="title"></h1>
+
+
+- Interpolation requires the expression to return a string. If you want to set an element property to a non-string data value, you must use property binding.
+
 5. Event Binding in Angular
+https://www.tektutorialshub.com/angular/event-binding-in-angular/
+
+- Event binding allows us to bind events such as keystroke, clicks, hover, touche, etc to a method in component. It is one way from view to component. By tracking the user events in the view and responding to it, we can keep our component in sync with the view. For Example, when the user changes to an input in a text box, we can update the model in the component, run some validations, etc. When the user submits the button, we can then save the model to the backend server.
+
+Ex - 
+Angular event binding syntax consists of a target event name within parentheses on the left of an equal sign, and a quoted template statement on the right.
+
+The following event binding listens for the button’s click events, calling the component’s onSave() method whenever a click occurs
+
+<button (click)="onSave()">Save</button>
+
+click - Target Event
+onSave - Template Statement
+
+- Unlike the Property Binding & Interpolation, where we use the template expression is used, in case of event binding we use template statement.
+
+The Template statement can change the state of the component. Angular runs the change detection and updates the view so as to keep it in sync with the component.
+
+- Instead of parentheses, you can also use the on- syntax as shown below.
+Ex - 
+<button on-click="clickMe()">Click Me</button>
+
+- $event Payload
+DOM Events carries the event payload. I.e the information about the event. We can access the event payload by using $event as an argument to the handler function.
+
+Ex - 
+<input (input)="handleInput($event)">
+<p>You have entered {{value}}</p>
+
+value=""
+handleInput(event) {
+  this.value=event.target.value;
+}
+
+- The properties of a $event object vary depending on the type of DOM event. For example, a mouse event includes different information than an input box editing event.
+
+Remember you need to use the variable as $event in the Template statement. Example handleInput($event). Otherwise, it will result in an error
+
+- We can also make use of the template reference variable to pass the value instead of $event.
+
+Ex -
+<h2>Template Reference Variable</h2>
+<input #el (input)="handleInput1(el)">
+<p>You have entered {{val}}</p>
+ 
+val="";
+handleInput1(element) {
+  this.val=element.value;
+}
+
+- We use keyup/keydown events to listen for keystrokes. The following example does that
+Ex-
+<input (keyup)="value1=$event.target.value">
+<p>You entered {{value1}}</p>
+
+But Angular also offers a feature, where it helps to filter out certain keys. For Example, if you want to listen only to the enter keys you can do it easily
+Ex-
+<input (keyup.enter)="value2=$event.target.value">
+<p>You entered {{value2}}</p>
+
+On pressing enter key it updates the value3 variable and on escape clears the variable.
+Ex - 
+<input (keyup.enter)="value3=$event.target.value" (keyup.escape)="$event.target.value='';value3=''">
+<p>You entered {{value3}}</p>
+
+You can also listen for the key combination
+Ex -
+<input (keyup.control.shift.enter)="value4=$event.target.value">
+<p>You entered {{value4}}</p>
+
 6. Two way Binding & ngModel in Angular
+https://www.tektutorialshub.com/angular/ngmodel-two-way-data-binding-in-angular/
+
+- Two way data binding means that changes made to our model in the component are propagated to the view and that any changes made in the view are immediately updated in the underlying component data.
+
+- The two way data binding nothing but both property binding & event binding applied together. Property Binding is one way from view to component. The event binding is one way from component to view. If we combine both we will get the Two-way binding.
+
+- The ngModel directive is not part of the Angular Core library. It is part of the FormsModule library. You need to import the FormsModule package into your Angular module.
+
 7. ngModelChange & Change Event
+
+- NgModelChange is an Angular specific event, which we can use to listen for changes to the user input. It is the @Output property of the ngModel directive, Hence we need to use it along with it. ngModle raises the NgModelChange event, whenever the model changes. Another way to listen for change is to use the change DOM event.
+
+Ex -
+Name:
+<input type="text" name="name" ngModel (ngModelChange)="nameChanged($event)">
+
+nameChanged is the handler function, which we need to define in the component class. We can access the new value by using the $event as an argument to the handler function.
+
+//Component
+nameChanged(arg) {
+  console.log("modelchanged " + arg);
+}
+
+* Change Event
+-The (change) is a DOM event fires when changes to the form fields like <input>, <select>, and <textarea> is committed by the user.
+
+This event fires when
+
+- user changes the input & moves the focus away from the text box (blur event)
+- On <select> it fires when the user selects a new option either by a mouse click or using a keyboard.
+- Fires when the state of a check box or radio button change due to users action
+
+* NgModelChange Vs Change
+- NgModelChange is Angular specific event. Change is a DOM Event and has nothing to do with the Angular.
+
+- We must use the ngModelChange along with the ngModel directive. You can use change event on <input>, <select>, and <textarea> form elements.
+
+- ngModelChange event passes new value. Change event passes event parameter, Use the target.value to access the new value.
+
+- ngModelChange will trigger with each input change. Change event fires when you remove the focus from input text after changing the content.
+
+
 8. Adding Child Component in Angular
+https://www.tektutorialshub.com/angular/angular-adding-child-component/
+
+- A Component, directive, pipes cannot be part of more than one module.
+
 
 * Directives
+https://www.tektutorialshub.com/angular/angular-directives/
 - The Angular directive helps us to manipulate the DOM. You can change the appearance, behavior, or layout of a DOM element using the directives. They help you to extend HTML.
 
+1.Angular Directives
 - The Angular directives are classified into three categories based on how they behave.  
 1. Component, 
-2. Structural (ngFor, ngIf, ngSwitch) and 
-3. Attribute Directives (ngClass, ngStyle)
+- Components are special directives in Angular.
 
-1.Angular Directives
+2. Structural (ngFor, ngIf, ngSwitch) and 
+- Structural directives can change the DOM layout by adding and removing DOM elements. All structural Directives are preceded by Asterix symbol.
+
+3. Attribute Directives (ngModel, ngClass, ngStyle)
+i) ngModel - The ngModel directive is used the achieve the two-way data binding.
+ii) ngClass - The ngClass is used to add or remove the CSS classes from an HTML element. Using the ngClass one can create dynamic styles in HTML pages
+iii) ngStyle - ngStyle is used to change the multiple style properties of our HTML elements. We can also bind these properties to values that can be updated by the user or our components.
+
 2.ngFor 
+https://www.tektutorialshub.com/angular/angular-ngfor-directive/
+
+
 3.ngSwitch
 4.ngIf
 5.ngClass
