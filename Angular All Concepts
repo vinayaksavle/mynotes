@@ -432,9 +432,49 @@ iii) ngStyle - ngStyle is used to change the multiple style properties of our HT
 2.ngFor 
 https://www.tektutorialshub.com/angular/angular-ngfor-directive/
 
-----incomplete-----
+- ngFor exposes several values, which help us to fine-tune display. We assign these values to the local variable and use it in our template
+
+The list of exported values provided by ngFor directive
+
+i)index: number: The zero-based index of the current element in the collection.
+Ex -
+
+<tr *ngFor="let movie of movies; let i=index;">
+    <td> {{i}} </td>
+</tr>
+
+ii) count: number: The total no of items in the collection
+first: boolean: True when the item is the first item in the collection.
+last: boolean: Is set to True, when the item is the last item in the collection.
+even: boolean: True when the item has an even index in the collection.
+odd: boolean: is set to True when the item has an odd index in the collection.
+Ex -
+
+<tr *ngFor="let movie of movies; let i=index; let o= odd; let e=even;"
+[ngClass]="{ odd: o, even: e }">
+
+- Track By clause allows you to specify your own key to identify objects.
+Angular uses the object identity to compare the elements in the collection to the DOM nodes. Hence when you add an item or remove an item, the Angular will track it and update only the modified items in the DOM. It does not render the entire list.
+
+But this fails if we update the list from the back end server. That is because the retrieved objects cannot be compared with the existing objects in the list as the reference has changed. The Angular to simply remove these elements from DOM and recreates the new elements from the new data. This has a huge performance implication.
+
+Ex -
+In our movie list example, let us make the title of the movie as the identifier.
+
+<tr *ngFor="let movie of movies; trackBy:trackByFn;">
+    <td>{{movie.title}}</td>
+    <td>{{movie.director}}</td>
+    <td>{{movie.cast}}</td>
+    <td>{{movie.releaseDate}}</td>
+</tr>
+
+  trackByFn(index, item) {
+    return item.title;
+  }
 
 3.ngSwitch
+https://www.tektutorialshub.com/angular/angular-ngswitch-directive/
+
 4.ngIf
 5.ngClass
 6.ngStyle
