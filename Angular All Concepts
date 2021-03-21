@@ -475,21 +475,359 @@ In our movie list example, let us make the title of the movie as the identifier.
 3.ngSwitch
 https://www.tektutorialshub.com/angular/angular-ngswitch-directive/
 
+- ngSwitchCase is bound to an inner_element, which we must place inside the container_element. We use * (Asterix symbol), because it is a structural directive. We also assign a match_expression, which Angular evaluates at runtime. The Angular displays the inner_element only when the value of the match_expression matches the value of the switch_expression else it is removed from the DOM.
+
+- If there is more than one match, then it displays all of them.
+Note that the ngSwitchCase does not hide the element, but removes them from the DOM.
+
+-  If none of the ngSwitchCase match_expression matches the switch_expression, then the angular displays the element attached to the ngSwitchDefault
+
+- You are free to add more than one ngSwitchDefault directive. Angular displays all of them.
+
+- Angular uses loose equality checks to compare the ngSwitchCase expression with the ngSwitch expression. This means that the empty string "" matches 0.
+
+Ex -
+<div class="card-body">
+    Input string : <input type='text' [(ngModel)]="num" />
+ 
+    <div [ngSwitch]="num">
+      <div *ngSwitchCase="'1'">One</div>
+      <div *ngSwitchCase="'2'">Two</div>
+      <div *ngSwitchCase="'3'">Three</div>
+      <div *ngSwitchCase="'4'">Four</div>
+      <div *ngSwitchCase="'5'">Five</div>
+      <div *ngSwitchDefault>This is Default</div>
+    </div>
+</div>
+
 4.ngIf
+
+- We bind the *ngIf to an expression (a condition in the above example). The expression is then evaluated by the ngIf directive. The expression must return either true or false.
+
+- If the expression evaluates to false then the Angular removes the entire element from the DOM. If true it will insert the element into the DOM.
+
+* Hidden attribute Vs ngIf
+
+- ngIf does not hide the DOM element. It removes the entire element along with its subtree from the DOM. It also removes the corresponding state freeing up the resources attached to the element. hidden attribute does not remove the element from the DOM. But just hides it.
+
+- ngIf else
+When the condition evaluates to false, then the ng-template with the name #elseBlock is rendered by the ngIf Directive.
+Ex - 
+<div *ngIf="condition; else elseBlock">
+    content to render, when the condition is true 
+</div>
+ 
+<ng-template #elseBlock>
+    content to render, when the condition is false 
+</ng-template>
+
+- ngIf then else
+Ex - 
+<div *ngIf="condition; then thenBlock else elseBlock"> 
+    This content is not shown
+</div>
+ 
+<ng-template #thenBlock>
+    content to render when the condition is true.
+</ng-template>
+ 
+<ng-template #elseBlock>
+    content to render when condition is false.
+</ng-template>
+
+
 5.ngClass
+- The ngClass directive adds and removes CSS classes on an HTML element. The syntax of the ngClass is as shown below.
+
+- NgClass with a String
+If you want to assign multiple classes, then separate each class with space as shown below.
+Ex -
+<element [ngClass]="'cssClass1 cssClass2'">...</element>
+
+- You can also use the ngClass without a square bracket. In that case, the expression is not evaluated but assigned directly to the class attribute. We also need to remove the double quote around the expression as shown below.
+
+<div class="row">     
+    <div ngClass='red size20'>Red Text with Size 20px </div> 
+</div>
+
+- NgClass with Array
+You can achieve the same result by using an array instead of a string as shown below.
+Ex -
+<element [ngClass]="['cssClass1', 'cssClass2']">...</element>
+
+- NgClass with Object
+You can also bind the ngClass to an object. Each property name of the object acts as a class name and is applied to the element if it is true.
+Ex -
+<element [ngClass]="{'cssClass1': true, 'cssClass2': true}">...</element>
+
+
 6.ngStyle
+-The Angular ngStyle directive allows us to set the many inline style of a HTML element using an expression. The expression can be evaluated at run time allowing us to dynamically change the style of our HTML element.
+Ex - <some-element[ngStyle]="{'font-size.em': '3'}">...</some-element>
+
+<div> [ngStyle]="{'background-color':status === 'error' ? 'red' : 'blue' }"></<div>
+
+
 7.ngFor Trackby
+- Angular Trackby option improves the Performance of the ngFor if the collection has a large no of items and keeps changing.
+
+- The ngFor will use the unique id returned by the trackBy function to track the items. Hence even if we refresh the data from the back end, the unique id will remain the same and the list will not be rendered again.
+
+- The trackBy takes a function that has two arguments: index and the current item. It must return a id that uniquely identifies the item. The following example returns the title as the unique id.
+Ex - 
+trackByFn(index, item) {
+    return item.title;
+  }
+  
+  <li *ngFor="let movie of movies; let i=index;trackBy: trackByFn;">
+  
+- Trackby multiple fields
+Ex: 
+<li *ngFor="let movie of movies; let i=index;trackBy: trackByFnMultipleFields;">
+
+trackByFnMultipleFields(index, item) {
+    return item.title + item.director;
+  }
+
 8.Custom Directive
+-Components are directives with Template (or view). We know how to build Angular Components. Structural & Attribute directives do not have an associated view.
+
+-Structural directives change the DOM layout by adding and removing DOM elements. All structural Directives are preceded by the Asterix (*) symbol.
+
+-The Attribute directives can change the appearance or behavior of an element.
+
+* Custom Attribute Directive
+- We attach the attribute directive to an element, which we call the parent element. To change the properties of the parent element, we need to get the reference. Angular injects the parent element when we ask for the instance of the ElementRef in its constructor.
+
+- ElementRef is a wrapper for the Parent DOM element. We can access the DOM element via the property nativeElement. The classList method allows us to add the class to the element.
+
+Ex -
+ttClass.directive.ts
+
+import { Directive, ElementRef, Input, OnInit } from '@angular/core'
+ 
+@Directive({
+  selector: '[ttClass]',
+})
+export class ttClassDirective implements OnInit {
+ 
+  @Input() ttClass: string;
+ 
+  constructor(private el: ElementRef) {
+  }
+ 
+  ngOnInit() {
+    this.el.nativeElement.classList.add(this.ttClass);
+  }
+ 
+}
+
+.html
+<button [ttClass]="'blue'">Click Me</button>
+
+.css
+.blue {
+  background-color: lightblue;
+}
+
+* Custom Structural Directive
+- Since, we are manipulating the DOM, we need ViewContainerRef and TemplateRef instances.
+
+- We use the createEmbeddedView method of the ViewContainerRef to insert the template if the condition is true. The clear removes the template from the DOM.
+
+Ex - 
+import { Directive, ViewContainerRef, TemplateRef, Input } from '@angular/core';
+ 
+@Directive({ 
+  selector: '[ttIf]' 
+})
+export class ttIfDirective  {
+ 
+  _ttif: boolean;
+ 
+  constructor(private _viewContainer: ViewContainerRef,
+            private templateRef: TemplateRef<any>) {
+  }
+ 
+ 
+  @Input()
+  set ttIf(condition) {
+    this._ttif = condition
+    this._updateView();
+  }
+ 
+  _updateView() {
+    if (this._ttif) {
+      this._viewContainer.createEmbeddedView(this.templateRef);
+    }
+    else {
+      this._viewContainer.clear();
+    }
+  }
+ 
+}
+
+import { Component } from '@angular/core';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title: string = "Custom Directives in Angular";
+  show=true;
+}
+
+.html
+<h1> {{title}} </h1>
+ 
+Show Me
+<input type="checkbox" [(ngModel)]="show">
+ 
+<div *ttIf="show">
+  Using the ttIf directive
+</div>
+ 
+<div *ngIf="show">
+  Using the ngIf directive
+</div>
+
+- We use the * notation to tell Angular that we have a structural directive and we will be manipulating the DOM. It basically tells angular to inject the TemplateRef. To inject the templateRef, the Angular needs to locate the template. The * tells the Angular to locate the template and inject its reference as templateRef
+
+https://www.tektutorialshub.com/angular/custom-directive-in-angular/
 
 * Pipes
+https://www.tektutorialshub.com/angular/angular-pipes/
 - The Angular pipes are used to Transform the Data. For Example, the Date pipe formats the date according to locale rules. We can pass arguments to pipe and chain pipes. The Angular also allows us to create the Custom Pipe
 
 1. Angular Pipes
+
+- Angular Pipes takes data as input and formats or transform the data to display in the template. We use them to change the appearance of the data before presenting it to the user. The most common use case of pipes is displaying the dates in the correct format as per the user’s locale.
+Ex -
+toDate | date | uppercase
+<p>medium : {{toDate | date:'medium'}} </p>
+
+
 2. Angular Custom Pipes
+
+- To create a Custom Pipe, first, You need to follow these steps
+
+1. Create a pipe class
+2. Decorate the class with @pipe decorator.
+3. Give a name to the pipe in the name meta data of the @pipe decorator. We will use this name in the template.
+4. The pipe class must implement the PipeTransform interface. The interfaces contain only one method transform.
+5. The first parameter to the transform method is the value to be transferred. The transform method must transform the value and return the result. You can add any number of additional arguments to the transform method.
+6. Declare the pipe class in the Angular Module (app.module.ts)
+7. Use the custom pipe just as you use other pipes.
+
+- import {Pipe, PipeTransform} from '@angular/core';
+ 
+@pipe({
+    name: 'tempConverter'
+})
+export class TempConverterPipe implements PipeTransform {
+    transform(value: number, unit: string) {
+        if(value && !isNaN(value)) {
+            if (unit === 'C') {
+                var temperature = (value - 32) /1.8 ;
+                return temperature.toFixed(2);
+            } else if (unit === 'F'){
+                var temperature = (value * 1.8 ) + 32
+                return temperature.toFixed(2);
+            }
+        }
+        return;
+    }
+}
+
+.html
+<p> celsius : <input type="text" [(ngModel)]="celcius" /> 
+       Fahrenheit : {{celcius | tempConverter:'F'}} </p>
+
 3. Date Pipe
+
+* There are two types formats options available
+
+i) Pre defined Format
+Ex - 
+{{toDate | date:'short'}}	5/24/20, 3:40 PM
+
+ii) Custom Format string
+Ex - 
+{{toDate | date:'dd/MM/yy HH:mm'}}         //May 24, 2020, 7:17:26 PM
+
 4. Async Pipe
+https://www.tektutorialshub.com/angular/angular-async-pipe/
+
+- The async pipe allows us to subscribe to an Observable or Promise from the template and returns the value emitted. The async pipes subscribe to the observable when the component loads. It unsubscribes when the component gets destroyed. 
+
+- ShareReplay - We use the shareReplay when you want subscribers to share the observable and access previously emitted values. i.e. the observable is subscribed only once and for every subsequent subscription, the previously received value is used.
+
+---Read this article from somewhere else--- 
+
+
 5. KeyValue Pipe
+- The KeyValue Pipe converts given Object or Map into an array of key-value pairs. We can use this with the ngFor to loop through the object keys. The keyValue accepts the one argument compareFn, which we can use to set the custom sort to the pipe. 
+
+Ex -
+obj = [
+    { key:a, value:789 },
+    { key:b, value:446 },
+    { key:c, value:123 },
+  ];
+  
+<ul>
+  <li *ngFor="let item of obj | keyvalue">
+    {{item.key}} ---> {{item.value}}</li>
+</ul>
+
+- KeyValue pipe uses the key to sort the results array. You can see it from the above example. Even though our object was c,b & a it was sorts it as a,b,c. The keyValue pipe uses the defaultComparator to sort the result. It uses
+
+i. Ascending Order if the keys are number
+ii. Alphabetical Order if keys are strings
+if keys are are of different types. then covert them to to their string values and use Alphabetical Order
+iii. If key is a either Null or undefined, put then at the end of the sort.
+
+- You can customize it by providing a custom sort function (compareFn) as the first argument to the keyValue pipe.
+
+Syntax: compareFn (a: KeyValue, b: KeyValue) => number 
+
+orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+  return 0
+}
+  
+orderbyValueAsc = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+   return a.value > b.value ? -1 : (a.value > b.value) ? 0 : 1  
+}
+ 
+orderbyValueDsc = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+  return a.value > b.value ? 1 : (a.value > b.value) ? 0 : -1  
+}
+
+<ul>
+  <li *ngFor="let item of obj | keyvalue : orderbyValueAsc ">
+    {{item.key}} ---> {{item.value}}</li>
+</ul>
+
+
+
 6. Using Pipes in Components & Services
+- We usually use Angular Pipes in the template. But a pipe is nothing but a class with a method transform. Whether it is a built-in pipe or custom pipe, we can easily use it in an angular component or service.
+
+- Using pipes in your code involves three simple steps
+
+Import the pipe in Module
+Inject pipe in the constructor
+Use the transform method of the pipe
+
+- constructor(private datePipe:DatePipe) {
+  }
+ 
+  ngOnInit() {
+     this.toDate = this.datePipe.transform(new Date());
+  }
+
 
 * Component Communication
 - Parent Component communicates with the child component using the @Input Annotation. The child components detect changes to these Input properties using OnChanges life Cycle hook or with a Property Setter.
