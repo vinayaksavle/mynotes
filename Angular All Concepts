@@ -833,10 +833,175 @@ Use the transform method of the pipe
 - Parent Component communicates with the child component using the @Input Annotation. The child components detect changes to these Input properties using OnChanges life Cycle hook or with a Property Setter.
 
 1.Passing data to child component 
+
+- In Angular, the Parent Component can communicate with the child component by setting its Property. To do that the Child component must expose its properties to the parent component. The Child Component does this by using the @Input decorator
+
+In the Child Component
+
+i) Import the @Input module from @angular/Core Library
+ii) Mark those property, which you need data from parent as input property using @Input decorator
+
+In the Parent Component
+
+i) Bind the Child component property in the Parent Component when instantiating the Child
+
+- The @Input Decorator is used to configure the input properties of the component. This decorator as also supports change tracking.
+
+When you mark a property as input property, then the Angular injects values into the component property using Property Binding. The Property Binding uses the [] brackets. The Binding Target (Property of the child component) is placed inside the square brackets. The Binding source is enclosed in quotes. Property binding is one way from Component to the Target in the template
+
+- Various ways to use @Input Decorator
+i) Using the @Input decorator to decorate the class property
+
+Ex - @Input() count: number;
+
+ii) Using the input array meta data of the component decorator
+
+Ex - @Component({
+    selector: 'child-component',
+    inputs: ['count'],
+    template: `<h2>Child Component</h2>
+    current count is {{ count }}`
+	})
+	
+- Detecting the Input changes
+assing the data to child component is not sufficient, the child Component needs to know when the input changes so that it can act upon it.
+
+There are two ways of detecting when input changes in the child component in Angular
+
+i) Using OnChanges LifeCycle Hook
+- ngOnChanges is a lifecycle hook, which angular fires when it detects changes to data bound input property. This method receives a SimpeChanges object, which contains the current and previous property values. We can Intercept input property changes in the child component using this hook.
+
+Ex -
+import { Component, Input, OnChanges, SimpleChanges, SimpleChange  } from '@angular/core';
+ 
+@Component({
+    selector: 'child-component',
+    template: `<h2>Child Component</h2>
+               current count is {{ count }}
+    `
+})
+export class ChildComponent implements OnChanges {
+    @Input() count: number;
+ 
+    ngOnChanges(changes: SimpleChanges) {
+ 
+        for (let property in changes) {
+            if (property === 'count') {
+              console.log('Previous:', changes[property].previousValue);
+              console.log('Current:', changes[property].currentValue);
+              console.log('firstChange:', changes[property].firstChange);
+            } 
+        }
+    }
+}
+
+
+ii) Using Input Setter
+- We can use the property getter and setter to detect the changes made to the input property as shown below
+Ex -
+private _count = 0;
+
+@Input()
+set count(count: number) {
+    this._count = count;
+    console.log(count);
+}
+get count(): number { return this._count; }
+
+
 2.Passing Data to Parent Component
+There are three ways in which parent component can interact with the child component
+
+i) Parent Listens to Child Event
+ii) Parent uses Local Variable to access the child
+iii) Parent uses a @ViewChild to get reference to the child component
+
+- The Child Component exposes an EventEmitter Property. This Property is adorned with the @Output decorator. When Child Component needs to communicate with the parent it raises the event. The Parent Component listens to that event and reacts to it.
+
+- To Raise an event, the component must declare an EventEmmitter Property. The Event can be emitted by calling the .emit() method
+
+- Using the EventEmitter Property gives the components ability to raise an event. But to make that event accessible from parent component, you must decorate the property with @Output decorator
+
+
+-In the child component
+
+i) Declare a property of type EventEmitter and instantiate it
+ii) Mark it with a @Output annotation
+iii) Raise the event passing it with the desired data
+
+-In the Parent Component
+
+i) Bind to the Child Component using Event Binding and listen to the child events
+ii) Define the event handler function
+
+Ex - 
+import { Component} from '@angular/core';
+ 
+@Component({
+  selector: 'app-root',
+  template: `
+        <h1>Welcome to {{title}}!</h1>
+        <p> current count is {{ClickCounter}} </p>
+        <child-component [count]=Counter (countChanged)="countChangedHandler($event)"></child-component>` ,
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'Component Interaction';
+  Counter = 5;
+ 
+  countChangedHandler(count: number) {
+    this.Counter = count;
+    console.log(count);
+  }
+}
+ 
+Child component
+import { Component, Input, Output, EventEmitter  } from '@angular/core';
+ 
+@Component({
+    selector: 'child-component',
+    template: `<h2>Child Component</h2>
+               <button (click)="increment()">Increment</button>
+               <button (click)="decrement()">decrement</button>
+               current count is {{ count }}
+    `
+})
+export class ChildComponent {
+    @Input() count: number;
+ 
+    @Output() countChanged: EventEmitter<number> =   new EventEmitter();
+ 
+    increment() {
+        this.count++;
+        this.countChanged.emit(this.count);
+      }
+    decrement() {
+        this.count--;
+        this.countChanged.emit(this.count);
+    }
+}
+ 
+- Parent Template can access the child component properties and methods by creating the template reference variable
+Ex - 
+<p> current count is {{child.count}} </p>
+        <button (click)="child.increment()">Increment</button>
+        <button (click)="child.decrement()">decrement</button>
+        <child-component #child></child-component>
+
+- The local variable approach is simple and easy. But it is limited because the parent-child wiring must be done entirely within the parent template. The parent component itself has no access to the child.
+
+You can’t use the local variable technique if an instance of the parent component class must read or write child component values or must call child component methods.
+
+- Injecting an instance of the child component into the parent as a @ViewChild is the another technique used by the parent to access the property and method of the child component
+Ex - @ViewChild(ChildComponent) child: ChildComponent;
+
 
 * Component Life Cycle Hook
 - The life cycle hooks are the methods that angular invokes on directives and components as it creates, changes, and destroys them. Using life-cycle hooks we can fine-tune the behavior of our components during creation, update, and destruction.
+
+https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/
+
+-
 
 1.Component Life Cycle
 2.OnInit & OnDestroy
