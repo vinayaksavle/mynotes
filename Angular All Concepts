@@ -1001,11 +1001,81 @@ Ex - @ViewChild(ChildComponent) child: ChildComponent;
 
 https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/
 
--
-
 1.Component Life Cycle
+
+- The Angular life cycle hooks are nothing but callback function, which angular invokes when a certain event occurs during the component’s life cycle.
+
+- For example,
+
+i) ngOnInit when Angular initializes the component for the first time.
+
+ii) When a component’s input property change, Angular invokes ngOnChanges
+
+iii) If the component is destroyed, Angular invokes ngOnDestroy
+
+* Constructor
+- Constructor is neither a life cycle hook nor it is specific to Angular.  It is a Javascript feature. It is a method which is invoked, when a class is created. Angular makes use of a constructor to inject dependencies.
+
+* ngOnChanges
+- The Angular invokes ngOnChanges life cycle hook whenever any data-bound input property of the component or directive changes. Initializing the Input properties is the first task that angular carries during the change detection cycle. And if it detects any change in property, then it raises the ngOnChanges hook. It does so during every change detection cycle. This hook is not raised if change detection does not detect any changes.
+
+- The change detector uses the === strict equality operator for detecting changes. Hence for objects, the hook is fired only if the references are changed. 
+
+* ngOnInit
+- It raises it after the ngOnChanges hook. This hook is fired only once and immediately after its creation (during the first change detection).
+
+- This is a perfect place where you want to add any initialisation logic for your component.  Here you have access to every input property of the component. You can use them in  http get requests to get the data from the back end server or run some initialization logic etc.
+
+- But note that none of child components or projected content are available at this point. Hence any properties we decorate with @ViewChild, @ViewChildren , @ContentChild & @ContentChildren will not be available to use.
+
+* ngDoCheck
+- The Angular invokes the ngDoCheck hook event during every change detection cycle. This hook is invoked even if there is no change in any of the properties.
+
+- Angular invokes it after the ngOnChanges & ngOnInit hooks.
+
+- Use this hook to Implement a custom change detection, whenever Angular fails to detect the changes made to Input properties. This hook is particularly useful when you opt for the Onpush change detection strategy.
+
+* ngAfterContentInit
+- ngAfterContentInit Life cycle hook is called after the Component’s projected content has been fully initialized. Angular also updates the properties decorated with the ContentChild and ContentChildren before raising this hook. This hook is also raised, even if there is no content to project.
+
+The content here refers to the external content injected from the parent component via Content Projection. 
+
+The Angular Components can include the ng-content element, which acts as a placeholder for the content from the parent as shown below
+
+<h2>Child Component</h2>
+<ng-content></ng-content>   <!-- placehodler for content from parent -->
+
+Parent injects the content between the opening & closing element.  Angular passes this content to the child component
+
+<h1>Parent Component</h1>
+<app-child> This <b>content</b> is injected from parent</app-child>
+
+* ngAfterContentChecked
+
+- ngAfterContentChecked Life cycle hook is called during every change detection cycle after Angular finishes checking of component’s projected content. Angular also updates the properties decorated with the ContentChild and ContentChildren before raising this hook. Angular calls this hook even if there is no projected content in the component
+
+This hook is very similar to the ngAfterContentInit hook. Both are called after the external content is initialized, checked & updated. Only difference is that ngAfterContentChecked is raised after every change detection cycle. While ngAfterContentInit during the first change detection cycle.
+
+* ngAfterViewInit
+- 
+
+
 2.OnInit & OnDestroy
 3.Onchanges
+
+* Why onChanges does not fire?
+The Change detector also raises the OnChanges hook. But it uses a different techniques for comparison.
+
+The change detector uses the === strict equality operator for detecting changes to the input properties. For primitive data types like string, the above comparison works perfectly
+
+But in the case of an object like a customer, this fails. For Arrays/objects, the strict checking means that only the references are checked. Since the reference to the customer stays the same the Angular does not raise the OnChanges hook.
+
+That leaves us two possible solutions
+
+Create a new customer and copy the old data to new customer
+We can Perform our own change detection using the ngDoCheck lifecycle hook
+
+
 4.DoCheck
 
 * Angular Forms
