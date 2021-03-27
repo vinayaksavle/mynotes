@@ -1265,12 +1265,149 @@ onSubmit(contactForm) {
 3.Set Value in Template Driven forms in Angular
 https://www.tektutorialshub.com/angular/how-to-set-value-in-template-driven-forms-in-angular/
 
-- 
+- You can make use of the patchValue to change the only few fields anytime.
+
+Ex -
+patchValue() {
+    let obj = {
+      firstname: "Rahul",
+      lastname: "Dravid",
+      email: "rahul@gmail.com",
+    };
+ 
+    this.contactForm.control.patchValue(obj);
+ 
+  }
+
 
 4.Reactive Forms in Angular
+
+- Reactive forms ( also known as Model-driven forms) is one of the two ways to build Angular forms. 
+
+
 5.FormBuilder in Reactive Forms
+- The FormBuilder is the helper API to build forms in Angular.  It provides shortcuts to create the instance of the FormControl, FormGroup or FormArray. It reduces the code required to write the complex forms.
+
+Ex -
+
+this.contactForm = this.formBuilder.group({
+      firstname: ['', [Validators.required, Validators.minLength(10)]],
+      lastname: ['', [Validators.required, Validators.maxLength(15), Validators.pattern("^[a-zA-Z]+$")]],
+      email: ['', [Validators.required, Validators.email]],
+      gender: ['', [Validators.required]],
+      isMarried: ['', [Validators.required]],
+      country: ['', [Validators.required]],
+      address: this.formBuilder.group({
+        city: ['', [Validators.required]],
+        street: ['', [Validators.required]],
+        pincode: ['', [Validators.required]],
+      })
+    });
+
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+ 
+  <p>
+    <label for="firstname">First Name </label>
+    <input type="text" id="firstname" name="firstname" formControlName="firstname">
+  </p>
+ 
+  <div
+    *ngIf="!firstname?.valid && (firstname?.dirty ||firstname?.touched)">
+    <div [hidden]="!firstname.errors.required">
+      First Name is required
+    </div>
+    <div [hidden]="!firstname.errors.minlength">
+      Min Length is 10
+    </div>
+  </div>
+ 
+  <p>
+    <label for="lastname">Last Name </label>
+    <input type="text" id="lastname" name="lastname" formControlName="lastname">
+  </p>
+ 
+  <div *ngIf="!lastname.valid && (lastname.dirty ||lastname.touched)">
+    <div [hidden]="!lastname.errors.pattern">
+      Only characters are allowed
+    </div>
+    <div [hidden]="!lastname.errors.maxLength">
+      Max length allowed is {{lastname.errors.maxlength?.requiredLength}} 
+    </div>
+    <div [hidden]="!lastname.errors.required">
+      Last Name is required
+    </div>
+  </div>
+
+
 6.SetValue & PatchValue in Angular
+* SetValue
+- We use the SetValue to update the FormControl , FormGroup or FormArray. When we use it to update the FormGroup or FormArray the SetValue requires that the object must match the structure of the FormGroup or FormArray exactly. Otherwise, it will result in an error.
+
+Ex - setValue(value: { [key: string]: any; }, options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void
+
+* PatchValue
+- The PatchValue is used to update only a subset of the elements of the FormGroup or FormArray. It will only update the matching objects and ignores the rest.
+
+Ex - patchValue(value: { [key: string]: any; }, options: { onlySelf?: boolean; emitEvent?: boolean; } = {}): void
+
+* onlySelf
+- The Angular checks the validation status of the form, whenever there is a change in value. The validation starts from the control whose value was changed and propagates to the top level FormGroup. This is the default behavior
+
+- There may be circumstances, where you do not want angular to check the validity of the entire form, whenever you change the value using the setValue or patchValue. We do that by setting the onlySelf=true as the argument. In such cases, the angular only checks the validity of the current control, but does not check any other control and does not propagate the validity checking to the parent form group.
+
+* emitEvent
+The Angular forms emit two events. One is ValueChanges & the other one is StatusChanges. The ValueChanges event is emitted whenever the value of the form is changed. The StatusChanges event is emitted whenever angular calculates the validation status of the Form. This is the default behavior
+
+- We can stop that from happening, by setting the emitEvent=false
+
+- The difference is that with setValue we must include all the controls, while with the patchValue you can exclude some controls.
+
+Ex -
+
+setValue() {
+ 
+    let contact = {
+      firstname: "Rahul",
+      lastname: "Dravid",
+      email: "rahul@gmail.com",
+      gender: "male",
+      isMarried: true,
+      country: "1",
+      address: {
+        city: "Bangalore",
+        street: "Brigade Road",
+        pincode: "600070"
+      }
+    };
+ 
+    this.reactiveForm.setValue(contact);
+  }
+
+patchName() {
+    let contact = {
+      firstname: "Rahul",
+      lastname: "Dravid",
+    }
+ 
+    this.reactiveForm.patchValue(contact);
+ 
+  }
+
+- The Angular forms emit two events. One is ValueChanges & the Other one is statusChanges. You can stop them from happening using the emitEvent:false argument as shown below.
+
+Ex -
+this.reactiveForm.get("firstname").statusChanges.subscribe(x => {
+      console.log('firstname status changes')
+    })
+	
+this.reactiveForm.get("firstname").valueChanges.subscribe(x => {
+      console.log('firstname value changed')
+    })
+
+
 7.StatusChanges in Angular Forms
+https://www.tektutorialshub.com/angular/statuschanges-in-angular-forms/
+
 8.ValueChanges in Angular Forms
 9.FormControl
 10.FormGroup
