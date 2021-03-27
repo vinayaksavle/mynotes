@@ -1166,8 +1166,107 @@ To do that, you need to create a separate key value differ for the each element
 * Angular Forms
 https://www.tektutorialshub.com/angular/angular-forms-fundamentals/
 1.Angular Forms Tutorial: Fundamental & Concepts
+
+- Building Blocks of Angular Forms
+i) FormControl
+- A FormControl represents a single input field in an Angular form.
+
+- The FormControl is an object that encapsulates all this information related to the single input element. It Tracks the value and validation status of each of these control
+
+- You can use FormControl to set the value of the Form field, find the status of form field like (valid/invalid, pristine/dirty, touched/untouched ) etc & add validation rules to it.
+
+Ex -
+firstname.errors      // returns the list of errors
+firstname.dirty       // true if the value has changed (dirty)
+firstname.touched     // true if input field is touched
+firstname.valid       // true if the input value has passed all the validation
+
+ii) FormGroup
+
+- FormGroup is a collection of FormControls . Each FormControl is a property in a FormGroup. with the control name as the key.
+
+- A typical Angular Form can have more than one FormGroup. A FormGroup can also contain another FormGroup. The Angular form is itself a FormGroup
+
+iii) FormArray
+- FormArray is an array of form controls. It is similar to FormGroup except for one difference. In FormGroup each FormControl is a property with the control name as the key. In FormArray is an array of form controls.
+
+Ex -
+contactForm = new FormGroup( {
+    name: new FormControl(''),
+    cities:new FormArray([
+      new FormControl('Mumbai'),
+      new FormControl('Delhi')
+    ])
+  });
+  
+cities() :FormArray {
+    return this.contactForm.get("cities") as FormArray
+  }
+
+
 2.Template Driven Forms in Angular
+https://www.tektutorialshub.com/angular/angular-template-driven-forms/
+
+- In Template Driven Forms we specify behaviors/validations using directives and attributes in our template and let it work behind the scenes. All things happen in Templates hence very little code is required in the component class. This is different from the reactive forms, where we define the logic and controls in the component class.
+
+- The Template-driven forms 
+
+1. The form is set up using ngForm directive
+2. controls are set up using the ngModel directive
+3. ngModel also provides the two-way data binding
+4. The Validations are configured in the template via directives
+
+- Once, we have a form with few form elements, the angular automatically converts it into a Template-driven form. This is done by the ngForm directive.
+
+- The ngForm directive is what makes the Angular template-driven forms work. But we do not need to add it explicitly. Angular adds it automatically
+
+- When we include FormsModule, the Angular is going to look out for any <form> tag in our HTML template. Angular does this via ngForm directive. ngForm directive automatically detects the <form> tag and automatically binds to it. You do not have to do anything on your part to invoke and bind the ngForm directive.
+
+Ex -
+<form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)">
+
+  <p>
+    <label for="firstname">First Name</label>
+    <input type="text" name="firstname" ngModel>
+	//<input type="text" name="firstname" #fname="ngModel" ngModel>
+  </p>
+  
+
+  <p>
+    <button type="submit">Submit</button>
+  </p>
+
+</form>
+
+onSubmit(contactForm) {
+    console.log(contactForm.value);
+  }
+  
+- We can add new FormGroup using the ngModelGroup directive. Let us add street, city & Pincode form controls and group them under the address FormGroup
+
+<div ngModelGroup="address">
+ 
+    <p>
+      <label for="city">City</label>
+      <input type="text" name="city" ngModel>
+    </p>
+ 
+    <p>
+      <label for="street">Street</label>
+      <input type="text" name="street" ngModel>
+    </p>
+    <p>
+      <label for="pincode">Pin Code</label>
+      <input type="text" name="pincode" ngModel>
+    </p>
+ 
+</div>
+
 3.Set Value in Template Driven forms in Angular
+https://www.tektutorialshub.com/angular/how-to-set-value-in-template-driven-forms-in-angular/
+
+- 
+
 4.Reactive Forms in Angular
 5.FormBuilder in Reactive Forms
 6.SetValue & PatchValue in Angular
