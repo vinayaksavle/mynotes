@@ -1057,11 +1057,64 @@ Parent injects the content between the opening & closing element.  Angular passe
 This hook is very similar to the ngAfterContentInit hook. Both are called after the external content is initialized, checked & updated. Only difference is that ngAfterContentChecked is raised after every change detection cycle. While ngAfterContentInit during the first change detection cycle.
 
 * ngAfterViewInit
-- 
+- ngAfterViewInit hook is called after the Component’s View & all its child views are fully initialized. Angular also updates the properties decorated with the ViewChild & ViewChildren properties before raising this hook. 
 
+- The View here refers to the template of the current component and all its child components & directives. 
+
+- This hook is called during the first change detection cycle, where angular initializes the view for the first time
+
+- At this point all the lifecycle hook methods & change detection  of all child components & directives are processed & Component is completely ready
+
+* ngAfterViewChecked
+
+- The Angular fires this hook after it checks & updates the component’s views and child views. This event is fired after the ngAfterViewInit and after that during every change detection cycle
+
+- This hook is very similar to the ngAfterViewInit hook. Both are called after all the child components & directives are initialized and updated. Only difference is that ngAfterViewChecked is raised during every change detection cycle. While ngAfterViewInit during the first change detection cycle.
+
+- This hook is called just before the Component/Directive instance is destroyed by Angular
+
+You can Perform any cleanup logic for the Component here. This is the correct place where you would like to Unsubscribe Observables and detach event handlers to avoid memory leaks.
+
+- The Angular executes the hooks in the following order
+On Component Creation
+
+1. OnChanges
+2. OnInit
+3. DoCheck
+4. AfterContentInit
+5. AfterContentChecked
+6. AfterViewInit
+7. AfterViewChecked
+
+- When the Component with Child Component is created
+
+1. OnChanges
+2. OnInit
+3. DoCheck
+4. AfterContentInit
+5. AfterContentChecked
+	1. Child Component -> OnChanges
+	2. Child Component -> OnInit
+	3. Child Component -> DoCheck
+	4. Child Component -> AfterContentInit
+	5. Child Component -> AfterContentChecked
+	6. Child Component -> AfterViewInit
+	7. Child Component -> AfterViewChecked
+6. AfterViewInit
+7. AfterViewChecked
+
+- After The Component is Created
+
+1. OnChanges
+2. DoCheck
+3. AfterContentChecked
+4. AfterViewChecked
+
+- The OnChanges hook is fired only if there is an input property defined in the component and it changes. Otherwise, it will never fire
 
 2.OnInit & OnDestroy
 3.Onchanges
+- The ngOnChnages is a life cycle hook, which angular fires when it detects changes to data-bound input property. This method receives a SimpeChanges object, which contains the current and previous property values.
 
 * Why onChanges does not fire?
 The Change detector also raises the OnChanges hook. But it uses a different techniques for comparison.
@@ -1072,14 +1125,46 @@ But in the case of an object like a customer, this fails. For Arrays/objects, th
 
 That leaves us two possible solutions
 
-Create a new customer and copy the old data to new customer
-We can Perform our own change detection using the ngDoCheck lifecycle hook
+1. Create a new customer and copy the old data to new customer
+2. We can Perform our own change detection using the ngDoCheck lifecycle hook
 
 
 4.DoCheck
+- We also looked at how OnChanges does not fire when the input property is an array/object because Angular uses dirty checking to compare the properties.
+
+In such a scenario, where Angular fails to detect the changes to the input property, the DoCheck allows us to implement our custom change detection.
+
+The Angular Fires the DoCheck hook after each change detection.
+
+- When ngDoCheck is called
+Notice that DoCheckCount keeps incrementing for every keystroke, mouse movements
+
+Angular calls this hook very frequently. This hook is called after every change detection cycle no matter where the change has occurred
+
+It is advisable to keep the implementation of Docheck simple and lightweight. Otherwise, it will result in bad user experience
+
+- The Angular provides a service called differs, which evaluate the given object/array and determines what changed
+
+There are two types of differs, that angular provides
+
+i) key-value differs
+
+- The KeyValueDiffers service is a differ that tracks changes made to an object over time and also expose an API to react to these changes.
+
+- Key-value differs should be used for dictionary-like structures, and it works at the key level. This differ will identify changes when a new key is added, when a key removed and when the value of a key changed.
+
+ii) iterable differs
+
+- Iterable differs service is used when we have a list-like structure and we’re only interested in
+knowing things that were added or removed from that list.
+
+It will detect if the elements are added/removed from the array. This will not detect if the changes are done to the elements of array
+
+To do that, you need to create a separate key value differ for the each element
+
 
 * Angular Forms
-
+https://www.tektutorialshub.com/angular/angular-forms-fundamentals/
 1.Angular Forms Tutorial: Fundamental & Concepts
 2.Template Driven Forms in Angular
 3.Set Value in Template Driven forms in Angular
