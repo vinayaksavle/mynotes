@@ -1408,15 +1408,558 @@ this.reactiveForm.get("firstname").valueChanges.subscribe(x => {
 7.StatusChanges in Angular Forms
 https://www.tektutorialshub.com/angular/statuschanges-in-angular-forms/
 
+- The StatusChanges event is fired whenever the angular calculates the validity status of the FormControl, FormGroup or FormArray. It is an observable and we can subscribe to it. The StatusChanges event does not fire depending on how we set emitEvent or onlySelf, when updating the value and validity of the form controls.
+
+Ex - this.reactiveForm.get("address").statusChanges.subscribe(newStatus=> {
+      console.log('address status changed')
+      console.log(newStatus)
+    })
+	
+withEmitEvent() {
+    this.reactiveForm.get("firstname").setValue("Sachin");
+  }
+  
+  withoutEmitEvent() {
+	this.reactiveForm.get("firstname").setValue("", { emitEvent: false });
+  }
+  
+- StatusChanges event can also be used in the template-driven forms. All you need to do is to get the reference to the Form Model in the component as shown below
+
+@ViewChild('templateForm',null) templateForm: NgForm;
+
+this.templateForm.control.get("address").statusChanges.subscribe(newStatus => {
+        console.log('address status changed')
+        console.log(newStatus)
+      })
+
+
+
 8.ValueChanges in Angular Forms
+
+- The ValueChanges is an event raised by the Angular forms whenever the value of the FormControl, FormGroup or FormArray changes. It returns an observable so that you can subscribe to it. The observable gets the latest value of the control. It allows us to track changes made to the value in real-time and respond to it. For example, we can use it to validate the value, calculate the computed fields, etc.
+
+Ex - 
+this.reactiveForm.get("firstname").valueChanges.subscribe(selectedValue => {
+  console.log('firstname value changed')
+  console.log(selectedValue)
+  console.log(this.reactiveForm.get("firstname").value)
+  console.log(this.reactiveForm.value)    //shows the old first name
+      
+  setTimeout(() => {
+    console.log(this.reactiveForm.value)   //shows the latest first name
+  })
+     
+})
+
+- The ValueChanges event is fired even when the values of the control are changed programmatically. In some circumstances, you might not want to raise the ValueChanges event. To do that we can use the emitEvent: false
+
+In the following example, the ValueChanges event is not fired at all, even though the value of the firstname is changed.
+
+Ex -
+this.reactiveForm.get("firstname").setValue("", { emitEvent: false });
+
+
 9.FormControl
+
+- The FormControl is an object that encapsulates all the information related to the single input element. It Tracks the value and validation status of each of these control.
+
+- The FormControl is just a class. A FormControl is created for each form field. We can refer to them in our component class and inspect its properties and methods
+
+- We can use FormControl to set the value of the Form field. Find the status of form field like (valid/invalid, pristine/dirty, touched/untouched ), etc. You can add validation rules to it.
+
+
 10.FormGroup
+
+- The Forms API also allows add controls dynamically
+
+- addControl()
+Adds a control to the FormGroup and also updates validity & validation status. If the control already exists, then ignores it
+
+Ex -
+addControl(name: string, control: AbstractControl): void
+
+addControl() {
+    this.middleName = new FormControl('', [Validators.required]);
+    this.reactiveForm.addControl("middleName",this.middleName);
+  }
+  
+- registerControl() 
+Adds control to this FormGroup but does not update the validity & validation status. If the control already exists, then ignores it
+
+registerControl(name: string, control: AbstractControl): AbstractControl
+
+registerControl() {
+  this.middleName = new FormControl('', [Validators.required]);
+  this.reactiveForm.addControl("middleName",this.middleName);
+}
+
+- removeControl() 
+This method will remove the control with the provided name from the FormGroup.
+
+removeControl(name: string): void
+
+remodeControl() {
+  this.reactiveForm.removeControl("middleName");
+}
+
+- setControl()
+Replaces the control with the provided name with the new control.
+
+setControl(name: string, control: AbstractControl): void
+
+setControl() {
+  this.middleName = new FormControl('test', [Validators.required]);
+  this.reactiveForm.setControl("middleName",this.middleName);
+}
+
+- contains()
+Check whether the control with the provided name exists or not..
+
+contains(controlName: string): boolean
+
+containsControl() {
+  console.log(this.reactiveForm.contains("middleName"));
+}
+
+- The Angular runs validation checks, whenever the value of a form control changes. Based on the result of the validation, the FormGroup can have four possible states.
+
+i) valid
+A FormGroup is valid when it has passed all the validation checks and the FormGroup is not disabled
+
+ii) invalid
+A FormGroup is invalid when one of its controls has failed a validation check or the entire FormGroup is disabled.
+
+iii) pending
+A FormGroup is pending when it is in the midst of conducting a validation check.
+
+iv) disabled
+A FormGroup is disabled when all of its controls are disabled.
+
+v) enabled
+A FormGroup is enabled as long one of its control is enabled.
+
+vi) pristine
+A FormGroup is pristine if the user has not yet changed the value in the UI in any of the controls
+
+vii) dirty
+A FormGroup is dirty if the user has changed the value in the UI in any one of the control.
+
+viii) touched
+True if the FomGroup is marked as touched. A FormGroup is marked as touched once the user has triggered a blur event on any one of the controls
+
+ix) untouched
+True if the FormGroup has not been marked as touched. A FormGroup is untouched if the user has not yet triggered a blur event on any of its child controls
+
+- setValidators() / setAsyncValidators()
+Programmatically adds the sync or async validators. This method will remove all the previously added sync or async validators.
+
+Ex -
+setValidator() {
+  this.reactiveForm.get("address").setValidators([addressValidator]);
+  this.reactiveForm.get("address").updateValueAndValidity();
+}
+ 
+export const addressValidator = (control: AbstractControl): {[key: string]: boolean} => {
+  const city = control.get('city').value;
+  const state = control.get('state').value;
+  console.log(control.value);
+  if (city=="" && state=="") {
+    return { address:false };
+  }
+  return null;
+};
+
+- clearValidators() / clearAsyncValidators()
+
+Ex -
+clearValidation() {
+   this.reactiveForm.get("address").clearValidators();
+   this.reactiveForm.get("address").updateValueAndValidity();
+}
+
+- errors()
+An object containing any errors generated by failing validation, or null if there are no errors.
+
+Ex - 
+getErrors() {
+ 
+  const controlErrors: ValidationErrors = this.reactiveForm.errors;
+  if (controlErrors) {
+    Object.keys(controlErrors).forEach(keyError => {
+      console.log("firtname "+ ' '+keyError);
+    });
+  }
+}
+
+
 11.FormArray Example
+
+- The FormArray is a way to Manage collection of Form controls in Angular. The controls can be aFormGroup, aFormControl, or another FormArray.
+
+- We can group Form Controls in Angular forms in two ways. One is using the FormGroup and the other one is FormArray. The difference is how they implement it. In FormGroup controls becomes a property of the FormGroup. Each control is represented as key-value pair. While in FormArray, the controls become part of an array. Because it is implemented as Array, it makes it easier dynamically add controls.
+
+
 12.Build Dynamic or Nested Forms using FormArray
+Best dynamic example
+
+- import { Component } from '@angular/core';
+  import { FormGroup, FormArray, FormBuilder } from '@angular/forms'
+ 
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent  {
+  
+  title = 'Nested FormArray Example Add Form Fields Dynamically';
+ 
+  empForm:FormGroup;
+ 
+ 
+  constructor(private fb:FormBuilder) {
+ 
+    this.empForm=this.fb.group({
+      employees: this.fb.array([]) ,
+    })
+  }
+ 
+ 
+  employees(): FormArray {
+    return this.empForm.get("employees") as FormArray
+  }
+ 
+ 
+  newEmployee(): FormGroup {
+    return this.fb.group({
+      firstName: '',
+      lastName: '',
+      skills:this.fb.array([])
+    })
+  }
+ 
+ 
+  addEmployee() {
+    console.log("Adding a employee");
+    this.employees().push(this.newEmployee());
+  }
+ 
+ 
+  removeEmployee(empIndex:number) {
+    this.employees().removeAt(empIndex);
+  }
+ 
+ 
+  employeeSkills(empIndex:number) : FormArray {
+    return this.employees().at(empIndex).get("skills") as FormArray
+  }
+ 
+  newSkill(): FormGroup {
+    return this.fb.group({
+      skill: '',
+      exp: '',
+    })
+  }
+ 
+  addEmployeeSkill(empIndex:number) {
+    this.employeeSkills(empIndex).push(this.newSkill());
+  }
+ 
+  removeEmployeeSkill(empIndex:number,skillIndex:number) {
+    this.employeeSkills(empIndex).removeAt(skillIndex);
+  }
+ 
+  onSubmit() {
+    console.log(this.empForm.value);
+  }
+ 
+ 
+}
+ 
+ 
+export class country {
+  id: string;
+  name: string;
+ 
+  constructor(id: string, name: string) {
+    this.id = id;
+    this.name = name;
+  }
+}
+
+<h1>{{title}}</h1>
+ 
+<form [formGroup]="empForm" (ngSubmit)="onSubmit()">
+ 
+  <div formArrayName="employees">
+ 
+    <div *ngFor="let employee of employees().controls; let empIndex=index">
+ 
+      <div [formGroupName]="empIndex" style="border: 1px solid blue; padding: 10px; width: 600px; margin: 5px;">
+        {{empIndex}}
+        First Name :
+        <input type="text" formControlName="firstName">
+        Last Name:
+        <input type="text" formControlName="lastName">
+ 
+        <button (click)="removeEmployee(empIndex)">Remove</button>
+ 
+ 
+        <div formArrayName="skills">
+ 
+          <div *ngFor="let skill of employeeSkills(empIndex).controls; let skillIndex=index">
+ 
+ 
+ 
+            <div [formGroupName]="skillIndex">
+              {{skillIndex}}
+              Skill :
+              <input type="text" formControlName="skill">
+              Exp:
+              <input type="text" formControlName="exp">
+ 
+              <button (click)="removeEmployeeSkill(empIndex,skillIndex)">Remove</button>
+ 
+            </div>
+ 
+          </div>
+          <button type="button" (click)="addEmployeeSkill(empIndex)">Add Skill</button>
+        </div>
+ 
+ 
+      </div>
+ 
+    </div>
+  </div>
+ 
+  <p>
+    <button type="submit">Submit</button>
+  </p>
+ 
+</form>
+ 
+ 
+<p>
+  <button type="button" (click)="addEmployee()">Add Employee</button>
+</p>
+ 
+{{this.empForm.value | json}}
+
+https://github.com/tekTutorialsHub/Angular2-Forms 
+
 13.SetValue & PatchValue in FormArray
+
+Best example of Form Array
+<h1>{{title}}</h1>
+ 
+<form [formGroup]="teachersForm" (ngSubmit)="onSubmit()">
+ 
+  <div formArrayName="teachers">
+ 
+    <div *ngFor="let teacher of teachers().controls; let ti=index">
+ 
+      <div [formGroupName]="ti"
+        style="border: 1px solid blue; padding: 10px; width: 100%; display: inline-block; margin: 5px;">
+        Teachers Name :
+        <input type="text" formControlName="name">
+        <button (click)="removeTeacher(ti)">Remove</button>
+        <button type="button" (click)="addBatch(ti)">Add Batch</button>
+ 
+        <div formArrayName="batches">
+ 
+          <div *ngFor="let batch of batches(ti).controls; let bi=index">
+ 
+            <div [formGroupName]="bi" style="border: 1px solid red; padding: 10px; margin: 5px; float:left">
+ 
+              Batch Name :
+              <input type="text" formControlName="name">
+              <button (click)="removeBatch(ti,bi)">Remove Batch</button>
+              <button (click)="addStudent(ti,bi)">Add Student</button>
+ 
+              <div formArrayName="students">
+ 
+                <div *ngFor="let batch of students(ti,bi).controls; let si=index">
+                  <div [formGroupName]="si" style="border: 1px solid blue; padding: 2px; ">
+                    Student Name :
+                    <input type="text" formControlName="name">
+                    <button (click)="removeStudent(ti,bi,si)">Remove student</button>
+                  </div>
+                </div>
+ 
+              </div>
+ 
+            </div>
+ 
+          </div>
+ 
+        </div>
+ 
+      </div>
+ 
+    </div>
+ 
+  </div>
+ 
+  <p>
+    <button type="button" (click)="addTeacher()">Add Teacher</button>
+  </p>
+  <p>
+    <button type="submit">Submit</button>
+  </p>
+ 
+</form>
+ 
+{{this.teachersForm.value | json}}
+
+import { Component } from '@angular/core';
+import { FormGroup, FormArray, FormBuilder } from '@angular/forms'
+ 
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+ 
+  title = 'FormArray SetValue & PatchValue Example';
+ 
+  teachersForm: FormGroup;
+ 
+  constructor(private fb: FormBuilder) {
+    this.teachersForm = this.fb.group({
+      teachers: this.fb.array([]),
+    })
+  }
+ 
+ 
+  /** Teachers */
+  teachers(): FormArray {
+    return this.teachersForm.get("teachers") as FormArray
+  }
+ 
+  newTeacher(): FormGroup {
+    return this.fb.group({
+      name: '',
+      batches: this.fb.array([])
+    })
+  }
+ 
+ 
+  addTeacher() {
+    this.teachers().push(this.newTeacher());
+  }
+ 
+ 
+  removeTeacher(ti) {
+    this.teachers().removeAt(ti);
+  }
+ 
+ 
+  /** batches */
+ 
+  batches(ti): FormArray {
+    return this.teachers().at(ti).get("batches") as FormArray
+  }
+ 
+ 
+  newBatch(): FormGroup {
+    return this.fb.group({
+      name: '',
+      students: this.fb.array([])
+    })
+  }
+ 
+  addBatch(ti: number) {
+    this.batches(ti).push(this.newBatch());
+  }
+ 
+  removeBatch(ti: number, bi: number) {
+    this.batches(ti).removeAt(ti);
+  }
+ 
+  /** students */
+ 
+  students(ti, bi): FormArray {
+    return this.batches(ti).at(bi).get("students") as FormArray
+  }
+ 
+  newStudent(): FormGroup {
+    return this.fb.group({
+      name: '',
+    })
+  }
+ 
+  addStudent(ti: number, bi: number) {
+    this.students(ti, bi).push(this.newStudent());
+  }
+ 
+  removeStudent(ti: number, bi: number, si: number) {
+    this.students(ti, bi).removeAt(si);
+  }
+ 
+  onSubmit() {
+    console.log(this.teachersForm.value);
+  }
+ 
+}
+ 
+ 
+* How to load initial data in FormArray
+When the form is loads for the first time, it will not have any controls in the FormArray. Calling PatchValue or SetValue will have no effect.
+
+The patchValue1 method in the following example tries to load the data. The data contains one teacher managing two batches with three students in each batch.
+
+patchValue1() {
+    console.log('patchValue1')
+    var data = {
+      teachers: [
+        {
+          name: 'Teacher 1', batches: [
+            { name: 'Batch No 1', students: [{ name: 'Ramesh' }, { name: 'Suresh' }, { name: 'Naresh' }] },
+            { name: 'Batch No 2', students: [{ name: 'Vikas' }, { name: 'Harish' }, { name: 'Lokesh' }] },
+          ]
+        }
+      ]
+    }
+ 
+    this.teachersForm.patchValue(data);
+}
+ 
+<p>
+  <button (click)="patchValue1()">PatchValue1</button>
+</p>
+
+https://www.tektutorialshub.com/angular/setvalue-patchvalue-in-formarray-angular/
+
 14.Select Options Dropdown
 
+Ex -
+<form [formGroup]="contactForm" (ngSubmit)="submit()">
+ 
+<p>
+ 
+  <select formControlName="country">
+    <option [ngValue]="null" disabled>Select Country</option>
+    <option *ngFor="let country of countries" [ngValue]="country.id">{{country.name}}</option>
+  </select>
+ 
+  <button type="submit">Submit</button>
+</p>
+ 
+</form>
+
+- <option [ngValue]="null" disabled > displays the Select Country when no value for country is selected or country is null
+
+The ngFor loops through the "countries" array and displays the country.name in the drop down. You can also display the country.name - country.id or any other property of the country
+
+We want to return the id of the country. Hence we use the [ngValue]="country.id". You can also use [ngValue]="country", in which case it will return the country object.
+
+
 * Services & Dependency Injection
+https://www.tektutorialshub.com/angular/angular-services/
+
 - Services allow us to create reusable code and use it every component that needs it. The Services can be injected into components and other services using the dependency injection system. The dependencies are declared in the Module using the Provider’s metadata. The Angular creates a tree of injector & Providers that resembles the Component Tree. This is called the hierarchical pattern.
 
 1.Services
