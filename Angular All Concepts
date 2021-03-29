@@ -2147,14 +2147,250 @@ https://www.tektutorialshub.com/angular/angular-reactive-forms-validation/
 1.Validations in Reactive Forms in Angular
 - A Validator is a function that checks the instance of FormControl, FormGroup or a FormArray and returns a list of errors. If the Validator returns a null means that validation has passed
 
-- 
+- sync validators runs validations and returns immediately. They either return a list of errors or null if no errors found.
+
+- async validators: returns a Promise or Observable. They either return a list of errors or null if no errors are found.
+
+- First, we need to disable browser validator by adding the novalidate attribute to the <form> element as shown below. If this attribute is present then the form is not validated by the built-in HTML5 validation when submitted.
+
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+
+<button type="submit" [disabled]="!contactForm.valid">Submit</button>
+
+- Displaying the Validation/Error messages
+i) Ex -
+<div
+    *ngIf="!contactForm.controls.firstname?.valid && (contactForm.controls.firstname?.dirty
+    ||contactForm.controls.firstname?.touched)">
+      First Name is not valid
+  </div>
+
+ii) Ex -
+<div *ngIf="!firstname.valid && (firstname.dirty ||firstname.touched)">
+      First Name is not valid
+  </div>
+  
+- Apart from checking valid we are also checking for the dirty & touched. Because we do not want the application to display the error when the form is displayed for the first time. We want to display errors only after the user has attempted to change the value. The dirty & touched properties help us do that.
+
+dirty: A control is dirty if the user has changed the value in the UI.
+touched: A control is touched if the user has triggered a blur event on it.
+
+Ex -
+<div
+    *ngIf="!firstname?.valid && (firstname?.dirty ||firstname?.touched)">
+    <div [hidden]="!firstname.errors.required">
+      First Name is required
+    </div>
+    <div [hidden]="!firstname.errors.minlength">
+      Min Length is 10
+    </div>
+  </div>
+
 
 2.Custom Validator in Reactive Forms
+
+- Building a custom Validator is as easy as creating a Validator function. It is a function, which must implement ValidatorFn Interface.
+
+- The ValidatorFn is an Interface, which defines the signature of the Validator function.
+
+Ex -
+interface ValidatorFn {
+  (control: AbstractControl): ValidationErrors | null
+}
+
+- The function takes the AbstractControl. This is the base class for FormControl, FormGroup, and FormArray. The validator function must return a list of errors i.e ValidationErrors or null if the validation has passed
+
+Our example app has numVal form field. We want it to be greater than 10.
+
+Ex -
+import { AbstractControl, ValidationErrors } from '@angular/forms'
+ 
+export function gte(control: AbstractControl): ValidationErrors | null {
+ 
+    const v=+control.value;
+ 
+    if (isNaN(v)) {
+      return { 'gte': true, 'requiredValue': 10 }
+    }      
+ 
+    if (v <= 10) {
+      return { 'gte': true, 'requiredValue': 10 }
+    } 
+ 
+    return null
+ 
+}
+
+- If the validation fails then return the ValidationErrors. You can use anything for the key, but it is advisable to use the name of the validator i.e gte as the key. Also, assign true as value. You can as well assign a string value.
+
+- You can return more than one key-value pair as shown in the above example. The second key requiredValue returns the value 10. We use this in the template to show the error message.
+
+Ex -
+ myForm = new FormGroup({
+    numVal: new FormControl('', [gte]),
+  })
+
+<div>
+    <label for="numVal">Number :</label>
+    <input type="text" id="numVal" name="numVal" formControlName="numVal">
+    <div *ngIf="!numVal.valid && (numVal.dirty ||numVal.touched)">
+      <div *ngIf="numVal.errors.gte">
+        The number should be greater than {{numVal.errors.requiredValue}}
+      </div>
+    </div>
+</div>
+
+- The problem with the above validator is that the value 10 is hardcoded. Hence, we will be not able to reuse it. If we want to resue it, we need to pass the number as the parameter.
+
 3.Passing Parameter to Custom Validator in Reactive Forms
+
+- To pass a parameter, we need to create a factory function or a function that returns a function. The example code is as shown below
+
+Ex -
+export function gte(val: number): ValidatorFn {
+ 
+  return (control: AbstractControl): ValidationErrors | null => {
+ 
+    let v: number = +control.value;
+ 
+    if (isNaN(v)) {
+      return { 'gte': true, 'requiredValue': val }
+    }      
+ 
+    if (v <= +val) {
+      return { 'gte': true, 'requiredValue': val }
+    } 
+      
+    return null;
+    
+  }
+ 
+}
+
+myForm = new FormGroup({
+    numVal: new FormControl('', [gte(10)]),
+  })
+
+<label for="numVal">Number :</label>
+    <input type="text" id="numVal" name="numVal" formControlName="numVal">
+    <div *ngIf="!numVal.valid && (numVal.dirty ||numVal.touched)">
+      <div *ngIf="numVal.errors.gte">
+        The number should be greater than {{numVal.errors.requiredValue}}
+      </div>
+    </div>
+
+
+
 4.Inject Service into Custom Validator
+
+- The gte method takes val and requiredValue as the parameter. It checks if the val is a number and is greater than requiredValue. If yes returns true else returns false.
+
+Ex -
+import { Injectable } from '@angular/core';
+ 
+@Injectable({
+  providedIn: 'root',
+})
+export class gteService {
+ 
+  gte(num:any, requiredValue:Number) : Boolean {
+ 
+    if (isNaN(num)) {
+      return false;
+    }      
+  
+    if (num <= +requiredValue) {
+      return false;
+    }
+ 
+    return true;
+  }
+}
+
+- There are two ways you can inject service into the validator. One is to create a wrapper service. The other option is to inject service directly into the validator.
+
+i) Wrapper Service
+Open the gte.validator.ts. Create the gteValidatorService class. In the constructor inject the gteService. Copy the validator functiongte into the class and use the gteService as shown below
+
+import { AbstractControl, ValidationErrors, ValidatorFn, Validator, NG_VALIDATORS, FormControl } from '@angular/forms'
+import { gteService } from './gte.service';
+import { Directive, OnInit, forwardRef, Input, Injectable } from '@angular/core';
+ 
+@Injectable({
+  providedIn: 'root',
+})
+export class gteValidatorService {
+ 
+  constructor(private gteService: gteService) {
+  }
+ 
+  gte(val: number): ValidatorFn {
+ 
+    return (control: AbstractControl): ValidationErrors | null => {
+  
+      let v: number = +control.value;
+      if (!this.gteService.gte(v,val)) {
+        return { 'gte': true, 'requiredValue': val }
+      }
+  
+      return null;
+    }
+  }
+}
+
+constructor(private gteValidator:gteValidatorService) {
+  }
+ 
+ 
+  myForm = new FormGroup({
+    numVal: new FormControl('', [this.gteValidator.gte(10)]),
+  })
+
+ii) Inject Service directly into the Validator
+
+import { AbstractControl, ValidationErrors, ValidatorFn, Validator, NG_VALIDATORS, FormControl } from '@angular/forms'
+import { gteService } from './gte.service';
+import { Directive, OnInit, forwardRef, Input, Injector } from '@angular/core';
+ 
+export function gte(val: number): ValidatorFn {
+ 
+  return (control: AbstractControl): ValidationErrors | null => {
+ 
+    let injector = Injector.create([ { provide: gteService, useClass:gteService,deps: []}])
+    let service = injector.get(gteService);
+ 
+    let v: number = +control.value;
+    if (!service.gte(v, val)) {
+      return { 'gte': true, 'requiredValue': val }
+    }
+ 
+    return null;
+ 
+  }
+}
+
 5.Validation in Template Driven Forms
+
+- Adding in Built-in Validators
+Ex -
+<input type="text" id="firstname" name="firstname" required [(ngModel)]="contact.firstname">
+
+<input type="text" id="firstname" name="firstname" required minlength="10" [(ngModel)]="contact.firstname">
+
+<input type="text" id="lastname" name="lastname" required maxlength="15" [(ngModel)]="contact.lastname">
+
+<input type="text" id="lastname" name="lastname" required maxlength="15" 
+    pattern="^[a-zA-Z]+$" [(ngModel)]="contact.lastname">
+
+<input type="text" id="email" name="email" required email [(ngModel)]="contact.email">
+
+
+
 6.Custom Validator in Template Driven Forms
 7.Angular Async Validator
+https://www.tektutorialshub.com/angular/angular-async-validator-example/
+
+
 8.Cross Field Validation
 9.Adding Validators Using SetValidators
 
