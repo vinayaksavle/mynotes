@@ -1960,17 +1960,195 @@ We want to return the id of the country. Hence we use the [ngValue]="country.id"
 * Services & Dependency Injection
 https://www.tektutorialshub.com/angular/angular-services/
 
+1.Services
+
+- Service is a piece of reusable code with a focused purpose. A code that you will use it in many components across your application
+
+* What services are used for
+i. Features that are independent of components such a logging services
+ii. Share logic or data across components
+iii. Encapsulate external interactions like data access
+
+* Advantageous of Service
+i. Services are easier to test.
+ii. Services are easier to Debug.
+iii. You can reuse the service.
+
+- Directly instantiating the service, as shown above, has many disadvantageous
+
+i. The ProductService is tightly coupled to the Component. If we change the ProductService class definition, then we need to update every code where service is used
+ii. If we want to change ProductService with BetterProductService, then we need to search wherever the ProductService is used and manually change it
+iii. Makes Testing difficult. We may need to provide mockProductService for testing and use the ProductService for Production.
+This problem can be solved by Angular Dependency injection.
+
 - Services allow us to create reusable code and use it every component that needs it. The Services can be injected into components and other services using the dependency injection system. The dependencies are declared in the Module using the Provider’s metadata. The Angular creates a tree of injector & Providers that resembles the Component Tree. This is called the hierarchical pattern.
 
-1.Services
 2.Dependency injection
+https://www.tektutorialshub.com/angular/angular-dependency-injection/
+
+- Dependency Injection (DI) is a technique in which we provide an instance of an object to another object, which depends on it. This is technique is also known as “Inversion of Control” (IoC)
+
+- How to solve all these problems. Move the creation of ProductService to the constructor the AppComponent class as shown below.
+Ex -
+constructor(private productService:ProductService) {}
+
+The above pattern is known as Dependency Injection Pattern.
+
+* Why use Dependency Injection
+- Our Component is now loosely coupled to the ProductService. AppComponent does not know how to create the ProductService. 
+
+AppComponent is now easier to Test. Our AppComponent is not dependent on a Particular implementation of ProductService anymore. It will work with any implementation of ProductService that is passed on to it. You can just create a mockProductService Class and pass it while testing.
+
+Reusing of the component is becomes easier. Our Component will now work with any ProductService as long as the interface is honored.
+
+Dependency injection pattern made our AppComponent testable, maintainable etc.
+
+But does it solve all our Problem ?. No, we just moved the Problem out of Component to the Creator of the Component.
+
+How do we create an instance of ProductService and pass it to the AppComponent? That is what Angular Dependency Injection does.
+
+- Angular Dependency Injection framework implements the Dependency injection Pattern in Angular. It creates & maintains the Dependencies and injects them into the Components or Services which requests for it.
+
+* Parts of Angular Dependency Injection Framework 
+
+i) Consumer
+- The Component that needs the Dependency. In the above example, the AppComponent is the Consumer
+
+ii) Dependency
+- The Service that is being injected. In the above example the ProductService is the Dependency
+
+iii) DI Token
+- The DI Token uniquely identifies a Dependency. We use DI Token when we register dependency
+
+iv) Provider
+- The  Providers Maintains the list of Dependencies along with their Tokens. The DI Token is used to identify the Dependency.  
+
+v) Injector
+- Injector holds the Providers and is responsible for resolving the dependencies and injecting the instance of the Dependency to the Consumer
+
+- The dependencies are registered with the Provider. This is done in the Providers metadata of the Injector.
+
+Angular Provides an instance of Injector & Provider to every Consumer.
+
+Consumer when instantiated, It declares the Dependencies it needs in its constructor.
+
+Injector reads the Dependencies from the constructor of the Consumer and looks for the dependency in the provider. The Provider provides the instance and injector, then injects it into the consumer. If the instance of the Dependency is already exists, then it is reused making the dependency singleton.
+
+- @Injectable() decorator is not needed, if the class already has other Angular decorators like @Component, @pipe or @directive etc. Because all these are a subtype of Injectible.
+
+- @Injectible is also not needed if the class does not have any dependencies to be injected. However it is best practice is to decorate every service class with @Injectable(), even those that don’t have dependencies.     
+
+- The Services are usually not added to Providers array of the Component, but to the Providers array of the @NgModule. Then they will be available to be used in all the components in the application
+
+- Angular  does not have any options add providers in the Service Class. The Providers must be added to the Component/Directive/Pipe or to the Module.
+
+- The services injected at the module level are app-scoped, which means that they can be accessed from every component/service within the app.Any service provided in the Child Module is available in the entire application.
+
+- The services is provided in a lazy module are module scoped and available only to the lazy loaded module.
+
+- The services provided in the Component level are available only to the Component & and to the child components.
+
+
+
 3.Injector, @Injectable & @Inject
+https://www.tektutorialshub.com/angular/angular-injector-injectable-inject/
+
+- The Angular Injector is responsible instantiating the dependency and injecting into the component or service.
+
+The Injector looks for the dependency in the Angular Providers using the token. The Angular Providers array returns the Provider, which contains the information about how to create the instance of the dependency. The Injector creates the instance and injects it into Component or service.
+
+- The Root Component contains all other components. Angular App will create child components under the Root Component. All these child component can have their own child components creating a tree of components. The Angular Injector is also created for all those components creating a Injector tree closely mimicking the component tree.
+
 4.Providers
+- There are four ways by which you can create the dependency: They are Class Provider (useClass), Value Provider (useValue ), Factory Provider ( useFactory ), and Aliased Class Provider ( useExisting).
+
+- The Angular Provider is an instruction (or recipe) that describes how an object for a certain token is created. The Angular Providers is an array of such instruction (Provider). Each provider is uniquely identified by a token (or DI  Token ) in the Providers Array.
+
+- Registered our ProductService using the Providers arrays as shown below in the @NgModule
+providers :[{ provide: ProductService, useClass: ProductService }]
+
+Shorthand notation of above
+providers: [ProductService]
+
+* Types of DI Token
+
+i) Type Token
+providers :[{ provide: ProductService, useClass: ProductService }]
+
+class ProductComponent {
+  constructor(private productService : ProductService ) {}
+}
+
+ii) String token
+ {provide:'PRODUCT_SERVICE', useClass: ProductService },   
+
+class ProductComponent {
+   constructor(@Inject('PRODUCTSERVICE') private prdService:ProductService ) { 
+}
+
+Ex -
+{provide:'USE_FAKE', useValue: true },   
+ {provide:'APIURL', useValue: 'http://SomeEndPoint.com/api' },   
+ 
+class ProductComponent {
+   constructor(@Inject('APIURL') private apiURL:string )
+}
+
+iii) Injection Token
+The Problem with the string tokens is that two developers can use the same string token at a different part of the app. You also do not have any control over the third-party modules, which may use the same token. If the token is reused, the last to register overwrites all previously registered tokens.
+
+String tokens are easier to mistype and that makes it difficult to track & maintain in big applications.
+
+The Angular provides InjectionToken class so as to ensure that the Unique tokens are created. The Injection Token is created by creating a new instance of the InjectionToken class.
+
+Ex -
+First, create a separate file and name it as tokens.ts. Import the InjectionToken from @angular/core library. Create an instance of InjectionToken and assign it to a const API_URL
+
+import { InjectionToken } from '@angular/core';
+ 
+export const API_URL= new InjectionToken<string>(''); 
+
+Open the AppModule and the Token is used to register the value in providers metadata
+
+import { API_URL } from './tokens';
+ 
+providers: [ 
+    { provide: API_URL, useValue: 'http://SomeEndPoint.com/api' }
+]
+ 
+It is then injected using the @Inject in the constructor of the service/component.
+
+import { API_URL } from './tokens';
+ 
+constructor(@Inject(API_URL) private apiURL: string) { 
+}
+
+* The Types of Provider 
+
+i) Class Provider : useClass
+ii) Value Provider: useValue
+iii) Factory Provider: useFactory
+iv) Aliased Class Provider: useExisting
+
 5.Hierarchical Dependency Injection
+https://www.tektutorialshub.com/angular/angular-hierarchical-dependency-injection/
+
+- The Angular creates the Injector, when the application root module (named as AppModule) is bootstrapped. This injector is called as root injector and acts as a parent to all other injectors. The root injector also gets its own copy of Providers. It gets it from the Providers is metadata of @NgModule of AppModule.
+
+- What happens if the child1Component requests a Service. The injector attached to Child1Component looks for the provider in the Providers collection registered with the Child1Component.
+
+If it does not find the provider, it then passes the request to the injector instance of the parent1Component as shown by the dotted arrow in the image above. If the provider is found, the request is returned with the instance of the dependency else the request is passed on the injector of the AppComponent. This process continues until it reaches the top-level injector.
+
+- 
 
 * Angular Forms Validation
+https://www.tektutorialshub.com/angular/angular-reactive-forms-validation/
 
 1.Validations in Reactive Forms in Angular
+- A Validator is a function that checks the instance of FormControl, FormGroup or a FormArray and returns a list of errors. If the Validator returns a null means that validation has passed
+
+- 
+
 2.Custom Validator in Reactive Forms
 3.Passing Parameter to Custom Validator in Reactive Forms
 4.Inject Service into Custom Validator
