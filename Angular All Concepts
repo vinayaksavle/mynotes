@@ -2390,11 +2390,186 @@ Ex -
 7.Angular Async Validator
 https://www.tektutorialshub.com/angular/angular-async-validator-example/
 
+- The creating an async validator is very similar to the Sync validators. The only difference is that the async Validators must return the result of the validation as an observable (or as Promise).
+
+- Creating a Async Validator is simple as creating a function, which must obey the following rules
+
+i) The function must implement the AsyncValidatorFn Interface, which defines the signature of the validator function.
+ii) The function must return either an observableor a promise
+iii) Return null for valid, or an ValidationErrors if the input is invalid
+
+Ex -
+import { AbstractControl, ValidationErrors } from '@angular/forms'
+ 
+import { Observable, of } from 'rxjs';
+ 
+export function gte(control: AbstractControl): 
+         Observable<ValidationErrors> | null {
+ 
+    const v:number=+control.value;
+ 
+    console.log(v)
+    
+    if (isNaN(v)) {
+      return of({ 'gte': true, 'requiredValue': 10 })
+    }      
+ 
+    if (v <= 10) {
+      return of({ 'gte': true, 'requiredValue': 10 })
+    } 
+ 
+    return of(null)
+ 
+}
+
 
 8.Cross Field Validation
+
+- Some times we also come across fields whose value depends on another field. For example, the following scenario’s requires us to compare two fields.
+
+i) Start date & end date fields. The end date must be greater than the start date.
+ii) Password confirmation. The new password must match the confirm password.
+
+- When we validate the multiple fields, we need to ensure that our validation logic runs for each of those fields.
+
+Hence we attach the validator to the Formgroup instead of FormControl. The Validator runs whenever we modify any of the fields in the FormGroup.
+
+Ex -
+this.mainForm = this.builder.group({
+      userName: ["", [Validators.required]],
+      password: ["", [Validators.required, Validators.minLength(5)]],
+      confirm: ["", [Validators.required]]
+    }, { validator: this.matchPassword2('password', 'confirm') });
+
+matchPassword2(firstControl, secondControl): ValidatorFn {
+ 
+    return (control: AbstractControl): ValidationErrors | null => {
+ 
+      const password = control.get(firstControl).value;
+      const confirm = control.get(secondControl).value;
+ 
+      if (password != confirm) { return { 'noMatch': true } }
+ 
+      return null
+ 
+    }
+  }
+  
+
 9.Adding Validators Using SetValidators
+- There are many use cases where it is required to add/remove validators dynamically to a FormControl or FormGroup. Usually when you have a Form Field, whose value depends on another Form Field.
+
+- The setValidators programmatically adds the sync validators. This method will remove all the previously added sync or async validators.
+
+Ex -
+this.myform.controls["mobile"].setValidators(Validators.required);
+
+this.myform.controls["mobile"].setValidators([Validators.required,Validators.minLength(10)]);
+
+- But, The setAsyncValidators programmatically add the Async validators.
+
+- setValidators overwrites all existing Validators. Hence it is very important to include all the validators that we want in the setValidators method
+
+- There is no option that exists, which can remove an individual validator. Use clearValidators to remove all the validators of a control.
+
+Ex -
+this.myForm.controls['controlName'].clearValidators()
+
+- We have two fields email & mobile.
+
+The user needs to choose, how he wants the system to notify him, using the drop-down field notifyVia. The drop-down has two options email & Mobile.
+
+If the user chooses email, then we need to make the email field as a Required field. If he chooses the Mobile, then we must make the mobile field as Required field.
+
+We subscribe to the valueChanges event of the notifyVia to listen for changes and invoke the changeValidators method.
+
+In the changeValidators method, we check the value of notifyVia and add or remove the required validator using the setValidators. We also add the email validator (for email field) or MinLength validator (for mobile field). To remove the validator, we use the method clearValidators()
+
+Finally, we use the updateValueAndValidity method, which forces the angular to update the validity status of the control.
+
+Ex -
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  title = 'setValidators';
+ 
+  myform:FormGroup;
+ 
+  notifyOptions = ["Email" ,"SMS"]
+ 
+  constructor(private fb: FormBuilder) {
+ 
+    this.myform = this.fb.group({
+      email: new FormControl(''),
+      mobile: new FormControl(''),
+      notifyVia: new FormControl('',Validators.required),
+    });
+ 
+    this.myform.get("notifyVia").valueChanges
+      .subscribe(data=> {
+        this.changeValidators()
+      })
+  }
+ 
+ 
+  changeValidators() {
+    console.log(this.myform.get("notifyVia").value)
+ 
+    if (this.myform.get("notifyVia").value=="Email") {
+      this.myform.controls["email"].setValidators([Validators.required,Validators.email]);
+      this.myform.controls["mobile"].clearValidators();
+    } else {
+      this.myform.controls["email"].clearValidators();
+      this.myform.controls["mobile"].setValidators([Validators.required,Validators.minLength(10)]);
+    }
+ 
+    this.myform.get("email").updateValueAndValidity();
+    this.myform.get("mobile").updateValueAndValidity();
+ 
+  }
+}
+
+<form [formGroup]="myform">
+ 
+  notify :
+<select formControlName="notifyVia">
+  <option *ngFor="let item of notifyOptions" [ngValue]="item">{{item}}</option>
+</select>
+<br>
+<br>
+ 
+ 
+email :
+<input type="text" formControlName= "email"/>
+<br>
+<br>
+mobile :
+<input type="text" formControlName= "mobile"/>
+<br>
+<br>
+ 
+<button type="submit" >Submit </button>
+</form>
+ 
+<br>
+<br>
+ 
+Form valid ---- {{myform.valid}}  <br>
+ 
+email valid-- {{myform.controls['email'].valid}}  <br>
+ 
+mobile valid -- {{myform.controls['mobile'].valid}}  <br>
+
+
 
 *  HTTP 
+https://www.tektutorialshub.com/angular/angular-httpclient/
+
 - The newly designed HttpClient Module allows us to query the Remote API source to get data into our Application. It requires us to Subscribe to the returned response using RxJs observables.
 
 1.Angular HTTP Client Tutorial
