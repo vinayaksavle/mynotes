@@ -2573,7 +2573,131 @@ https://www.tektutorialshub.com/angular/angular-httpclient/
 - The newly designed HttpClient Module allows us to query the Remote API source to get data into our Application. It requires us to Subscribe to the returned response using RxJs observables.
 
 1.Angular HTTP Client Tutorial
+
+- The HttpClient is a separate model in Angular and is available under the @angular/common/http package.
+
+- Observable help us to manage async data. You can think of Observables as an array of items, which arrive asynchronously over time.
+
+- When an Observer subscribes to an observable, it needs to pass (optional) the three callbacks. next(),  error()  &  complete(). The observable invokes the next() callback, when it receives an value. When the observable completes it invokes the complete() callback. And when the error occurs it invokes the error() callback with details of error and subscriber finishes.
+
+- Observables Operators
+Operators are methods that operate on an Observable and return a new observable. Each Operator modifies the value it receives. These operators are applied one after the other in a chain. The RxJs provides several Operators, which allows you to filter, select, transform, combine and compose Observables. Examples of Operators are map, filter, take, merge, etc
+
+- HTTP Get
+
+Syntax:
+get(url: string, 
+      options: {
+          headers?: HttpHeaders | { [header: string]: string | string[]; };
+          params?: HttpParams | { [param: string]: string | string[]; };
+          observe?: "body|events|response|";
+          responseType: "arraybuffer|json|blob|text";
+          reportProgress?: boolean; 
+          withCredentials?: boolean;}
+     ): Observable<>
+	 
+- By default, the body of the response is parsed as JSON. If you want any other type, then you need to specify explicitly using the observe & responseType options.
+
+- headers : It allows you to add HTTP headers to the outgoing requests. 
+
+observe: The HttpClient.get method returns the body of the response parsed as JSON (or type specified by the responseType). Sometimes you may need to read the entire response along with the headers and status codes. To do this you can set the observe property to the response.
+
+response: which returns the entire response
+
+body: which returns only the body
+
+events: which return the response with events.
+
+params: Allows us to Add the URL parameters or Get Parameters to the Get Request
+
+reportProgress: This is a boolean property. Set this to true, if you want to get notified of the progress of the Get Request. This is a pretty useful feature when you have a large amount of data to download (or upload) and you want the user to notify of the progress.
+
+responseType: Json is the default response type. In case you want a different type of response, then you need to use this parameter. The Allowed Options are arraybuffer, blob, JSON, and text. 
+
+withCredentials: It is of boolean type. If the value is true then HttpClient.get will request data with credentials (cookies)
+
+
+- HTTP Post
+
+Syntax:
+post(url: string, 
+     body: any, 
+     options: { 
+        headers?: HttpHeaders | { [header: string]: string | string[]; }; 
+        observe?: "body|events|response|"; 
+        params?: HttpParams | { [param: string]: string | string[]; }; 
+        reportProgress?: boolean; 
+        responseType: "arraybuffer|json|blob|text"; 
+        withCredentials?: boolean; 
+     }
+): Observable
+
+Ex -
+addPerson(person:Person): Observable<any> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(person);
+    this.http.post(this.baseURL + 'people', body,{'headers':headers , observe: 'response'})
+      .subscribe(
+       response=> {
+            console.log("POST completed sucessfully. The response received "+response);
+        },
+        error => {
+            console.log("Post failed with the errors");
+        },
+        () => {
+            console.log("Post Completed");
+        }
+}
+
+- HTTP PUT
+
+Syntax:
+put(url: string, 
+     body: any, 
+     options: { 
+        headers?: HttpHeaders | { [header: string]: string | string[]; }; 
+        observe?: "body|events|response|"; 
+        params?: HttpParams | { [param: string]: string | string[]; }; 
+        reportProgress?: boolean; 
+        responseType: "arraybuffer|json|blob|text"; 
+        withCredentials?: boolean; 
+     }
+): Observable
+
+- HTTP PATCH
+
+Syntax:
+patch(url: string, 
+     body: any, 
+     options: { 
+        headers?: HttpHeaders | { [header: string]: string | string[]; }; 
+        observe?: "body|events|response|"; 
+        params?: HttpParams | { [param: string]: string | string[]; }; 
+        reportProgress?: boolean; 
+        responseType: "arraybuffer|json|blob|text"; 
+        withCredentials?: boolean; 
+     }
+): Observable
+
+- HTTP DELETE
+
+Syntax:
+delete(url: string, 
+      options: {
+          headers?: HttpHeaders | { [header: string]: string | string[]; };
+          params?: HttpParams | { [param: string]: string | string[]; };
+          observe?: "body|events|response|";
+          responseType: "arraybuffer|json|blob|text";
+          reportProgress?: boolean; 
+          withCredentials?: boolean;}
+     ): Observable<>
+
+
 2.HTTP GET Example
+https://www.tektutorialshub.com/angular/angular-http-get-example-using-httpclient/
+
+- When the observable completes, it will call the complete() callback. There is no need for this call back as the subscription completes when the data is received.
+
 3.HTTP POST Example
 4.Passing URL Parameters (Query strings)
 5.HTTP Headers Example
