@@ -1,0 +1,50 @@
+SQL Server Notes By Guru Kud Venkat
+
+1. Install SQL Server 2019 Step by Step | Developer Edition | Free Software | Install SSMS
+
+SSMS - Sequel Server Management Studio
+
+- Enterprise and Standard are used for Production use, License costs, Enterprise has more features
+
+- Express and Developer Edition are Free software, Express - 10GB limit, Developer same as Enterprise but for non production use.
+
+- Database Server contains all the tables and data you know any sql server management objects that you create for ex. it could be trigger, view, tables data related to those tables all stored centrally on that database server and to connect to that database the client tool we generally use is SSMS (Sequel Server Management Studio). 
+
+- SSMS is a client tool and not the server by itself. Developer machines (clients) connects to SQL Server using SSMS.
+
+2. Creating altering and dropping a database - Part 2
+
+- A SQL server database can be created, altered and dropped
+i) Graphically using SqL Server Management Studio (SSMS) or
+ii) Using a Query
+Ex - CREATE DATABASE DBName
+
+- The following two files will gets generated
+.MDF file - Master Data File (Contains actual data) 
+.LDF file - Transaction Log Data file (Used to recover the database)
+
+- To alter DB,
+ALTER DATABASE DBName MODIFY NAME = NewDBName
+
+or 
+
+Execute sp_renameDB 'OldDBName','NewDBName'
+
+- To Delete or Drop a database
+DROP DATABASE DBName
+
+- Dropping a database, deletes the LDF and MDF files.
+
+- You cannot drop a database, if it is currently in use. You get an error stating - Cannot drop database because it is currently in use.
+
+- So, if other users are connected, you need to put the database in single user mode and then drop the database.
+Alter Database DatabaseName SET SINGLE_USER WITH Rollback Immediate
+
+- With Rollback Immediate option, will rollback all incomplete transactions and closes the connection to the database.
+
+Note: System databases cannot be dropped.
+
+
+3. Creating and working with tables - Part 3
+https://www.youtube.com/watch?v=JLeaM8pK8dE&list=PL08903FB7ACA1C2FB&index=4&ab_channel=kudvenkat
+
