@@ -48,3 +48,58 @@ Note: System databases cannot be dropped.
 3. Creating and working with tables - Part 3
 https://www.youtube.com/watch?v=JLeaM8pK8dE&list=PL08903FB7ACA1C2FB&index=4&ab_channel=kudvenkat
 
+- A primary key is used to identify uniquely each record in that table.
+
+ALTER TABLE ForeignKeyTable ADD CONSTRAINT ForeignKeyTable_ForeignKeyColumn_FK FOREIGN KEY (ForeignKeyColumn) REFERENCES PrimaryKeyTable (PrimaryKeyColumn)
+
+- Foreign keys are used to enforce database integrity. In layman's terms, A foreign key in one table points to a primary key in another table. The foreign key constraint prevents invalid data from being inserted into the foreign key column, has to be one of the values contained in the table it points to. 
+
+4. Adding a default constraint - Part 4
+
+- A column default can be specified using Default constraint. The DEFAULT constraint is used to insert a default value into a column. The default value will be added to all new records, if no other value is specified, including NULL.
+
+Syntax:
+Altering an existing column to add a default constraint:
+ALTER TABLE {TABLE_NAME}
+ADD CONSTRAINT {CONSTRAINT_NAME}
+DEFAULT {DEFAULT_VALUE} FOR {EXISTING_COLUMN_NAME}
+
+Adding a new column, with default value, to an existing table:
+ALTER TABLE {TABLE_NAME}
+ADD {COLUMN_NAME} {DATA_TYPE} {NULL | NOT NULL}
+CONSTRAINT {CONSTRAINT_NAME} DEFAULT {DEFAULT_VALUE}
+
+Dropping a constarint:
+ALTER TABLE {TABLE_NAME}
+DROP CONSTRAINT {CONSTRAINT_NAME}
+
+5. Cascading referential integrity constraint - Part 5
+
+- Cascading referential integrity constraint allows to define the actions Microsoft SQL Server should take when a user attempts to delete or update a key to which an existing foreign keys points.
+
+- For example, If you try to delete primary key of one table whose foreign key relation is there in other table column you will get error. So, Cascading referential integrity constraint can be used to define actions Microsoft SQL Server should take when this happens. By default, we get an error and the DELETE or UPDATE statement is roller back.
+
+* Options when setting up Cascading referential integrity constraint:
+
+i) No Action: This is the default behavior. No Action specifies that if an attempt is made to delete or update a row with a key referenced by foreign keys in existing rows in other tables, an error s raised and the DELETE or UPDATE is rolled back.
+
+ii) Cascade: Specifies that if an attempt is made to delete or update a row with a key referenced by foreign keys in existing rows in other tables, all rows containing those foreign keys are also deleted or updated.
+
+iii) Set NULL: Specifies that if an attempt is made to delete or update a row with a key referenced by foreign keys in existing rows in other tables, all rows containing those foreign keys are set to NULL.
+
+iv) Set Default: Specifies that if an attempt is made to delete or update a row with a key referenced by foreign keys in existing rows in other tables, all rows containing those foreign keys are set to default values.
+
+6. Adding a check constraint - Part 6
+
+- CHECK constraint is used to limit the range of the values, that can be entered for a column.
+
+Syntax:
+ALTER TABLE {TABLE_NAME}
+ADD CONSTRAINT {CONSTRAINT_NAME} CHECK {BOOLEAN_EXPRESSION}
+
+- If the BOOLEAN_EXPRESSION returns true, then the CHECK constraint allows the value, otherwise it doesn't. Since, AGE is a nullable column, it's possible to pass null for this column, when inserting a row. When you pass NULL for the AGE column, the boolean expression evaluates to UNKNOWN, and allows the value.
+
+7. Identity Column in SQL Server - Part 7
+https://www.youtube.com/watch?v=aOkFE6NLGCQ&list=PL08903FB7ACA1C2FB&index=8
+
+- 
