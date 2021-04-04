@@ -2806,21 +2806,579 @@ https://www.tektutorialshub.com/angular/angular-routing-navigation/
 - The Router module handles the navigation & Routing in Angular. The Routing allows you to move from one part of the application to another part or one View to another View. 
 
 1. Routing and Navigation in Angular
+- Routing allows you to move from one part of the application to another part or one View to another View.
+
+- The Router is a separate module in Angular. It is in its own library package, @angular/router. The Router Module provides the necessary service providers and directives for navigating through application views.
+
+- Using Angular Router you can
+
+i. Navigate to a specific view by typing a URL in the address bar
+ii. Pass optional parameters to the View
+iii. Bind the clickable elements to the View and load the view when the user performs application tasks
+iv. Handles back and forward buttons of the browser
+v. Allows you to dynamically load the view
+vi. Protect the routes from unauthorized users using Guards
+
+- Router 
+The Angular Router is an object that enables navigation from one component to the next component as users perform application tasks like clicking on menus links, buttons or clicking on back/forward button on the browser. We can access the router object and use its methods like navigate() or navigateByUrl(), to navigate to a route
+
+- Route 
+Route tells the Angular Router which view to display when a user clicks a link or pastes a URL into the browser address bar. Every Route consists of a path and a component it is mapped to. The Router object parses and builds the final URL using the Route
+
+- Routes 
+Routes is an array of Route objects our application supports
+
+- RouterOutlet
+The outerOutlet is a directive (<router-outlet>) that serves as a placeholder, where the Router should display the view
+
+- RouterLink
+The RouterLink is a directive that binds the HTML element to a Route. Clicking on the HTML element, which is bound to a RouterLink, will result in navigation to the Route. The RouterLink may contain parameters to be passed to the route’s component.
+
+- RouterLinkActive
+RouterLinkActive is a directive for adding or removing classes from an HTML element that is bound to a RouterLink. Using this directive, we can toggle CSS classes for active RouterLinks based on the current RouterState
+
+- ActivatedRoute
+The ActivatedRoute is an object that represents the currently activated route associated with the loaded Component.
+
+- RouterState
+The current state of the router including a tree of the currently activated routes together with convenience methods for traversing the route tree.
+
+- RouteLink Parameters array
+The Parameters or arguments to the Route. It is an array which you can bind to RouterLink directive or pass it as an argument to the Router.navigate method.
+
+- Import the Router Module from @angular/router library in the root module of the application. Then, install the routes using the RouterModule.forRoot method, passing the routes as the argument in the imports array
+
+imports: [RouterModule.forRoot(routes)],
+
+- Ex -
+{ path: '', redirectTo: 'home', pathMatch: 'full' },
+
+The path is empty, indicates the default route. The default route is redirected to the home path using the RedirectTo argument. This route means that, when you navigate to the root of your application /, you are redirected to the home path (/home), which in turn displays the HomeComponent.
+
+Note, that we have pathMatch argument set to ‘full’. The pathMatch tells the Router how to match the URL.
+
+When it is set to full, the path is matched to the entire URL
+
+Every route ends in an empty space for ex: /contact/’’. If pathMatch is not set to full then the router will apply the redirect, which results in the error.
+
+Wild Card Route
+{ path: '**', component: ErrorComponent }
+The “**” matches every URL. The Router will display the ErrorComponent.
+
+- Note that the order of the route is important. The Routes are matched in the order they are defined. The Router always returns the first matching route (first-match-wins strategy)
+
+Since the wildcard route (**) matches every URL and should be placed last.
+
+- the forRoot method is used, when you want to provide the service and also want to configure the service at the same time
+
+- The routermodule.forroot method returns the Router Service configured with the routes passed in the argument and also registers the Router service. It also registers the other providers that the routing module requires.
+
+- When the application is bootstrapped, the Router service looks at the current browser URL and performs the initial navigation.
+
+When the user changes the URL either clicking on a link in the page or by entering a URL in the address bar, the router looks for a corresponding Route from the Routes array and renders the associated component.
+
 2. Location Strategies in Angular Router
+
+- Angular supports two Location Strategies:
+i. HashLocationStrategy
+Where URL looks like http://localhost:4200/#/product
+
+ii. PathLocationStrategy
+Where URL looks like http://localhost:4200/product
+
+- The introduction of HTML5, now allows browsers to programmatically alter the browser’s history through the history object.
+
+Using history.pushState() method, we can now programmatically add the browser history entries and change the location without triggering a server page request.
+
+The history.pushState method accepts the following three parameters.
+
+i. State object: A state object is a JavaScript object which is associated with the new history entry created by pushState()
+ii. Title: This is an optional title for the state
+iii. URL: The new history entry’s URL. The browser won’t jump to that page.
+
+Ex -
+var stateObj= { message: "some message" };
+history.pushState(stateObj, "title", newUrl);
+ 
+- Which Location Strategy to Use
+We recommend you to use the HTML 5 style (PathLocationStrategy ) as your location strategy.
+
+- Because, It produces clean and SEO Friendly URLs that are easier for users to understand and remember.
+You can take advantage of the server-side rendering, which will make our application load faster, by rendering the pages in the server first before delivering it the client
+Use hash location strategy only if you have to support the older browsers.
+
 3. Passing Parameters to Route
+
+- Defining the Route
+{ path: 'product/:id', component: ProductDetailComponent }
+
+- Defining the Navigation
+<a [routerLink]="['/Product', product.productID]">{{product.name}} </a>
+
+- The ActivatedRoute is a service, which keeps track of the currently activated route associated with the loaded Component.
+
+- ParamMap
+The Angular adds the map all the route parameters in the ParamMap object, which can be accessed from the ActivatedRoute service
+
+The ParamMap makes it easier to work with parameters. We can use get or getAll methods to retrieve the value of the parameters in the component. Use the has method to check if a certain parameter exists.
+
+The Older version of ActivatedRoute class has a Params array which is an array of the parameter values, indexed by name. You can still use it but It is now deprecated and is replaced by the ParamMap.
+
+- There are two ways in which you can use the ActivatedRoute to get the parameter value from the ParamMap object.
+
+i. Using Snapshot
+The snapshot property returns the initial value of the route. You can then access the paramsMap array, to access the value of the id, as shown above,
+
+Ex -  this.id=this._Activatedroute.snapshot.paramMap.get("id");
+
+
+ii. Using observable
+You can retrieve the value of id by subscribing to the paramMap observable property of the activateRoute as shown above. Better to use observable.
+
+Ex -
+this._Activatedroute.paramMap.subscribe(params => { 
+    this.id = params.get('id'); 
+});
+
+- The ActivatedRoute service has a great deal of useful information including:
+
+url: This property returns an array of Url Segment objects, each of which describes a single segment in the URL that matched the current route.
+
+params: This property returns a Params object, which describes the URL parameters, indexed by name.
+
+queryParams: This property returns a Params object, which describes the URL query parameters, indexed by name.
+
+fragment: This property returns a string containing the URL fragment.
+
+Snapshot: The initial snapshot of this route
+
+data: An Observable that contains the data object provided for the route
+
+Component: The component of the route. It’s a constant
+
+outlet: The name of the RouterOutlet used to render the route. For an unnamed outlet, the outlet name is primary.
+
+routeConfig: The route configuration used for the route that contains the origin path.
+
+parent: an ActivatedRoute that contains the information from the parent route when using child routes.
+
+firstChild: contains the first ActivatedRoute in the list of child routes.
+
+children: contains all the child routes activated under the current route
+
+pathFromRoot: The path from the root of the router state tree to this route
+
+
 4. Child Routes / Nested Routes
+
+- Why subscribe to route params
+
+Because the angular does not create the component if it is already present in the DOM. It reuses the component instance
+
+This implies that the ngOnInit life cycle hook is not invoked when the user navigates to the component again. We are retrieving the parameter value in the ngOnInit using the snapshot method. Hence our component does not update itself.
+
+This issue can be rectified by subscribing to the observable params property. Our component will be notified, whenever the value of the parameter changes. So that we can update the component accordingly.
+
+- 
+
+
 5.Passing Optional (Query) Parameters to a route
+https://www.tektutorialshub.com/angular/angular-passing-optional-query-parameters-to-route/
+
+- <a [routerLink]="['product']" [queryParams]="{ val1:2 , val2:10}">Whatever</a>
+
+The router will construct the URL as /product?val1=2&val2=10
+
+- The queryParamsMap is a Observable that contains a map of the query parameters available to the current route. We can use this to retrieve values from the query parameter. The queryParamsMap is accessible via ActivatedRoute.
+
+Ex:
+this.sub = this.Activatedroute.queryParamMap
+       .subscribe(params => {
+     this.pageNum = +params.get('pageNum')||0;     
+});
+
+- You can also read the value of the query parameter from queryParamMap using the snapshot property of the ActivatedRoute as shown below
+
+Ex: this.Activatedroute.snapshot.queryParamMap.get('pageNum')||0;;
+
+- Remember, the router populates the snapshot, when the component loads for the first time. Hence you will read only the initial value of the query parameter with the snapshot property. You will not be able to retrieve any subsequent changes to the query parameter.
+
+- 
+
 6.Navigation between Routes
+
+- Navigating between Angular routes
+i. RouterLink directive
+Ex -<li><a [routerLink]="['product']">Product</a></li>
+
+Will map to URL “/product” and renders the associated ProductComponent
+
+ii. Navigating Using Code
+Ex - this._router.navigate(['product'])
+or
+this._router.navigateByUrl('product')
+
+- router.navigate 
+Use this method, if you want to Navigate to a route using the link parameters array. The first argument to the navigate method is link parameters array, which is similar to what we provide while defining the routerlink directive. Navigate Method always uses the absolute path unless you provide a starting point.
+
+- navigate.navigateByUrl
+Use this method if you want to navigate to a URL by using the absolute path. The first argument is a string containing the complete URL. NavigateByUrl Method always uses the absolute path
+
+- If the First segment of the route starts with “/“, then the path is considered to be Absolute path
+
+- If the First segment begins with “./” or it does not begin with a slash, then the path is considered to be the relative path.
+
+- And if the First segment begins with “. ./“, then the path is relative to the parent route. (one level up)
+
+- NavigationExtras
+
+- relativeTo: ActivatedRoute
+We can provide the extra options to both router.navigate() or router.navigatebyURL() method. Enables relative navigation from the current ActivatedRoute. This is applicable only to router.navigate() method.
+
+Ex - this.router.navigate(['../Detail'], { relativeTo: this.activatedRoute });
+
+- queryParams: Params
+Sets query parameters to the URL. 
+Ex - this.router.navigate(['/products'], { queryParams: { page: 1 } });
+
+- fragment: string
+Sets the hash fragment for the URL. The following code constructs the URL as “/home#top”
+Ex - this.router.navigate(['/home'], { fragment: 'top' });
+
+- preserveQueryParams: boolean
+Passes the query parameters of the current route to the next route. If you are on the route “Product?Page=2”, then the clicking on the following will pass the query parameters to the “view” route as “view?Page=2”
+
+Ex - this.router.navigate(['/view'], { preserveQueryParams: true });
+
+- queryParamsHandling: QueryParamsHandling
+The query parameters of the current route are merged with that of the new route if you set queryParamsHandling=”merge”.
+
+Ex - 
+this.router.navigate(['/view'], { queryParams: { page: 2 },preserveQueryParams: true, queryParamsHandling: "merge" });
+
+- preserveFragment: boolean
+Passes the fragment of the current route to the next navigation. Similar to the preserveQueryParams
+
+Ex - this.router.navigate(['/view'], { preserveFragment: true });
+
+- skipLocationChange: boolean
+You can change the route, without changing the URL in the browser.  This Navigates to a new URL without pushing a new state into history.
+
+Ex - this.router.navigate(['/view'], { skipLocationChange: true });
+
+- replaceUrl: boolean
+The current route is removed from the browser history while navigating to the new route. It replaces the current state in history with the new state.
+
+Ex - this.router.navigate(['/view'], { replaceUrl: true });
+
 7.Angular Route Guards
+- We use the Angular Guards to control, whether the user can navigate to or away from the current route.
+
+- We need to restrict the user until the user performs specific actions like login. Angular provides the Route Guards for this purpose.
+
+- Uses of  Angular Route Guards
+i. To Confirm the navigational operation
+ii. Asking whether to save before moving away from a view
+iii. Allow access to certain parts of the application to specific users
+iv. Validating the route parameters before navigating to the route
+v. Fetching some data before you display the component.
+
+- Types of Route Guards
+i. CanActivate
+This guard decides if a route can be activated (or component gets used). This guard is useful in the circumstance where the user is not authorized to navigate to the target component. Or the user might not be logged into the system
+
+ii. CanDeactivate
+This Guard decides if the user can leave the component (navigate away from the current route). This route is useful in where the user might have some pending changes, which was not saved. The CanDeactivate route allows us to ask user confirmation before leaving the component.  You might ask the user if it’s OK to discard pending changes rather than save them.
+
+iii. Resolve
+This guard delays the activation of the route until some tasks are complete. You can use the guard to pre-fetch the data from the backend API, before activating the route
+
+
+iv. CanLoad
+The CanLoad Guard prevents the loading of the Lazy Loaded Module. We generally use this guard when we do not want to unauthorized user to be able to even see the source code of the module.
+
+This guard works similar to CanActivate guard with one difference. The CanActivate guard prevents a particular route being accessed. The CanLoad prevents entire lazy loaded module from being downloaded, Hence protecting all the routes within that module.
+
+v. CanActivateChild
+This guard determines whether a child route can be activated. This guard is very similar to CanActivateGuard. We apply this guard to the parent route. The Angular invokes this guard whenever the user tries to navigate to any of its child route. This allows us to check some condition and decide whether to proceed with the navigation or cancel it.
+
+- CanDeactivate() and CanActivateChild() guards are always checked first. The checking starts from the deepest child route to the top. CanActivate() guard is checked next and checking starts from the top to the deepest child route. CanLoad() is invoked next,  If the feature module is to be loaded asynchronously. Resolve() Guard is invoked last.
+
+- The canActivate method accepts two arguments. The first argument is an ActivatedRouteSnapshot object, which describes the route that is being navigated to using the properties. The second argument is a RouterStateSnapshot object, which describes the current route through a single property called URL.
+
 8.CanActivate Guard
+- The example of canActivate guard is as follows
+
+import { Injectable } from '@angular/core';
+import { Router, CanActivate, ActivatedRouteSnapshot,RouterStateSnapshot } from '@angular/router';
+ 
+ 
+@Injectable()
+export class AuthGuardService implements CanActivate {
+ 
+    constructor(private _router:Router ) {
+    }
+ 
+    canActivate(route: ActivatedRouteSnapshot,
+                state: RouterStateSnapshot): boolean {
+ 
+        //check some condition  
+        if (someCondition)  {
+            alert('You are not allowed to view this page');
+            //redirect to login/home page etc
+            //return false to cancel the navigation
+            return false;
+        } 
+        return true;
+    }
+}
+
+{ path: 'product', component: ProductComponent, canActivate : [AuthGuardService] },
+
+
 9.CanActivateChild Guard
+- The Angular CanActivateChild guard runs before we navigate to a child route.
+
+- The CanActivatechild guard is very similar to CanActivateGuard. We apply this guard to the parent route. The Angular invokes this guard whenever the user tris to navigate to any of its child route. This allows us check some condition and decide whether to proceed with the navigation or cancel it.
+
+- Difference between CanActivate & CanActivateChild
+
+i. The ProductComponent displays the list of product. We have attached the canActivate guard to the product route. The canActivate guard blocks the access to the route, if the user is not logged in. This guard protect both the product route and all its children.
+
+Ex -
+{ path: 'product', component: ProductComponent, canActivate : [AuthGuardService],
+      children: [
+      {  path: 'view/:id', component: ProductViewComponent  },
+      {  path: 'edit/:id', component: ProductEditComponent  },
+      {  path: 'add', component: ProductAddComponent }
+      ]  
+  },
+
+Now, consider the case where we want all users to view the ProductComponent, but only the Admin user can view any of its child routes. We can create another guard ProductGuardService which implements the canActivate guard and attach it to each of those child routes as shown below.
+
+Ex -
+{ path: 'product', component: ProductComponent, canActivate : [AuthGuardService],
+      children: [
+      {  path: 'view/:id', component: ProductViewComponent, canActivate : [ProductGuardService]  },
+      {  path: 'edit/:id', component: ProductEditComponent, canActivate : [ProductGuardService]  },
+      {  path: 'add', component: ProductAddComponent, canActivate : [ProductGuardService] }
+      ]  
+  },
+
+Another way is to use the CanActivateChild guard and attach it to the product route as shown below. When Angular sees a canActivateChild guard attached to the parent route, it invokes it every time the user tries to navigates to the child route. Hence instead of attaching Guard service every child, you can attach it to the parent route.
+
+Ex -
+{ path: 'product', component: ProductComponent, canActivate : [AuthGuardService], 
+canActivateChild : [AdminGuardService],
+      children: [
+      {  path: 'view/:id', component: ProductViewComponent  },
+      {  path: 'edit/:id', component: ProductEditComponent  },
+      {  path: 'add', component: ProductAddComponent }
+      ]  
+  },
+
 10.CanDeactivate Guard
+- The Angular CanDeactivate Guard determines whether we can navigate away from a route. The Angular CanDeactivate guard is called, whenever we navigate away from the route before the current component gets deactivated.
+
+- The best use case for CanDectivate guard is the data entry component. The user may have filled the data entry and tries to leave that component without saving his work. The CanDeactivate guard gives us a chance to warn the user that he has not saved his work and give him a chance to cancel the navigation.
+
+Syntax :
+interface CanDeactivate<T> {
+  canDeactivate(component: T, 
+                currentRoute: ActivatedRouteSnapshot, 
+                currentState: RouterStateSnapshot, 
+                nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
+}
+
 11.Angular Resolve Guard
+- The Angular Resolve Guard or Angular Resolvers allow us to load certain data before we navigate to a Route. 
+
+- The Angular renders the Angular Component, when we navigate to a route. The component will then sends an HTTP request to back end server to fetch data so as to display it to the user. We generally do this in ngOnInit Life cycle hook
+
+The Problem with the above approach is that, the use will see a empty component. The component shows the data after the arrival of the data. The one way is solve this problem is to show some loading indicator
+
+The another way to solve this is to make use the Resolve Guard. The Resolve Guard pre fetches the data before the navigating to the route. Hence the component is rendered along with the data.
+
+- Remember Resolve runs after all other guards are executed
+
+
 12.Angular Pass data to route
+
+- Angular allows us to pass data to the route. The route data can be either static or dynamic. The static data use the Angular route data property, where you can store arbitrary data associated with this specific route. For to pass dynamic data (or an object), we can make use of the history state object. The Routed Component can then retrieve the dynamic data from the history state object.
+
+- The Angular can pass data to Route in several ways.
+
+i. Using URL or Route Parameter
+ii. The Optional Parameter or Query Strings
+iii. Using URL Fragment
+iv. Static data using the data property
+v. Dynamic data using state object
+
+- The option to pass the dynamic data or a user-defined object was added in the Angular Version 7.2 using the state object. The state object is stored in History API
+
+Ex -
+<a [routerLink]="['dynamic']" [state]="{ id:1 , name:'Angular'}">Dynamic Data</a>
+
+or
+
+this.router.navigateByUrl('/dynamic', { state: { id:1 , name:'Angular' } });
+
+The Router will add a navigationId property to the state object. Hence you cannot use a scalar value.
+
+
+- The state can be accessed by using the getCurrentNavigation method of the router (works only in the constructor)
+
+Ex - 
+this.router.getCurrentNavigation().extras.state
+
+or 
+console.log(history.state)
+
+or use the getState method of the Location Service. This method is available Angular 8+
+
+import { Location } from '@angular/common';
+ 
+export class SomeComponent
+{
+  products:Product[];
+ 
+  constructor(private location:Location){
+  }
+ 
+  ngOnInit() {
+    console.log(this.location.getState());
+  }
+}
+
+- Passing static data to a route
+The Angular Router will pass the { id:'1', name:"Angular"} when the StaticComponent is rendered. The data value will be located in the data property of the ActivatedRoute service
+
+Ex -
+{ path: 'static', component: StaticComponent, data :{ id:'1', name:"Angular"}},
+
+ngOnInit() {
+      this.activatedroute.data.subscribe(data => {
+          this.product=data;
+      })
+}
+
+-  Passing dynamic data (or object) example
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { map, filter} from 'rxjs/operators';
+import { Observable} from 'rxjs/observable';
+ 
+@Component({
+     template: `<H1>Passing Dynamic Data Demo</H1>
+ 
+     {{ product | json }}`
+})
+export class DynamicComponent implements OnInit {
+ 
+     product;
+ 
+     constructor(private router:Router, private activatedRoute:ActivatedRoute) {
+          console.log(this.router.getCurrentNavigation().extras.state);
+     }
+ 
+     ngOnInit() {
+          //console.log(history.state);
+          this.product=history.state;
+     }
+ }
+
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+ 
+@Component({
+  template: `
+     <ul>
+       <li><a [routerLink]="['/static']">Static Data</a></li>
+       <li><a [routerLink]="['/dynamic']" [state]=product>Dynamic Data</a></li> 
+    </ul>
+   
+    <p>Id :   <input type="text" [(ngModel)]="product.id" > </p>
+    <p>name :<input type="text" [(ngModel)]="product.name" > </p>
+    <button (click)="gotoDynamic()" >Goto Dynamic Component</button>`
+})
+export class HomeComponent {
+  
+  public product = { id:'1', name:"Angular"};
+ 
+  constructor(private router : Router) {
+  }
+ 
+  gotoDynamic() {
+    //this.router.navigateByUrl('/dynamic', { state: { id:1 , name:'Angular' } });
+    this.router.navigateByUrl('/dynamic', { state: this.product });
+  }
+}
+
+The Dynamic Component gets dynamic data. We use the history.state to access the product data. Alternatively, we can use the this.router.getCurrentNavigation().extras.state to achieve the same. Please remember getCurrentNavigation only works in the constructor. It will return null if used elsewhere.
+
+In HomeComponent, we have used routerLink & navigateByUrl to pass the data to the dynamic component. You can also use the form fields to change the data, before passing it to the dynamic route.
+
+- Static data is defined on route and will work on a refresh. Dynamic data will not work
+
 13.RouterLinkActive
+- The RouterLinkActive is a directive for adding or removing classes from an HTML element that is bound to a RouterLink. Using this directive, we can toggle CSS classes for active Router Links based on the current RouterState. The main use case of this directive is to highlight which route is currently active. You can either make the font bold or apply some background color.
+
+Ex -
+<li><a [routerLink]="['home']" routerLinkActive="active">Home</a></li>
+ 
+<li><a [routerLink]="['product']" [routerLinkActive]="['active']">Product</a></li>
+
+With the CSS Rule defined as the global styles.
+
+.active {
+  background-color: yellow;
+}
+
+- When the user navigates to any of the above routes, the Angular router adds the “active” class to the activated element. And when the user navigates away the class will be removed.
+
+The Angular does this by watching the URL. Whenever the Url matches with the URL of the routerLink directive, it applies the classes defined in the RouterLinkActive directive. When it does not match it will be removed from the element.
+
+Using this we can apply different background or foreground color to our navigation links.
+
+- You can add multiple classes to the routerLinkActive directive as shown below
+Ex -
+<a routerLink="/user/bob" [routerLinkActive]="['class1', 'class2']">Bob</a>
+ 
+<li><a [routerLink]="['home']" routerLinkActive="active  home">Home</a></li>
+<li><a [routerLink]="['product']" [routerLinkActive]="['active','home']">Product</a></li>
+
 14.Router Events
+- The Angular Router raises events when it navigates from one route to another route. It raises several events such as NavigationStart, NavigationEnd, NavigationCancel, NavigationError, ResolveStart, etc. You can listen to these events and find out when the state of the route changes.
+
+The router.events is an Observable that gets triggered when the route changes. We receive NavigationEvent as the parameter in the callback. We check the NavigationEvent instance to check the Type of event fired.
+
+Ex:
+this.router.events
+  .subscribe(
+    (event: NavigationEvent) => {
+      if(event instanceof NavigationStart) {
+        console.log(event);
+      }
+    });
+or
+import { filter } from 'rxjs/operators';
+import { Router, NavigationStart, Event as NavigationEvent } from '@angular/router';
+ 
+this.router.events
+  .pipe(
+    filter( event =>event instanceof NavigationStart)
+  )
+  .subscribe(
+    (event: NavigationEvent) => {
+      console.log(event);
+  }
+)
+
+- The Router events allow us to watch for the router state changes and run some custom logic. One of the use case scenarios is to show the loading indicator when the user navigates from one route to another. You can listen to NavigationStart and NavigationEnd events to achieve this result
+
 
 * Angular Module
+https://www.tektutorialshub.com/angular/angular-modules/
 - The Angular Modules help us to organize our code into manageable parts or block. Each block implements a specific feature. The Components, Templates, Directives, Pipes, and Services, which implements that feature become part of the module.
 
 1.Introduction to Angular Modules
