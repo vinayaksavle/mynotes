@@ -102,4 +102,77 @@ ADD CONSTRAINT {CONSTRAINT_NAME} CHECK {BOOLEAN_EXPRESSION}
 7. Identity Column in SQL Server - Part 7
 https://www.youtube.com/watch?v=aOkFE6NLGCQ&list=PL08903FB7ACA1C2FB&index=8
 
+- If a column is marked as an identity column, then the values for this column are automatically generated, when you insert a new row into the table.
+
+Ex - CREATE TABLE tblPerson(
+Id int identity(1,1) Primary Key
+) 
+
+- To explicitly supply a value for identity column
+i. First turn on identity insert - SET Identity_Insert tblPerson ON
+ii. In the insert query specify the column list
+INSERT INTO tblPerson(Id,Name)values(2,'vvs')
+
+- If you have deleted all the rows in a table, and you want to reset the identity column value, use DBCC CHECKIDENT command.
+Ex: DBCC CHECKIDENT('tblPerson',RESEED,0)
+
+
+8. How to get the last generated identity column value in SQL Server - Part 8
+
+- Identity column values are auto generated. There are several ways in SQL server, to retrieve the last identity value that is generated. The most common way is to use SCOPE_IDENTITY() build in function.
+
+Note: You can also use @@IDENTITY and IDENT_CURRENT('tableName')
+
+Session - It is connection to the SQL Server.
+Difference:
+SCOPE_IDENTITY() - Same session and the same scope. Prefer this.
+@@IDENTITY - Same session and across any scope.
+IDENT_CURRENT('TableName') - Specific table across any session and any scope.
+
+https://www.youtube.com/watch?v=n1iwngG_zNY&list=PL08903FB7ACA1C2FB&index=9
+
+Do watch video
+!Important for blog topic.
+
+9. Unique key constraint - Part 9
+
+- We use UNIQUE constarint to enforce uniqueness of a column i.e, the column shouldn't allow any duplicate values. We can add a unique constraint through the designer or using a query.
+
+- To create the unique key using a query:
+ALTER TABLE table_name
+ADD CONSTRAINT constraint_name UNIQUE(column_name)
+
+- But primary key and unique key are used to enforce, the uniqueness of a column. So, when do you chosse one over the other ?
+A table can have, only one primary key. If you want to enforce uniqueness on 2 or more columns, then we use unique key constraint.
+
+- What is the difference betwen Primary key constraint and Unique key constraint ?
+i. A table can have only one primary key, but more than one unique key.
+ii. Primary key does not allow nulls, where as unique key allows one null.
+
+10. Select statement in sql server - Part 10
+- selecting distinct rows
+SELECT DISTINCT Name,City FROM tblPerson
+
+It distinct name and city columns so there are chances that duplicate city might come but rows will be distinct.
+
+- Wild Cards
+% - Specifies zero or more characters
+_ - Specifies exactlt one character.
+[] - Any character with in the brackets
+[^] - Not any character with in the brackets.
+
+Ex -
+SELECT * FROM tblPerson WHERE email LIKE '_@_.com'
+// A@A.com
+
+SELECT * FROM tblPerson WHERE Name LIKE '[MST]%'
+// Tom,Mary,Sam
+
+SELECT top 5 * from tblPerson
+SELECT top 50 Percent * from tblPerson
+
+11. Group by in sql server - Part 11
+
+https://www.youtube.com/watch?v=FKSSOpQe5Jc&list=PL08903FB7ACA1C2FB&index=12
+
 - 
