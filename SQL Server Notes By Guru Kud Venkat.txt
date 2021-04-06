@@ -175,4 +175,47 @@ SELECT top 50 Percent * from tblPerson
 
 https://www.youtube.com/watch?v=FKSSOpQe5Jc&list=PL08903FB7ACA1C2FB&index=12
 
+- Group by clause is used to group a selected set of rows into a set of summary rows by the value of one or more columns or expressions. It is always used in conjunction with one or more aggregate function.
+
+- Filtering Groups:
+WHERE clause is used to filter rows before aggregation, where as HAVING class is used to filter groups after aggregation. The following 2 queries produce the same result.
+Ex -
+SELECT City, SUM(Salary) as Total FROM tblEmployee WHERE city = 'London' GROUP BY City
+
+SELECT City, SUM(Salary) as Total FROM tblEmployee GROUP BY City HAVING CITY = 'London'
+
+Note: From a performance standpoint, you cannot say that one method is less efficient than the other. SQL Server optimizer analyzes each statement and selects an efficient way of executing it. As a best practice, use the syntax that clearly describes the desired result. Try to eliminate rows that you wouldn't need, as early as possible.
+
+- Difference WHERE and HAVING
+i. WHERE clause can be used with - Select, Insert and Update statements, where as HAVING clause can only be used with the Select statement.
+
+ii. WHERE filters rows before aggregation (GROUPING), where as, HAVING filter groups, after the aggregations are performed.
+
+iii. Aggregate functions cannot be used in the WHERE clause, unless it is in a sub query contained in a HAVING clause, whereas, aggregate functions can be used in HAVING clause.
+
+Ex - HAVING SUM(SALARY) > 5000
+
+12. Joins in sql server - Part 12
+
+- JOINS in SQL Server are used to retrieve data from 2 or more related tables. In general tables are related to each other using foreign key constraints.
+
+- In SQL Server, there are different types of JOINS
+i. INNER JOIN
+ii. OUTER JOIN
+iii. CROSS JOIN
+
+OUTER Joins are again divided into
+i. LEFT JOIN OR LEFT OUTER JOIN
+ii. RIGHT JOIN OR RIGHT OUTER JOIN
+iii. FULL JOIN OR FULL OUTER JOIN
+
+- CROSS JOIN
+It produces, the Cartesian product of the 2 tables involved in the JOIN. For ex, In the Employee table we have 10 rows and in the Department table we have 4 rows. So, a cross join between these 2 tables produces 40 rows.
+
+Note: CROSS JOIN shouldn't have ON clause.
+SELECT Name, Gender, Dep FROM tblEmployee CROSS JOIN tblDepartment
+
+13. Advanced or intelligent joins in sql server - Part 13
+https://www.youtube.com/watch?v=GKGtOABAO9s&list=PL08903FB7ACA1C2FB&index=14
+
 - 
