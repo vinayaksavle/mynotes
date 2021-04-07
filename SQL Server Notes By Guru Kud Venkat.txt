@@ -218,4 +218,86 @@ SELECT Name, Gender, Dep FROM tblEmployee CROSS JOIN tblDepartment
 13. Advanced or intelligent joins in sql server - Part 13
 https://www.youtube.com/watch?v=GKGtOABAO9s&list=PL08903FB7ACA1C2FB&index=14
 
-- 
+- INNER JOIN (Only Matching rows)
+SELECT [Column] FROM tblEmployee E INNER JOIN tblDepartment D ON E.DeptId = D.Id
+
+- LEFT JOIN (Matching rows + Left table non-Matching rows)
+SELECT [Column] FROM tblEmployee E LEFT JOIN tblDepartment D ON E.DeptId = D.Id
+
+- RIGHT JOIN (Matching rows + Right table non-Matching rows)
+SELECT [Column] FROM tblEmployee E RIGHT JOIN tblDepartment D ON E.DeptId = D.Id
+
+- FULL JOIN ((Matching rows + both table non-Matching rows))
+SELECT [Column] FROM tblEmployee E FULL JOIN tblDepartment D ON E.DeptId = D.Id
+
+- Non-matching rows from LEFT table
+SELECT [Column] FROM tblEmployee E LEFT JOIN tblDepartment D ON E.DeptId = D.Id WHERE D.Id IS NULL
+
+- Non-matching rows from RIGHT table
+SELECT [Column] FROM tblEmployee E RIGHT JOIN tblDepartment D ON E.DeptId = D.Id WHERE E.DeptId IS NULL
+
+- Non-matching rows from both table
+SELECT [Column] FROM tblEmployee E FULL JOIN tblDepartment D ON E.DeptId = D.Id WHERE D.Id IS NULL OR E.DeptId IS NULL
+
+14. Self join in sql server - Part 14
+
+- Joining a table with itself is called as SELF JOIN.
+SELF JOIN is not a different type of JOIN.
+
+It can be classified under any type of JOIN:
+i. INNER
+ii. OUTER (Left,Right,Full)
+iii. CROSS Joins
+
+- Take a scenario there is employee table in which all employee data is present with managerid. To get manager name based on its id write query use self join.
+-- LEFT OUTER SELF JOIN 
+SELECT E.Name AS Employee, M.Name AS Manager FROM tblEmployee E LEFT JOIN tblEmployee M ON E.ManagerId = M.EmployeeId
+
+-- RIGHT OUTER SELF JOIN 
+SELECT E.Name AS Employee, M.Name AS Manager FROM tblEmployee E RIGHT JOIN tblEmployee M ON E.ManagerId = M.EmployeeId
+
+-- CROSS OUTER SELF JOIN 
+SELECT E.Name AS Employee, M.Name AS Manager FROM tblEmployee E CROSS JOIN tblEmployee M ON E.ManagerId = M.EmployeeId
+
+
+15. Different ways to replace NULL in sql server - Part 15
+
+- Three ways to replace NULL values - ISNULL() Function, CASE Statement & COALESCE() Function
+
+SELECT E.Name AS Employee, ISNULL(M.Name, 'No Manager') AS Manager FROM tblEmployee E LEFT JOIN tblEmployee M ON E.ManagerId = M.EmployeeId
+
+SELECT E.Name AS Employee, CASE WHEN M.Name IS NULL THEN 'No Manager' ELSE M.Name END AS Manager FROM tblEmployee E LEFT JOIN tblEmployee M ON E.ManagerId = M.EmployeeId
+
+SELECT E.Name AS Employee, COALESCE(M.Name, 'No Manager') AS Manager FROM tblEmployee E LEFT JOIN tblEmployee M ON E.ManagerId = M.EmployeeId
+
+16. Coalesce function in sql server Part 16
+
+- COALESCE() Function - Returns the first NON NULL value.
+
+- Take a scenario where you want employee name if first name is null then check middle name if that is also null then check last name.
+
+SELECT Id, COALESCE(FirstName, MiddleName, LastName) AS Name FROM tblEmployee
+
+17. Union and union all in sql server Part 17
+
+- UNION and UNION ALL operators in SQL Server, are used to combine the result-set of two or more SELECT queries.
+
+Note: For UNION and UNION ALL to work, the Number, Data types and the order of the columns in the select statements should be same.
+
+- Difference between UNION and UNION ALL
+i. UNION removes duplicate rows, where as UNION ALL does not
+ii. UNION has to perform distinct sort to remove duplicates, which makes it less faster than UNION ALL.
+
+Note: Estimated query execution plan - CTRL + L
+
+- Sorting results of UNION or UNION ALL
+ORDER BY clause should be used only on the last SELECT statement in the UNION query.
+
+- Difference between UNION and JOIN
+UNION combines the result set of two or more select queries into a single result set which includes all the rows from all the queries in the union, where as JOINS, retrieve data from two or more tables based on logical relationships between the tables.
+
+In short, UNION combines rows from 2 or more tables, where JOINS combine columns from 2 or more table.
+
+18. Stored procedures in sql server Part 18
+https://www.youtube.com/watch?v=Qu3E-oncF3g&list=PL08903FB7ACA1C2FB&index=19
+
