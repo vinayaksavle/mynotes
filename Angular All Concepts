@@ -3382,9 +3382,89 @@ https://www.tektutorialshub.com/angular/angular-modules/
 - The Angular Modules help us to organize our code into manageable parts or block. Each block implements a specific feature. The Components, Templates, Directives, Pipes, and Services, which implements that feature become part of the module.
 
 1.Introduction to Angular Modules
+- The Angular module (also known as ngModule) help us to organize the application parts into cohesive blocks of functionality. Each block is focused on providing a specific functionality or a feature.
+
+- The JavaScript Modules , which also goes by the name JS modules or ES modules or ECMAScript modules are part of the JavaScript Language. The JS Modules are stored in a file. There is exactly one module per file and one file per module. These modules contain small units of independent, reusable code. They export a value, which can be imported and used in some other module.
+
+- The NgModule() decorator is a function that takes a single metadata object, whose properties describe the module. The most important properties are as follows.
+
+@NgModule({
+  declarations: [  ],
+  imports:      [  ],
+  providers:    [  ],
+  exports:      [  ],
+  bootstrap:    [  ],
+  entrycomponents: [ ]
+})
+
+- Declarations array
+This is where components, directives, and pipes that belong to this NgModule are declared.
+
+You should add only those, which belong to this module. The Component cannot belong to more than one module. The services must not be declared here. They are defined in the Angular Providers array.
+
+- Providers array
+The Services, which you want to add to the global collection of services are added here. The services are then available for injection via dependency injection.
+Remember :
+Declarations is for Components, Directives & Pipes. Providers are for Services
+
+Services are global in scope. Services added to Providers array are available for injection in the entire application
+
+- Imports array
+If you want this ngModule require any feature or functionality, then those modules need to be imported here. Any components, directives, and pipes that are defined and exported in that module can be used in this module.
+
+- Exports array
+If you want other modules to use the component, pipes, directives of this NgModule, then those must be specified here.
+
+Only those components declared here are visible to the other ngModules, when they import this module.
+
+- Bootstrap
+The main component of this module, which needs to be loaded when the module is loaded is specified here.
+
+This is a must if you are the first module ( called the root module) that is loaded when the Angular App starts. It is the responsibility of the root module to load the first view and it is done by specifying the component here.
+
+If the module is not the root module, then you should keep this blank
+
+- EntryComponents
+The components that are dynamically loaded needs to be declared here.
+
+- The application needs only one instance of the services provided by the RouterModule.  But every Angular module might contain routes of its own and needs to import RouterModule and register the routes.
+
+Angular has a nice way to solve this problem. The Services are registered only if you call the forRoot method. forRoot method must be called only once and in the Root module. In the other modules, we will be using the forChild method to register the routes
+
 2.Routing Between Angular Modules
+https://www.tektutorialshub.com/angular/angular-routing-between-modules/
+
+- forRoot vs forChild
+The services provided in the Root Module or in any of the eagerly loaded feature modules  are app-scoped. i.e they are available for injection in every component in the app.
+
+This rule does not apply to the lazy loaded modules. The lazy loaded modules gets their own injector and providers. The services provided in the lazy loaded modules are available only in the lazy loaded module only.
+
+- It may happen that you may have other routes defined in the AppRoutingModule and might not be able to import it last. In that case create another routing module and place only the wild card route in it and import it in the AppModule.
+
 3.Angular folder structure: Best Practices
+- We can classify our modules into the following four categories
+
+i. Root Module
+The Angular requires one module to be loaded as the application starts. We call this as root module. The root module loads the root component and all other modules.  The root module is conventionally called as AppModule and created under the  /src/app.folder
+
+ii. Feature Module
+The Features module implements a specific feature of the Application. All the components, pipes & directives which implement the feature become part of the module.
+
+iii. Shared Module
+There are many components, directives & pipes, which we may like to share across various modules. All these components should go into the shared module. 
+
+The shared module and must declare the components, pipes, and directives using the declarations metadata and export it using the exports metadata
+
+The Services must not be defined here. Since the shared modules are imported everywhere, it may create a new instance of the service if it is imported in the lazy loaded modules.
+
+iv. Core Module
+The Services shared across the application must become part of the CoreModule. The user authentication services, services that fetch data are examples of such services.
+
+The Services usually needs to be Singleton, Only one instance of the Service must exist. Providing it in CoreModule ensures that the services remain singleton
+
 4.Lazy Loading in Angular
+https://www.tektutorialshub.com/angular/angular-lazy-loading/
+
 5.Preloading Strategy
 6.CanLoad Guard
 
