@@ -301,3 +301,111 @@ In short, UNION combines rows from 2 or more tables, where JOINS combine columns
 18. Stored procedures in sql server Part 18
 https://www.youtube.com/watch?v=Qu3E-oncF3g&list=PL08903FB7ACA1C2FB&index=19
 
+- A store procedure is group of T-SQL (Transact SQL) statements. If you have a situation, where you write the same query over and over again, you can save that specific query as a stored procedure and call it just by its name.
+
+- Note: When naming user defined stored procedures, Microsoft recommends not to use sp_ as a prefix. All system stored procedures, are prefixed with sp_. This avoids any ambiguity between user defined and system stored procedures and any conflicts, with some future system procedure.
+
+Ex - 
+CREATE PROCEDURE spGetEmployees
+AS 
+BEGIN
+	SELECT Name,Gender FROM tblEmployee
+END
+
+spGetEmployees or EXEC spGetEmployees or Execute spGetEmployees
+
+- Parameters and variables have an @ prefix in their name.
+Ex -
+EXEC spGetEmployees 'Male',1
+EXEC spGetEmployees @Gender='Male',@Department=1
+
+- To view the tex, of stored procedure
+i. Use system stored procedure sp_helptext 'SPName' OR
+ii. Right click the SP in Object explorer -> Script Procedure as -> Create To -> New Query Editor window
+
+- To change the store procedure, use ALTER PROCEDURE statement.
+
+To delete the SP, use DROP PROC 'SPName' or DROP PROCEDURE 'SPName'
+
+To encrypt the text of the SP, use WITH ENCRYPTION option. It is not possible to view the text of an encrypted SP. 
+
+Ex - 
+CREATE PROCEDURE spGetEmployees
+@Gender nvarchar(20),
+@DepartmentId int
+AS 
+BEGIN
+	SELECT Name,Gender FROM tblEmployee WHERE Gender = @Gender AND DepartmentId = @DepartmentId
+END
+
+19. Stored procedures with output parameters Part 19
+
+- To create an SP with output parameter, we use the keywords OUT or OUTPUT.
+
+Ex - 
+CREATE PROCEDURE spGetEmployees
+@Gender nvarchar(20),
+@EmployeeeCount int Output
+AS
+BEGIN
+	SELECT @EmployeeeCount = COUNT(Id) FROM tblEmployee WHERE Gender = @Gender
+END
+
+DECLARE @EmployeeeTotal int
+exec spGetEmployees 'Male',@EmployeeeTotal OUTPUT
+
+or
+exec spGetEmployees @EmployeeeCount = @EmployeeeTotal OUT, @Gender = 'Male'
+PRINT @EmployeeeTotal
+
+- If you don't specify the OUTPUT keyword, when executing the stored procedure, the @EmployeeeTotal variable will be NULL.
+
+- Useful system stored procedures
+sp_help procedure_name - View the information about the stored procedure, like parameter names, their datatypes etc. sp_help can be used with any database object, like tables,views, SP's, triggers etc. Alternatively, you can also press ALT + F1, when the name of the object is highlighted.
+
+sp_helptext procedure_name - View the Text of the stored procedure
+
+sp_depends procedure_name - View the dependencies of the stored procedure. This system SP is very useful, especially if you want to check, if there are any stored procedures that are referencing a table that you are about to drop. sp_depends can also be used with other database objects like table etc.
+
+20. Stored procedure output parameters or return values Part 20
+
+- Whenever you execute a stored procedure, it returns an integer status variable.Usually, zero indicates success, and non-zero indicates failure.
+Ex -
+CREATE Procedure spGetTotalCountOfEmployee
+As
+BEGIN
+return (SELECT COUNT(ID) FROM tblEmployee)
+END
+
+Declare @Total int
+Execute @Total = spGetTotalCountOfEmployee
+SELECT @Total
+
+So, we are able to achieve what we want, using output parameters as well as return values.
+
+- Return values you can use only where return type is integer. If in above example we try to return Name it will throw error for return saying conversion failed. Also you can return only single value using return but with output we can return multiple values.
+
+- Return Values
+Only integer Datatype
+Only one value
+use to convey success or failure
+
+VS
+
+- Output Parameters
+Any Datatype
+More than one value
+Use to return values like name, count etc.
+
+21. Advantages of stored procedures Part 21
+
+- Execution plan retention and reusability
+- Reduces network traffic
+- Code reusability and better maintainability
+- Better Security
+- Avoids SQL Injection Attack
+
+22. Built in string functions in sql server 2008 Part 22
+https://www.youtube.com/watch?v=qJFr-R76r9A&list=PL08903FB7ACA1C2FB&index=23&ab_channel=kudvenkat
+
+- 
