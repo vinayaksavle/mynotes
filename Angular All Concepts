@@ -3464,14 +3464,227 @@ The Services usually needs to be Singleton, Only one instance of the Service mus
 
 4.Lazy Loading in Angular
 https://www.tektutorialshub.com/angular/angular-lazy-loading/
+- Lazy loading is the technique where angular loads the Modules only on a need basis rather than all at once. It is also called on-demand loading. By default, Angular Loads the modules eagerly. Lazy Loading of Angular Modules reduces the initial load time of the app. We use the loadChilden method of the Angular Router to lazy load them when the user navigates to a route.
+
+Syntax: 
+ > Angular 8
+ {path: "admin", loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)},
+ 
+ < Angular 7
+ {path: "admin", loadChildren:'./admin/admin.module#AdminModule'},
+
+-loadChildren: We need to provide call back function to loadChildren argument. The call back must load the AdminModule. We use the dynamic import syntax using the import method. The import method loads the module from the path, which we provide as the argument to it.
+
+- The lazy loaded module loads only for the first visit of the URL, it will not load when we revisit that URL again. When we define an AdminModule to lazy loaded, the angular creates a separate bundle for the entire module.
+
+- We need to be careful when we create a service or provide a services in Lazy loaded module.
+
+Any Service defined in the Lazy Loaded Module, will not be load until the user navigates to that module. Hence we cannot use them anywhere else in the application.
+
+The Angular creates a separate injector for the lazy loaded module. Therefore, any service we provide in the lazy loaded module gets its own instance of the service.
+
+- Hence create a service in the lazy loaded module, only if it is used within the lazy loaded Module. Else consider moving it to the AppModule or a special CoreModule. 
+
+- Do not import lazy loaded modules in any other modules. This will make the angular to load the module eagerly and can have unexpected bugs.
+
+- Be careful when you import other modules in the lazy loaded module. If the other modules providers any services, then the lazy loaded module will get a new instance of the service. This may have unintended side effects, if the services are intended to be app-wide singleton
 
 5.Preloading Strategy
+
+- Angular Preloading Strategy is yet another way to speed up the load time of the Angular Apps. We build Modular apps using the Angular Modules. The Angular loads all the modules, when the user requests for the first time. This will make app loading slowly as it need to download all the modules. We can solve this problem by lazy loading those modules. The Angular allows us further optimize our app using a technique called PreLoading.
+
+- Preloading in Angular means loading the Lazy loaded Modules in the background asynchronously, while user is interacting with the app. This will help boost up the loading time of the app
+
+- By Lazy loading the modules, we can reduce the initial download size of the app, and thus making app load quickly. This is very useful in case of big apps. But when user navigates to a lazy loaded part of the app, the angular will have to download the module from the server, which means that user will have to wait for the download to finish.
+
+- By Preloading the lazy loaded module, the user do not have to wait for the module to be downloaded as the module is already downloaded in the background.
+
+- To make use of Preloading, first we need to enable lazy loading of the Modules. Mark the modules with the loadChildren, when you define routes as shown below. The angular will lazy load those modules.
+
+const routes: Routes = [
+  {path: "admin", loadChildren:'./admin/admin.module#AdminModule'},
+];
+
+And then, you can enable preloading by using the preloadingStrategy: PreloadAllModules, while registering the routes using the forRoot method.
+
+RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}) 
+
+- NoPreloading: This will disables all the preloading. This is default behavior i.e. if you don not specify the preloadingStrategy, then the angular assumes you do not want preloading
+
+RouterModule.forRoot(routes,{preloadingStrategy: NoPreloading}
+
+- PreloadAllModules: This strategy will preload all the lazy loaded modules. 
+
+RouterModule.forRoot(routes,{preloadingStrategy: PreloadAllModules}) 
+
+- With PreloadAllModules all the modules are preloaded, which may actually create a bottleneck if the application has large no of modules to be loaded.
+
+- The better way strategy would be
+i. Eagerly Load the modules required at startup. For Example authentication module, core module, shared module etc
+ii. Preload all frequently used modules, may be after some delay
+iii. Lazy load remaining modules
+
+To selectively preload a module, we need to make use of custom preloading strategy.
+
+In a real application, you may set a delay before preloading the module. You can also set different delay for different routes also.
+
+Ex -
+const routes: Routes = [
+  {path: "admin", loadChildren:'./admin/admin.module#AdminModule',data: { preload: true, delay:5000 }},
+  {path: "test", loadChildren:'./test/test.module#TestModule',data: { preload: true, delay:10000 }},
+];
+
+import { Injectable } from '@angular/core';
+import { Observable, of, timer  } from 'rxjs';
+import { flatMap } from 'rxjs/operators'
+ 
+import { PreloadingStrategy, Route } from '@angular/router';
+ 
+@Injectable()
+export class CustomPreloadingStrategy implements PreloadingStrategy {
+ 
+    preload(route: Route, loadMe: () => Observable<any>): Observable<any> {
+    
+    if (route.data && route.data['preload']) {
+      var delay:number=route.data['delay']
+      console.log('preload called on '+route.path+' delay is '+delay);
+      return timer(delay).pipe(
+        flatMap( _ => { 
+          console.log("Loading now "+ route.path);
+          return loadMe() ;
+        }));
+    } else {
+      console.log('no preload for the path '+ route.path);
+      return of(null);
+    }
+  }
+} 
+
 6.CanLoad Guard
+- The Angular Route Guards are used to control, whether the user can navigate to or away from a given route. The canload guard determines whether a particular lazy loaded child route can be loaded.
+
+- The Angular modules can be either eagerly loaded or lazy loaded. By default Angular loads all the modules eagerly. To lazy load a module we need to use the loadChildren in the route definition
+
+- Sometimes, we want to prevent the loading of the modules for unauthorized users. This is where we use the CanLoad Guard.
+
+- The Angular provides canActivate Guard, which prevents unauthorized user from accessing the route. But it does not stop the module from being downloaded. The user can use the chrome developer console to see the source code. The CanLoad Guard prevents the module from being downloaded.
 
 * Advanced Components
 
 1.Ng-Content & Content Projection in Angular
+- The ng-content tag acts as a placeholder for inserting external or dynamic content. The Parent component passes the external content to the child component. When Angular parses the template, it inserts the external content where ng-content appears in the child component’s template
+
+- We can use content projection to create a reusable component. The components that have similar logic & layout and can be used in many places in the application.
+
+- Take an example of a card component. It has a header section, footer section & body section. The contents of these sections will vary. The ng-content will allow us to pass these sections to the card component from the parent component. This enables us to use the card component at many places in the app.
+
+Example -
+import { Component } from '@angular/core';
+ 
+ 
+@Component({
+  selector: 'app-card',
+  template: `
+    <div class="card">
+    <div class="header">
+      <ng-content select=".header" ></ng-content>
+    </div>
+    <div class="content">
+      <ng-content select="content" ></ng-content>
+    </div>
+    <div class="footer">
+      <ng-content select="footer" ></ng-content>
+    </div>
+    </div>
+  `,
+  styles: [
+    ` .card { min- width: 280px;  margin: 5px;  float:left  } 
+      .header { color: blue}
+    `
+  ]
+})
+export class CardComponent {
+}
+ 
+In the above example, we have three ng-content slots, each have a selector header,content & footer. Now open the app.component.html add the following code
+
+<app-card>
+ <header><h1>Angular</h1></header>
+ <content>One framework. Mobile & desktop.</content>
+ <footer><b>Super-powered by Google </b></footer>
+</app-card>
+  
+<app-card>
+ <div class="header">
+    <h1>Angular</h1>
+  </div>
+ <content>A JavaScript library for building user interfaces</content>
+ <footer><b>Facebook Open Source </b></footer>
+</app-card>
+
+Similarly, you can use the various CSS Selectors as shown below
+
+ <ng-content select="custom-element" ></ng-content>
+ <ng-content select=".custom-class" ></ng-content>
+ <ng-content select="[custom-attribute]" ></ng-content>
+
+- ng-content without selector catches all
+Now, in the following example, the last paragraph does not belong to any ng-content slots. Hence ng-content will not project the last para as it cannot determine where to add.
+
+<card>
+  <div class="header"><h1>Typescript</h1></div>
+  <div class="content">Typescript is a javascript for any scale</div>
+  <div class="footer"><b>Microsoft </b></div>
+  <p>This text will not be shown</p>
+</card>
+
+To solve the above issue, we can include ng-content without any selector. It will display all the content, which cannot be projected into any other slots.
+
+import { Component } from '@angular/core';
+ 
+ 
+@Component({
+  selector: 'app-card',
+  template: `
+    <div class="card">
+    <div class="header">
+      <ng-content select="header" ></ng-content>
+    </div>
+    <div class="content">
+      <ng-content select="content" ></ng-content>
+    </div>
+    <div class="footer">
+      <ng-content select="footer" ></ng-content>
+    </div>
+    <ng-content></ng-content>                      
+    </div>
+  `,
+  styles: [
+    ` .card { min- width: 280px;  margin: 5px;  float:left  } 
+      .header { color: blue}
+    `
+  ]
+})
+export class CardComponent {
+}
+
+- ngProjectAs
+Sometimes it becomes necessary to wrap the component using the ng-container. Most of the time when you use a structural directive like ngIf or ngSwitch.
+
+<card>
+  <ng-container ngProjectAs="header">
+    <div>
+      <h1 style="color:red;">React</h1>
+    </div>
+  </ng-container>
+  <div class="content">A JavaScript library for building user interfaces</div>
+  <div class="footer"><b>Facebook Open Source </b></div>
+</card>
+
+
 2.Angular @input, @output & EventEmitter
+https://www.tektutorialshub.com/angular/angular-input-output-eventemitter/
+
 3.Template Reference Variable in Angular
 4.ng-container in Angular
 5.ng-template & TemplateRef in angular
