@@ -3685,20 +3685,920 @@ Sometimes it becomes necessary to wrap the component using the ng-container. Mos
 2.Angular @input, @output & EventEmitter
 https://www.tektutorialshub.com/angular/angular-input-output-eventemitter/
 
+- @input - Input decorator marks the property as the input property. I.e it can receive data from the parent component. The parent component uses the property binding to bind it to a component property. Whenever the value in the parent component changes angular updates the value in the child component.
+
+- @output - Output decorates the property as the output property. We initialize it as an EventEmitter. The child component raises the event and passes the data as the argument to the event. The parent component listens to events using event binding and reads the data.
+
+- EventEmitter - EventEmitter is responsible for raising the event. The @output property normally is of type EventEmitter. The child component will use the emit() method to emit an event along with the data.
+
+
 3.Template Reference Variable in Angular
+https://www.tektutorialshub.com/angular/template-reference-variable-in-angular/
+
+- Template Reference Variable
+The Template reference variable is a reference to any DOM element, component or a directive in the Template. We can use it elsewhere in the template. We can also pass it to a method in the component. It can contain a reference to elements like h1, div, etc
+Ex - 
+HTML Element
+<input type="text" #firstName>
+
+Component/Directive
+<app-customer #customerList=”customer”></app-customer>
+
+Component/Directive with exportAs
+<app-customer #customerList=”customer”></app-customer>
+customer is exportAs name in component.
+
+Example:
+Create a new component customer-list.component.ts
+
+import { Component } from '@angular/core';
+import { Customer } from './customer';
+ 
+@Component({
+  selector: 'app-customer-list',
+  templateUrl: './customer-list.component.html',
+  exportAs:'customerList'
+})
+export class CustomerListComponent {
+ 
+  selectedCustomer: any;
+ 
+  customers: Customer[] = [
+ 
+    {customerNo: 1, name: 'Rahuld Dravid', address: '', city: 'Banglaore', state: 'Karnataka', country: 'India'},
+    {customerNo: 2, name: 'Sachin Tendulkar', address: '', city: 'Mumbai', state: 'Maharastra', country: 'India'},
+    {customerNo: 3, name: 'Saurrav Ganguly', address: '', city: 'Kolkata', state: 'West Bengal', country: 'India'},
+    {customerNo: 4, name: 'Mahendra Singh Dhoni', address: '', city: 'Ranchi', state: 'Bihar', country: 'India'},
+    {customerNo: 5, name: 'Virat Kohli', address: '', city: 'Delhi', state: 'Delhi', country: 'India'},
+ 
+  ]
+}
+
+customer-list.component.html
+
+<h2>List of Customers</h2>
+ 
+<table class='table'>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Select</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let customer of customers;">
+      <td>{{customer.customerNo}}</td>
+      <td>{{customer.name}}</td>
+      <td>{{customer.address}}</td>
+      <td>{{customer.city}}</td>
+      <td>{{customer.state}}</td>
+      <button (click)="selectedCustomer=customer">Select</button>
+    </tr>
+  </tbody>
+</table>
+
+app.component.html
+
+You have selected {{customerListComponent.selectedCustomer?.name}}
+<app-customer-list #customerListComponent></app-customer-list>
+
+ExportAs
+Sometimes there could be more than one directive on a DOM Element.For Example in the following code has two directives. In such a case, we need to specify which directive to use for #variable.
+
+<a-directive b-directive #variable />
+The components or directives can use exportAs to export the component/directive in a different name.
+
+For Example, open the customer-list.component and add the exportAs:'customerList' under the @Component metadata
+
+@Component({
+ selector: 'app-customer-list',
+ templateUrl: './customer-list.component.html',
+ exportAs:'customerList'
+})
+
+You have selected {{customerList.selectedCustomer?.name}}
+<app-customer-list #customerList="customerList"></app-customer-list>
+
+- Variable Scope
+ The scope of the template reference variable is the template within which it is declared. You cannot access it outside the template. Hence any variable declared in CustomerListComponent cannot be accessed from the app component although we render the customer list within the app component.
+
+- Child scope
+Also, note that we can create a new child template scope (nested scope) by using the directive ng-template . Also the structural directive like ngIf, ngFor, etc also creates their own child scope. The following is an example of the <ng-template> directive. The address variable defined inside the ng-template is not accessible outside it.
+
+Ex - 
+<h2>Variable Scope</h2>
+ 
+<div *ngIf="false else addressTemplate"></div>
+ 
+<ng-template #addressTemplate>
+ <p>
+   <label for="address">Address</label>
+   <input (keyup)="0" type="text" #address id="address">
+ </p>
+ <p>The address of {{firstName.value}} {{lastName.value}} Entered {{address.value}} </p>
+ 
+</ng-template>
+ 
+<!-- address is not accessible here -->
+<p>
+You Entered {{address?.value}}
+</p>
+
+<div *ngIf="true">
+  <app-customer-list #variable></app-customer-list
+  //variable is accessible from here
+</div>
+ 
+//variable is not accessible from here
+
+
 4.ng-container in Angular
+
+- ng-container allows us to create a division or section in a template without introducing a new HTML element. The ng-container does not render in the DOM, but content inside it is rendered. ng-container is not a directive, component, class, or interface, but just a syntax element.
+Ex - 
+<h1> ng-Container</h2>
+<p>Hello  world! </p>
+<ng-container>               //This is removed from the final HTML
+ Container's content.
+</ng-container>
+
+Renders as
+<h1> ng-Container</h2>
+<p>Hello  world! </p>
+Container's content.
+
+You can see that the element is absent in the final HTML
+
+- It is a very useful directive. Especially when working with structural directives like ngIf, ngFor, etc.
+
+- ng-Container with ngFor
+For Example, consider the following items. We want to display the items as a list, but only the active items. This requires two directives ngFor to loop through the items and ngIf to check if the items are active
+
+items= [
+   { name:'Angular', active:true},
+   { name:'React', active:true},
+   { name:'Typescript', active:true},
+   { name:'FoxPro', active:false},
+   { name:'Javascript', active:true},
+   { name:'ASP.NET Core', active:true},
+   { name:'DBase', active:false}
+ ]
+ 
+ Without ng-container, the only way to achieve this is by using the span element as shown. This adds the unnecessary DOM element. and it may also cause issues with the CSS.
+
+<ul>
+ <span *ngFor="let item of items;">
+   <li *ngIf="item.active">
+     {{item.name}}
+   </li>
+ </span>
+</ul>
+
+By Replacing the span with ng-container our HTML renders correctly without those extra span elements
+
+<ul>
+ <ng-container *ngFor="let item of items;">
+   <li *ngIf="item.active">
+     {{item.name}}
+   </li>
+ </ng-container>
+</ul>
+ 
+- ng-container with ngIf
+The div of the ngIf is not necessary here.
+<div *ngIf="items1">          //Replace the div with ng-container as shown below
+ <div *ngFor="let item of items1;">
+   {{item.name}}
+ </div>
+</div>
+
+<ng-container *ngIf="items1">
+ <div *ngFor="let item of items1;">
+   {{item.name}}
+ </div>
+</ng-container>
+
+- ngSwitch with/without ng-container
+<div [ngSwitch]="value">
+ <span *ngSwitchCase="0">Text one</span>
+ <span *ngSwitchCase="1">Text two</span>
+</div>
+ 
+<div [ngSwitch]="value">
+ <ng-container *ngSwitchCase="0">Text one</ng-container>
+ <ng-container *ngSwitchCase="1">Text two</ng-container>
+</div>
+
+- ngTemplateOutlet (Interview question)
+The container is also used as a placeholder for injecting a dynamic template using the ngTemplateOutlet.
+
+<ng-container *ngTemplateOutlet="loading"></ng-container>
+
+
 5.ng-template & TemplateRef in angular
+https://www.tektutorialshub.com/angular/ng-template-in-angular/
+
+- The <ng-template> is an Angular element, which contains the template. A template is an HTML snippet. The template does not render itself on DOM.
+
+Ex -
+<h2>Defining a Template using ng-Template</h2>
+ 
+<ng-template>
+  <p> Say Hello</p>
+</ng-template>
+
+The above code generates the following output. The Angular does not render Say Hello. You won’t even find it as a hidden element in the DOM.
+
+//output
+Defining a Template using ng-Template
+
+i.e because ng-template only defines a template. It is our job to tell angular where & when to display it.
+
+- There are few ways you can display the template.
+i. Using the ngTemplateOutlet directive.
+The ngTemplateOutlet, is a structural directive, which renders the template. To use this directive, first, we need to create the template and assign it to a template reference variable (sayHelloTemplate in the following template).
+
+Ex -
+<h1>ng-template & TemplateRef</h1>
+<h2>Using the ngTemplateOutlet</h2>
+ 
+<ng-template #sayHelloTemplate>
+  <p> Say Hello</p>
+</ng-template>
+
+We use the ngTemplateOutlet in the DOM, where we want to render the template.
+
+The following code assigns the Template variable sayHelloTemplate to the ngTemplateOutlet directive using the Property Binding.
+
+<ng-container *ngTemplateOutlet="sayHelloTemplate">
+  This text is not displayed
+</ng-container> 
+
+//Output
+ng-template & TemplateRef
+Using the ngTemplateOutlet
+Say Hello
+
+- The content inside the ngTemplateOutlet directive is not displayed. It replaces it with content it gets from the sayHelloTemplate.
+
+- The ngTemplateOutlet is a very powerful directive. You can use it render templates, pass data to the template, pass the template to child components, etc. You can learn all these from our ngTemplateOutlet tutorial
+
+ii. Using the TemplateRef & ViewContainerRef
+
+- TemplateRef is a class and the way to reference the ng-template in the component or directive class. Using the TemplateRef we can manipulate the template from component code.
+
+Ex -
+<ng-template #sayHelloTemplate>
+  <p> Say Hello</p>
+</ng-template>
+
+Now, we can use the ViewChild query to inject the sayHelloTemplate into our component as an instance of the class TemplateRef.
+
+@ViewChild('sayHelloTemplate', { read: TemplateRef }) sayHelloTemplate:TemplateRef<any>;
+
+Now, we need to tell Angular where to render it. The way to do is to use the ViewContainerRef.
+
+The ViewContainerRef is also similar to TemplateRef. Both hold the reference to part of the view.
+
+The TemplateRef holds the reference template defined by ng-template.
+ViewContainerRef, when injected to via DI holds the reference to the host element, that hosts the component (or directive).
+
+Once, we have ViewContainerRef, we can use the createEmbeddedView method to add the template to the component.
+
+constructor(private vref:ViewContainerRef) {}
+ 
+  ngAfterViewInit() {
+this.vref.createEmbeddedView(this.sayHelloTemplate);
+  }
+
+- ng-template with ngIf
+To understand how structural directives using ng-template works let us look at ttIf directive which we built in the tutorial custom structural directive. The ttIf directive is a simplified clone of *ngIf.
+
+Create tt-if.directive.ts and add the following code. Also, remember to declare the ttIfDirective in app.module.ts
+
+import { Directive, ViewContainerRef, TemplateRef, Input } from '@angular/core';
+ 
+@Directive({ 
+  selector: '[ttIf]' 
+})
+export class ttIfDirective  {
+ 
+  _ttif: boolean;
+ 
+  constructor(private _viewContainer: ViewContainerRef,
+              private templateRef: TemplateRef<any>) {
+  }
+ 
+ 
+  @Input()
+  set ttIf(condition) {
+    this._ttif = condition
+    this._updateView();
+  }
+ 
+  _updateView() {
+    if (this._ttif) {
+      this._viewContainer.createEmbeddedView(this.templateRef);
+    }
+    else {
+      this._viewContainer.clear();
+    }
+  }
+ 
+}
+
+Open the app.component.html. You can use both <div *ttIf="selected"> and<ng-template [ttIf]="selected"> syntax.
+
+Show/hide 
+<input type="checkbox" [(ngModel)]="selected">
+ 
+<div *ttIf="selected">
+  Using the ttIf directive via *ttIf
+</div>
+ 
+ 
+<ng-template [ttIf]="selected">
+  <div>
+    <p>Using the ttIf directive via ng-template</p>
+  </div>
+</ng-template>
+
+import { Component } from '@angular/core';
+ 
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: [ './app.component.css' ]
+})
+export class AppComponent  {
+  selected=false;
+}
+
 6.ngtemplateoutlet in angular
+https://www.tektutorialshub.com/angular/ngtemplateoutlet-in-angular/
+
 7.HostBinding & HostListener
+https://www.tektutorialshub.com/angular/hostbinding-and-hostlistener-in-angular/
+
+- HostListener listens to host events, while HostBinding allows us to bind to a property of the host element. The host is an element on which we attach our component or directive. This feature allows us to manipulate the host styles or take some action whenever the user performs some action on the host element.
+
+- The host element is the element on which we attach our directive or component. Remember components are directives with a view (template).
+
+- Consider the following ttToggle directive. We built this directive in our tutorial custom directive in Angular. We attach it to a button element. Here the button element is the host element.
+
+<button ttToggle>Click To Toggle</button>
+
+- HostBinding - Host Binding binds a Host element property to a variable in the directive or component
+
+Ex -
+The following appHighLight directive, uses the HostBinding on style.border property of the parent element to the border property. Whenever we change the value of the border, the angular will update the border property of the host element.
+
+import { Directive, HostBinding, OnInit } from '@angular/core'
+ 
+@Directive({
+  selector: '[appHighLight]',
+})
+export class HighLightDirective implements OnInit {
+ 
+  @HostBinding('style.border') border: string;
+ 
+  ngOnInit() {
+    this.border="5px solid blue"
+  }
+ 
+}
+We apply appHighLight directive to a host element ( p in the example) as shown below.
+
+<div>
+  <h2>appHighLight Directive</h2>
+  <p appHighLight>
+    This Text has blue Border
+  </p>
+</div>
+
+- HostListener - HostListener Decorator listens to the DOM event on the host element. It also provides a handler method to run when that event occurs.
+
+For example, in the following code HostListener listens to the mouseover & mouseleave event. We use the HostListner decorator to decorate functions onMouseOver & onMouseLeave.
+
+import { Directive, HostBinding, OnInit, HostListener } from '@angular/core'
+ 
+@Directive({
+  selector: '[appHighLight]',
+})
+export class HighLightDirective implements OnInit {
+ 
+  @HostBinding('style.border') border: string;
+ 
+  ngOnInit() {
+  }
+ 
+  @HostListener('mouseover') 
+  onMouseOver() {
+    this.border = '5px solid green';
+    console.log("Mouse over")
+  }
+ 
+  @HostListener('mouseleave') 
+  onMouseLeave() {
+    this.border = '';
+    console.log("Mouse Leave")
+  }
+ 
+}
+
+- Whenever the mouse is moved over the p element, the mouseover event is captured by the HostListener. It runs the onMouseOver method which we have attached to it. This method adds a green border to the p element using the HostBinding.
+
+
 8.ViewChild, ViewChildren & QueryList
+https://www.tektutorialshub.com/angular/understanding-viewchild-viewchildren-querylist-in-angular/
+
+- The ViewChild or ViewChildren decorators are used to Query and get the reference of the DOM element in the Component. ViewChild returns the first matching element and ViewChildren returns all the matching elements as a QueryList of items. We can use these references to manipulate element properties in the component.
+
+- ViewChild returns Undefined
+ViewChild Returning undefined is one of the common errors, we encounter when we use them. The error is due to the fact that we try to use the value, before the ViewChild initializes it.
+
+For Example, the code below results in Cannot read property 'increment' of undefined. i.e. the component’s view is not yet initialized when the constructor is run. Hence, the Angular yet to update child variable with the reference to the ChildComponet.
+
+export class AppComponent {
+  title = 'Parent calls an @ViewChild()';
+  
+  @ViewChild(ChildComponent, {static:true}) child: ChildComponent;
+ 
+  constructor() {
+    this.child.increment()
+  } 
+ 
+}
+ 
+//
+Cannot read property 'increment' of undefined
+ 
+ The solution is to wait until the Angular Initializes the View. Angular raises the AfterViewInit life cycle hook once it completes the View Initialization. So we can use the ngAfterViewInit to access the child variable.
+
+ngAfterViewInit() {
+    this.child.increment()
+  }
+  
+ - The above code will also work with the ngOnInit Life cycle hook. But it is not guaranteed to work all the time as the Angular might not initialize all parts of the view, before raising the ngOnInit hook. Hence it is always better to use the ngAfterViewInit hook.
+
+- Using Static Option in ViewChild
+The static option determines the timing of the ViewChild query resolution.
+
+i. static:true will resolves ViewChild before any change detection is run.
+ii. static:false will resolves it after every change detection run.
+
+The value of the static becomes important when the child is rendered dynamically. For Example inside a ngIf or ngSwitch etc.
+
+For Example consider the following code, where we have moved the child-component inside the ngIf.
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+ 
+//child.component.html
+ 
+<h1>ViewChild Example</h1>
+ 
+<input type="checkbox" id="showCounter" name="showCounter" [(ngModel)]="showCounter">
+ 
+<ng-container  *ngIf="showCounter">
+ 
+  <p> current count is {{child?.count}} </p>
+ 
+  <button (click)="increment()">Increment</button>
+  <button (click)="decrement()">decrement</button>
+ 
+  <child-component></child-component>
+ 
+</ng-container>
+ 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+ 
+//child.component.ts
+ 
+import { Component, ViewChild, AfterViewInit, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChildComponent } from './child.component';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: 'app.component.html' ,
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'ViewChild Example)';
+ 
+  showCounter: boolean = true
+ 
+  @ViewChild(ChildComponent, { static: true }) child: ChildComponent;
+ 
+  increment() {
+    this.child.increment();
+  }
+ 
+  decrement() {
+    this.child.decrement();
+  }
+ 
+}
+ 
+The above code results in a TypeError: Cannot read property 'increment' of undefined. The error occurs even if we assign true to showCounter
+
+Because in the above case Angular does not render the child component immediately. But after the first change detection which detects the value of showCounter and renders the child component.
+
+Since we used static: true, the angular will try to resolve the ViewChild before the first change detection is run. Hence the child variable always will be undefined.
+
+Now, change the static: false. Now the code will work correctly. I.e because after every change detection the Angular updates the ViewChild.
+
+- Using the Read Option in ViewChild
+
+A Single element can be associated with multiple types.
+
+For Example, consider the following code. #nameInput template variable is now associated with both input & ngModel
+
+<input #nameInput [(ngModel)]="name">
+
+The viewChild code below, returns the instance of the input element as elementRef.
+
+ @ViewChild('nameInput',{static:false}) nameVar;
+
+If we want to get the instance of the ngModel, then we use the Read token and ask for the type.
+
+@ViewChild('nameInput',{static:false, read: NgModel}) inRef;
+ 
+@ViewChild('nameInput',{static:false, read: ElementRef}) elRef;
+@ViewChild('nameInput', {static:false, read: ViewContainerRef }) vcRef;
+
+Every element in Angular is always has a ElementRef and ViewContainerRef associated with it. If the element is a component or directive then there is always a component or directive instance. You can also apply more than one directive to an element. The ViewChild without read token always returns the component instance if it is a component. If not it returns the elementRef.
+
+
+- Injecting a Provider from the Child Component
+
+You can also inject the services provided in the child component.
+
+import { ViewChild, Component } from '@angular/core';
+ 
+@Component({
+  selector: 'app-child',
+  template: `<h1>Child With Provider</h1>`,
+  providers: [{ provide: 'Token', useValue: 'Value' }]
+})
+ 
+export class ChildComponent{
+}
+
+And in the Parent component, you can access the provider using the read property.
+
+import { ViewChild, Component } from '@angular/core';
+ 
+@Component({
+  selector: 'app-root',
+  template: `<app-child></app-child>`,
+})
+ 
+export class AppComponent{
+    @ViewChild(ChildComponent , { read:'Token', static:false } ) childToken: string;
+}
+
+ViewChildren
+ViewChildren decorator is used to getting the list of element references from the View.
+
+ViewChildren is different from the ViewChild. ViewChild always returns the reference to a single element. If there are multiple elements the ViewChild returns the first matching element, ViewChildren always returns all the elements as a QueryList. You can iterate through the list and access each element.
+
+The ViewChildren is always resolved after the change detection is run. i.e why it does not have static option. And also you cannot refer to it in the ngOnInit hook as it is yet to initialize.
+
+- QueryList - The QueryList is the return type of ViewChildren and contentChildren . 
+QueryList stores the items returned by the viewChildren or contentChildren in a list.
+
+The Angular updates this list, whenever the state of the application change. It does it on each change detection.
+
+The QueryList also Implements an iterable interface. Which means you can iterate over it using  for (var i of items) or use it with ngFor in template *ngFor="let i of items".
+
+- Changes can be observed by subscribing to the changes Observable.
+
+You can use the following methods & properties.
+
+first: returns the first item in the list.
+last: get the last item in the list.
+length: get the length of the items.
+changes: Is an observable. It emits a new value, whenever the Angular adds, removes or moves the child elements.
+It also supports JavaScript array methods like map(), filter() , find(), reduce(), forEach(), some(). etc
+
+Finally, we can use the this.modelRefList.forEach to loop through the QueryList and access each element.
+
+import { ViewChild, Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { NgModel } from '@angular/forms';
+ 
+@Component({
+  selector: 'app-viewchildren1',
+  template: `
+      <h1>ViewChildren Example</h1>
+ 
+      <input name="firstName" [(ngModel)]="firstName">
+      <input name="midlleName" [(ngModel)]="middleName">
+      <input name="lastName" [(ngModel)]="lastName">
+ 
+      <button (click)="show()">Show</button>
+  
+  `,
+})
+ 
+export class ViewChildrenExample1Component {
+ 
+  firstName;
+  middleName;
+  lastName;
+ 
+  @ViewChildren(NgModel) modelRefList: QueryList<NgModel>;
+  
+  show() {
+ 
+    this.modelRefList.forEach(element => {
+      console.log(element)
+      //console.log(element.value)
+    });
+  }
+}
+
+- Listening for QueryList Changes
+- We can subscribe to the changes observable to find if any new elements are added/removed or moved. In the example below, we have included ngIf directive to hide/show the input elements.
+
+We subscribe to the changes observable in the component class. Every time we use the ngIf to hide or add the component, the changes observable emits the latest QueryList.
+
+import { ViewChild, Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { NgModel } from '@angular/forms';
+ 
+@Component({
+  selector: 'app-viewchildren2',
+  template: `
+      <h1>ViewChildren Example</h1>
+ 
+      <input *ngIf="showFirstName" name="firstName" [(ngModel)]="firstName">
+      <input *ngIf="showMiddleName" name="midlleName" [(ngModel)]="middleName">
+      <input *ngIf="showlastName" name="lastName" [(ngModel)]="lastName">
+ 
+ 
+      <input type="checkbox" id="showFirstName" name="showFirstName" [(ngModel)]="showFirstName">
+      <input type="checkbox" id="showMiddleName" name="showMiddleName" [(ngModel)]="showMiddleName">
+      <input type="checkbox" id="showlastName" name="showlastName" [(ngModel)]="showlastName">
+ 
+      <button (click)="show()">Show</button>
+  
+  `,
+ 
+})
+ 
+export class ViewChildrenExample2Component implements AfterViewInit {
+ 
+  firstName;
+  middleName;
+  lastName;
+ 
+  showFirstName=true;
+  showMiddleName=true;
+  showlastName=true;
+ 
+  @ViewChildren(NgModel) modelRefList: QueryList<NgModel>;
+ 
+  ngAfterViewInit() {
+ 
+    this,this.modelRefList.changes
+      .subscribe(data => {
+        console.log(data)
+      }
+    )
+  }
+  
+ 
+  show() {
+    this.modelRefList.forEach(element => {
+      console.log(element)
+      //console.log(element.value)
+    });
+ 
+  }
+}
+
+
 9.ElementRef
+https://www.tektutorialshub.com/angular/elementref-in-angular/
+
+ElementRef - The DOM objects are created and maintained by the Browser. They represent the structure and content of the Document. In a Vanilla JavaScript code, we access these DOM objects to manipulate the View. We can create and build documents, navigate their structure, and add, modify, or delete elements and content.
+
+- Use with caution
+[From the Angular Documents]
+
+Use this API as the last resort when direct access to DOM is needed. Use templating and data-binding provided by Angular instead. Alternatively, you can take a look at Renderer2 which provides API that can safely be used even when direct access to native elements is not supported.
+
+Relying on direct DOM access creates tight coupling between your application and rendering layers which will make it impossible to separate the two and deploy your application into a web worker.
+
+- Improper use of ElementRef can result in an XSS Injection attack. For Example in the following code, we are injecting a script using the elementRef. When the component containing such code runs, the script is executed
+
+constructor(private elementRef: ElementRef) {
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.textContent = 'alert("Hello World")';
+    this.elementRef.nativeElement.appendChild(s);
+ }
+
+
 10.Renderer2
+https://www.tektutorialshub.com/angular/renderer2-angular/
+
+- The Renderer2 allows us to manipulate the DOM elements, without accessing the DOM directly. It provides a layer of abstraction between the DOM element and the component code. Using Renderer2 we can create an element, add a text node to it, append child element using the appendchild method., etc. We can also add or remove styles, HTML attributes, CSS Classes & properties, etc. We can also attach and listen to events etc.
+
+- Why not ElementRef?
+We can use the nativeElement property of the ElelemtRef to manipulate the DOM. We learned this in our last tutorial on ElementRef. The nativeElement Property contains the reference to the underlying DOM object. This gives us direct access to the DOM, bypassing the Angular. There is nothing wrong with using it, but it is not advisable for the following reasons.
+
+Angular keeps the Component & the view in Sync using Templates, data binding & change detection, etc. All of them are bypassed when we update the DOM Directly.
+DOM Manipulation works only in Browser. You will not able to use the App in other platforms like in a web worker, in Server (Server-side rendering), or in a Desktop, or in the mobile app, etc where there is no browser.
+The DOM APIs do not sanitize the data. Hence it is possible to inject a script, thereby, opening our app an easy target for the XSS injection attack.
+
+- Using Renderer2
+
+import {Component, Renderer2, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+
+constructor(private renderer:Renderer2) {
+}
+
+Use ElementRef & ViewChild to get the reference to the DOM element, which you want to manipulate.
+
+@ViewChild('hello', { static: false }) divHello: ElementRef;
+
+Use the methods like setProperty , setStyle etc to change the property, styles of the element as shown below.
+
+this.renderer.setProperty(this.divHello.nativeElement,'innerHTML',"Hello Angular")
+ 
+this.renderer.setStyle(this.divHello.nativeElement, 'color', 'red');
+
+
 11.ContentChild & ContentChildren
+https://www.tektutorialshub.com/angular/contentchild-and-contentchildren-in-angular/
+
+- The ContentChild & ContentChildren are decorators, which we use to Query and get the reference to the Projected Content in the DOM. Projected content is the content that this component receives from a parent component.
+
+- The ContentChild & ContentChildren is very similar to the ViewChild & ViewChildren. We use the ViewChild  or  ViewChildren to Query and get the reference of any DOM element in the Component. The DOM element can be an HTML element, Child Component or directive, etc. But, We cannot use the ViewChild  or  ViewChildren to get the reference to the template inserted using the Content projection.
+
+- Content Projection recap
+Content projection is a way to pass the HTML content from the parent component to the child component. The child component will display the template in a designated spot. We use the ng-content element to designate a spot for the template in the template of the child component. The ng-content also allows us to create multiple slots using the selector attribute. The parent can send different content to each of those slots.
+
+
+
 12.AfterViewInit, AfterViewChecked, AfterContentInit & AfterContentChecked
+https://www.tektutorialshub.com/angular/afterviewinit-afterviewchecked-aftercontentinit-aftercontentchecked-in-angular/
+
+- Before diving into these hooks, we need to know the difference between Content & View. The hooks AfterConentInit & AfterContentChecked deals with the Content, While AfterViewInit, AfterViewChecked deals with the View.
+
+- Content - Content refers to the external content injected into this component using the Content Projection.
+
+Content projection is a way to pass the HTML content from the parent component to the child component. The child component will display the template in a designated spot. We use the ng-content element to create a spot in the template of the child component as shown below.
+
+<h2>Child Component</h2>
+<ng-content></ng-content>   <!-- place hodler for content from parent -->
+
+Parent injects the content between the opening & closing element.  Angular passes this content to the child component.
+
+<h1>Parent Component</h1>
+<app-child> This <b>content</b> is injected from parent</app-child>
+
+- View
+View refer to the the template of the component.
+
+- AfterContentChecked
+AfterContentChecked is the life cycle hook, that angular calls during every change detection cycle after Angular completes the checking of the content for changes. Angular also updates the properties decorated with the ContentChild and ContentChildren before raising this hook. This hook fires after the ngDoCheck & AfterContentInit.
+
+- AfterViewInit
+A lifecycle hook that Angular calls during the change detection after it completes initialization of component’s view and its child views. Angular also updates the properties decorated with the ViewChild  & ViewChildren properties before raising this hook. Use this hook to handle any additional initialization tasks. Fires only once, during the first change detection cycle, immediately after the creation of the component.
+
+- AfterViewChecked
+A lifecycle hook that Angular calls after the change detector completes the checking of a component’s view and child views for changes.
+
+Angular also updates the properties decorated with the ViewChild & ViewChildren properties before raising this hook.
+
+- Init Hooks
+Angular fires the AfterContentInit & AfterViewInit hooks, when the content or view is initialized for the first time. That happens during the first change detection cycle, which angular invokes immediately after the instantiation of the component.
+
+- Checked Hooks
+Angular fires the AfterContentChecked & AfterViewChecked hooks, where Angular checks if the the content or view has changed. i.e previously rendered content or view is same as the current content or view.
+
+- AfterViewInit & AfterViewChecked fires after child components are ready
+After content, angular initializes the components view. It also initializes the child views & runs thier change detection. Hence, by the time we receive the hooks AfterViewInit & AfterViewChecked, the current component & all its children are ready to render.
+
+Init Hook fires only once
+Init hooks fires only once, during the first change detection cycle, which angular fires immediately after the creation of the component. This makes it best place to run some custom initialization logic. Use the AfertContentInit for content related initialization & AfterViewInit for view related initializations.
+
+- Avoid using Checked Hooks
+Checked hooks runs on every change detection cycle. For example when you just click on the input element and move away.
+
+Hence it is better to avoid using these hooks. If you choose to implement these hooks then ensure that your code is extremely lightweight otherwise it may slow down the application.
+
+Do not modify bindings in Checked Hooks
+Open the ngAfterViewChecked method of the app.component.ts. here, we assign value of the viewChild.message to the message variable of parent component. Code does not raise any errors.
+
+  ngAfterViewChecked() {
+    console.log('AppComponent==>AfterViewChecked');
+    this.message=this.viewChild.message;
+  }
+
+Read above article carefully....
+
+13. Angular Decorators
+Angular Decorators
+An Angular Decorator is a function, using which we attach metadata to a class, method, accessor, property, or parameter. We apply the decorator using the form @expression, where expression is the name of the decorator.
+
+The Decorators are Typescript features and still not part of the Javascript. It is still in the Proposal stage.
+
+To enable Angular Decorators, we need to add the experimentalDecorators to the tsconfig.json file. The ng new command automatically adds this for us.
+
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "experimentalDecorators": true
+  }
+}
+
+-List of All Angular Decorators
+The following is a complete list of Decorators in Angular.
+
+@NgModule
+@Component
+@Injectable
+@Directive
+@Pipe
+@Input
+@Output
+@Host
+@HostBinding
+@HostListener
+@ContentChild
+@ContentChildren
+@ViewChild
+@ViewChildren
+@Inject
+@Self
+@SkipSelf
+@Optional
+
+- We can classify them under four different categories
+
+i. Class decorators.
+We apply class decorators to classes. @NgModule, @Component, @Injectable, @Directive & @Pipe are Class Decorators in Angular
+
+ii. Property decorators
+iii. Method decorators
+iv. Parameter decorators
+ 
 
 * Observable in Angular
 
 1.Angular Observable Tutorial
+https://www.tektutorialshub.com/angular/angular-observable-tutorial-using-rxjs/
+
 2.Create Observable from a string, array. object, collection
 3.Observable from events using fromEvent
 4.Observable pipe
