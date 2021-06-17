@@ -4598,15 +4598,429 @@ iv. Parameter decorators
 
 1.Angular Observable Tutorial
 https://www.tektutorialshub.com/angular/angular-observable-tutorial-using-rxjs/
+- Rx stands from Reactive programming. It is defined as programming with asynchronous data streams.
+
+- A stream is a data, which arrives over a period of time. The stream of data can be anything. Like variables, user inputs, properties, caches, data structures, and even failures, etc
+
+- As said earlier the stream of data can be anything. For Example
+
+Mouse click or Mouse hover events with x & y positions
+Keyboard events like keyup, keydown, keypress, etc
+Form events like value changes etc
+Data which arrives after an HTTP request
+User Notifications
+Measurements from any sensor
+
+- The RxJS (Reactive Extensions Library for JavaScript) is a javascript library, that allows us to work with asynchronous data streams
+
+- Observable is a function that converts the ordinary stream of data into an observable stream of data. You can think of Observable as a wrapper around the ordinary stream of data.
+
+- Observable stream or simple Observable emits the value from the stream asynchronously. It emits the complete signals when the stream completes or an error signal if the stream errors out.
+
+Observables are declarative. You define an observable function just like any other variable. The observable starts to emit values only when someone subscribes to it.
+
+- The Observable on its own is useless unless someone consumes the value emitted by the observable. We call them observers or subscribers.
+
+The observers communicate with the Observable using callbacks. The observer must subscribe with the observable to receive the value from the observer. While subscribing it optionally passes the three callbacks. next(), error() & complete()
+
+- The observable invokes the next() callback whenever the value arrives in the stream. It passes the value as the argument to the next callback. If the error occurs, then the error() callback is invoked. It invokes the complete() callback when the stream completes.
+
+- We need to unsubscribe to close the observable when we no longer require it. If not it may lead to memory leak & Performance degradation.
+
+To Unsubscribe from an observable, we need to call the Unsubscribe() method on the subscription. It will clean up all listeners and frees up the memory.
+
+- 
 
 2.Create Observable from a string, array. object, collection
+https://www.tektutorialshub.com/angular/rxjs-observable-using-create-of-from-in-angular/
+
+- Observable creation functions
+These operators help us to create observable from an array, string, promise, any iterable, etc. Here are some of the operators
+
+create
+defer
+empty
+from
+fromEvent
+interval
+of
+range
+throw
+timer
+
+- Of Operator
+The Of creates the observable from the arguments that you pass into it. You can pass any number of arguments to the Of. Each argument emitted separately and one after the other. It sends the Complete signal in the end.
+
+Ex -
+ngOnInit() {
+  const array1=[1,2,3,4,5,6,7]
+  const array2=['a','b','c','d','e','f','g']  
+  const obsof2=of(array1,array2 );
+  obsof2.subscribe(val => console.log(val),
+           error=> console.log("error"),
+          () => console.log("complete"))
+ 
+}
+ 
+**** Output ***
+[1, 2, 3, 4, 5, 6, 7]
+['a','b','c','d','e','f','g']
+complete
+
+- From Operator
+From Operator takes only one argument that can be iterated and converts it into an observable.
+
+You can use it to convert
+
+an Array,
+anything that behaves like an array
+Promise
+any iterable object
+collections
+any observable like object
+
+Ex -
+The from operator iterates over each character of the string and then emits it. The example is as shown below.
+
+ngOnInit() { 
+  const obsfrom2 = from('Hello World');
+    obsfrom2.subscribe(val => console.log(val),
+      error => console.log("error"),
+      () => console.log("complete"))
+}
+ 
+ 
+*** Output ****
+H
+e
+l
+l
+o
+ 
+W
+o
+r
+l
+d
+complete
+
+
+ngOnInit() {
+     const obsFrom4 = from(this.generateNos())
+      obsFrom4.subscribe(val => console.log(val),
+      error => console.log("error"),
+      () => console.log("complete"))
+}
+ 
+*generateNos() {
+   var i = 0;
+   while (i < 5) {
+     i = i + 1;
+     yield i;
+  }
+ 
+ 
+*** Output ***
+1
+2
+3
+4
+5
+
+- Of Vs From
+- Of
+Accepts variable no of arguments	
+emits each argument as it is without changing anything	
+
+- From
+Accepts only one argument
+iterates over the argument and emits each value
+
+
+
+
 3.Observable from events using fromEvent
+https://www.tektutorialshub.com/angular/create-observable-from-event-using-fromevent-in-angular/
+
+- Angular provides FromEvent method to create an observable from DOM events directly.
+
+Ex -
+To create an observable from any event, first, we need to get the reference to DOM element using the viewchild & ElementRef. For example the following code gets the reference to the button element with the id #btn
+
+<button #btn>Button</button>
+@ViewChild('btn', { static: true }) button: ElementRef;
+
+  buttonClick() {
+    this.buttonSubscription =  fromEvent(this.button.nativeElement, 'click')
+        .subscribe(res => console.log(res));
+  }
+
+scroll() {
+    const source = fromEvent(window, 'scroll');
+    source.subscribe(val => console.log(val));
+  }
+
+
 4.Observable pipe
+https://www.tektutorialshub.com/angular/angular-observable-pipe/
+
+- The operators are very important components of the Rxjs library. They are functions that take an observable as input and transform it into a new observable and return it. We use them to manipulate the observable data stream.
+
+- Filter operator filter items from the source observable based on some condition and returns the filtered value as a new observable
+
 5.Map Operator
+https://www.tektutorialshub.com/angular/angular-observable-map-operator/
+
+- The Angular observable Map operator takes an observable source as input. It applies a project function to each of the values emitted by the source observable and transforms it into a new value. It then emits the new value to the subscribers. We use a Map with a Pipe, which allows us to chain multiple operators together.
+
+Ex -
+  multiplyBy2() {
+    this.srcArray
+    .pipe(map(val => { return val * 2}))
+    .subscribe(val => { console.log(val)})
+  }
+
+
+
 6.Filter Operator
+https://www.tektutorialshub.com/angular/filter-operator-in-angular-observable/
+
+Syntax:
+filter<T>(predicate: (value: T, index: number) => boolean, thisArg?: any): MonoTypeOperatorFunction<T>
+
+- The Filter Operator in Angular filters the items emitted by the source Observable by using a condition (predicate). It emits only those values, which satisfies the condition and ignores the rest.
+
+- The first argument is the predicate function. This function is evaluated against each value of the source observable. Filter emits only those values which satisfies the the predicate. The predicate function takes 2 parameters. The first one is the value emitted by the source. The second argument is zero based index. 
+Ex -
+values = [
+    {
+      name: "John",
+      age: 30
+    },
+    {
+      name: "alex",
+      age: 40
+    }
+  ];
+ 
+  ngOnInit() {
+    fromArray(this.values)
+      .pipe(
+        filter(val => {
+          return val.age > 30;
+        })
+      )
+      .subscribe(val => console.log(val));
+  }
+
+
 7.Tap Operator
+https://www.tektutorialshub.com/angular/tap-operator-in-angular-observable/
+- The Angular Tap RxJs operator returns an observable that is identical to the source. It does not modify the stream in any way. Tap operator is useful for logging the value, debugging the stream for the correct values, or perform any other side effects.
+
+- Ex - 
+of(1, 2, 3, 4, 5)
+      .pipe(
+        tap(val => {
+          console.log("Tap " + val);
+        })
+      )
+      .subscribe(val => console.log("at Subscriber " + val));
+
+O/p -
+Tap 1
+at Subscriber 1
+Tap 2
+at Subscriber 2
+Tap 3
+at Subscriber 3
+Tap 4
+at Subscriber 4
+Tap 5
+at Subscriber 5
+
+- One of the use cases for the tap operator is using it to debug the Observable for the correct values.
+
+    of(1, 2, 3, 4, 5)
+      .pipe(
+        tap(val => {
+          console.log("before " +val);
+        }),
+        map(val => {
+          return val + 5;
+        }),
+        tap(val => {
+          console.log("after " +val);
+        })
+      )
+      .subscribe(val => console.log(val));
+ 
+ 
+**Console**
+before 1
+after 6
+6
+before 2
+after 7
+7
+before 3
+after 8
+8
+
 8.SwitchMap
+https://www.tektutorialshub.com/angular/using-switchmap-in-angular/
+
+- The Angular SwitchMap maps each value from the source observable into an inner observable, subscribes to it, and then starts emitting the values from it. It creates a new inner observable for every value it receives from the Source. Whenever it creates a new inner observable it unsubscribes from all the previously created inner observables. Basically it switches to the newest observable discarding all other.
+
+- Syntax
+switchMap(project: (value: T, index: number) => O): OperatorFunction<T, ObservedValueOf<O>>
+
+Ex - 
+let srcObservable= of(1,2,3,4)
+let innerObservable= of('A','B','C','D')
+ 
+srcObservable.pipe(
+  switchMap( val => {
+    console.log('Source value '+val)
+    console.log('starting new observable')
+    return innerObservable
+  })
+)
+.subscribe(ret=> {
+  console.log('Recd ' + ret);
+})
+ 
+ 
+//Output
+Source value 1
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 2
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 3
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 4
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+
+SwitchMap Vs Map
+The map operators emits value as observable. The SwitchMap creates a inner observable, subscribes to it and emits its value as observable.
+
+The Following example shows the difference between them.
+
+The map operator below maps the value coming from the source observable to a new value by multiplying it by 2. It then emits it into the observable stream. The subscribers will receive the values 2,4,6 & 8.
+ 
+let obs= of(1,2,3,4)
+ 
+//Using MAP
+obs.pipe(
+  map(val => {
+    return val*2      //Returning Value
+  })
+)
+.subscribe(ret=> {
+  console.log('Recd from map : ' + ret);
+})
+ 
+//Output
+Recd from map : 2
+Recd from map : 4
+Recd from map : 6
+Recd from map : 8
+ 
+We can write the above code using SwitchMap as follows. The only thing that changes is how we return the new value in the project function. The map example returns the value as val*2, while the SwitchMap returns new observable (of(val*2)) using the of function. It also subscribes to the newly created observable and emits its value to the stream.
+
+let obs= of(1,2,3,4)
+ 
+obs.pipe(
+   switchMap( val => {
+     return of(val*2)  //Returning observable
+   })
+)
+.subscribe(ret=> {
+  console.log('Recd from switchMap : ' + ret);
+ })
+ 
+//Output
+Recd from switchMap : 2
+Recd from switchMap : 4
+Recd from switchMap : 6
+Recd from switchMap : 8
+
+- When we use the Angular Router to Pass parameter to route, we need to read it in our component class. We do that by subscribing to the paramMap to get the id. We then use the id to retrieve the product data.
+
+Ex -
+ngOnInit() {
+    this._Activatedroute.paramMap.subscribe(params => { 
+       this.service.getProduct(+params.get('id')) 
+          .subscribe((product: Product) => this.product = product);
+    });
+  }
+
+- Consider the example where the user navigates to the /product/1 route. The service will send the query to the database to get the Product with id 1. Now, the user decides to navigate to the route /product/2. This will also result in another query for the Product being sent to the database. It is possible that the result of the second query arrives before the first query. In such a scenario, we will be in the route /product/2 , while our component displays the data of the product 1.
+
+We can easily solve the above issue using the switchMap. When SwitchMap creates the second observable it unsubscribes from all the previous observable. Hence even if the Product 1 data arrives late, it would be discarded as there are no subscribers
+
+Ex -
+ngOnInit() {
+ 
+    this.activatedRoute.paramMap
+      .pipe(
+        switchMap((params: Params) => {
+          return this.service.getProduct(params.get('id'))
+        }
+        ))
+      .subscribe((product: Product) => this.product = product);
+}
+
+- Angular Forms ValueChanges event
+The similar situations described above can also happen when we subscribe to the ValueChanges event and use that to get data from the back end.
+
+this.mainForm.get("productCode").valueChanges
+.pipe(
+  debounceTime(700)
+)
+.subscribe(val=> {
+  this.queryDepositData(val)
+    .subscribe(data => {
+      this.product=data;
+  })
+})
+
+The switchMap ensures that only the result from the last observable populates the Product
+
+this.mainForm.get("productCode").valueChanges
+.pipe(
+  debounceTime(700),
+  switchMap(val => {
+    return this.queryDepositData();
+  })
+)
+.subscribe(data => {
+  this.product=data;
+})
+
+- The example also uses the debounceTime operator, which emits a value from the source Observable only after a particular time span has passed without another source emission.
+
 9.MergeMap
+https://www.tektutorialshub.com/angular/using-mergemap-in-angular/
+
+
+
 10.ConcatMap
 11.ExhaustMap
 12.take, takeUntil, takeWhile, takeLast
