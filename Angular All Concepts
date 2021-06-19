@@ -5019,15 +5019,670 @@ this.mainForm.get("productCode").valueChanges
 9.MergeMap
 https://www.tektutorialshub.com/angular/using-mergemap-in-angular/
 
+- The Angular MergeMap maps each value from the source observable into an inner observable, subscribes to it, and then starts emitting the values from it replacing the original value. It creates a new inner observable for every value it receives from the Source. Unlike SwitchMap, MergeMap does not cancel any of its inner observables. It merges the values from all of its inner observables and emits the values back into the stream.
 
+Ex -
+let srcObservable= of(1,2,3,4)
+let innerObservable= of('A','B','C','D')
+ 
+srcObservable.pipe(
+  mergeMap( val => {
+    console.log('Source value '+val)
+    console.log('starting new observable')
+    return innerObservable
+  })
+)
+.subscribe(ret=> {
+  console.log('Recd ' + ret);
+})
+ 
+ 
+//Output
+Source value 1
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 2
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 3
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 4
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+
+- The map operators emit value as observable. The MergeMap creates an inner observable, subscribes to it, and emits its value as observable.
+
+- MergeMap never cancels any of its inner observable. It waits for them to finish and emit value. Note that the inner observable’s might finish in an order that is different from the order in which they are subscribed. MergeMap does not care about the order.
+
+- Merging values from two or more HTTP Calls
+Consider a scenario where you receive data from an observable (outer observable). For each of those values, you want to call another observable (inner observable) to get more data. The scenario like this is an ideal use case for MergeMap
+
+In the following example, we have an array of a breed of dogs. We convert the array into an observable. This becomes our outer observable
+
+For each of those dog breeds emitted by the outer observable, we make an HTTP request to get the sub-breeds using the free Dog API. The URL for the HTTP request constructed using the dog breed, which we receive from the outer observable.
+
+The MergeMap automatically subscribes to all of its inner observable and waits for them to complete. It then pushes the values from them into the subscribers.
+
+Ex -
+of("hound", "mastiff", "retriever")        //outer observable
+  .pipe(
+    mergeMap(breed => {
+      const url = 'https://dog.ceo/api/breed/' + breed + '/list';
+      return this.http.get<any>(url)       //inner observable   
+    })
+  )
+  .subscribe(data => {
+    console.log(data)
+  })
+  
+The above code, without using the MergeMap is as follows. The code makes use of nested observable.
+
+of("hound", "mastiff", "retriever")
+  .subscribe(breed => {
+    const url = 'https://dog.ceo/api/breed/' + breed + '/list';
+ 
+    this.http.get<any>(url)
+      .subscribe(data => {
+        console.log(data)
+      })
+  })
+  
+- The MergeMap create a one inner observable for each value of outer observable. To Create more than one inner observable, we can make use of the ForkJoin Operator.
+
+In the following example, along with a list of breeds, we also send a query for a random image of the dog breed. This requires us to send two HTTP get request in Angular. We create two observables obs1 & obs2 to do that. Then we use the forJoin to merge obs1 with obs2 and return a new observable.
+
+- MergeHTTPRequestWithFork() {
+ 
+  //const url='https://dog.ceo/api/breed/'+hound+'/list';
+ 
+  of("hound", "mastiff", "retriever")
+    .pipe(
+      mergeMap(breed => {
+        const url1 = 'https://dog.ceo/api/breed/' + breed + '/list';
+        const url2 = 'https://dog.ceo/api/breed/' + breed + '/images/random';
+ 
+        let obs1= this.http.get<any>(url1)
+        let obs2= this.http.get<any>(url2)
+ 
+        return forkJoin(obs1,obs2)
+ 
+      })
+    )
+    .subscribe(data => {
+      console.log(data)
+    })
+ 
+}
 
 10.ConcatMap
+https://www.tektutorialshub.com/angular/using-concatmap-in-angular/
+
+- The Angular ConcatMap maps each value from the source observable into an inner observable, subscribes to it, and then starts emitting the values from it replacing the original value. It creates a new inner observable for every value it receives from the Source. It merges the values from all of its inner observables in the order in which they are subscribed and emits the values back into the stream. Unlike SwitchMap, ConcatMap does not cancel any of its inner observables. It is Similar to MergeMap except for one difference that it maintains the order of its inner observables.
+
+Ex -
+let srcObservable= of(1,2,3,4)
+let innerObservable= of('A','B','C','D')
+ 
+srcObservable.pipe(
+  concatMap( val => {
+    console.log('Source value '+val)
+    console.log('starting new observable')
+    return innerObservable
+  })
+)
+.subscribe(ret=> {
+  console.log('Recd ' + ret);
+})
+ 
+ 
+//Output
+Source value 1
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 2
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 3
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 4
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+
+- ConcatMap Vs Map
+The map operators emit value as observable. The ConcatMap creates an inner observable, subscribes to it, and emits its value as observable. It emits the value in the order in which it creates the observable.
+
+- ConcatMap never cancels any of its inner observable. It waits for them to finish and emit value. It also waits for the previous inner observable to finish before creating a new observable.
+
+
 11.ExhaustMap
+https://www.tektutorialshub.com/angular/using-exhaustmap-in-angular/
+
+- The Angular ExhaustMap maps each value from the source observable into an inner observable, subscribes to it. It then starts emitting the values from it replacing the original value. It then waits for the inner observable to finish. If it receives any new values before the completion of the inner observable it ignores it. It receives a new value after completion of the inner observable, then it creates a new inner observable. The whole process repeats itself until the source observable is completes
+
+Ex -
+let srcObservable= of(1,2,3,4)
+let innerObservable= of('A','B','C','D')
+ 
+srcObservable.pipe(
+  exhaustMap( val => {
+    console.log('Source value '+val)
+    console.log('starting new observable')
+    return innerObservable
+  })
+)
+.subscribe(ret=> {
+  console.log('Recd ' + ret);
+})
+ 
+ 
+//Output
+Source value 1
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 2
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 3
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+Source value 4
+starting new observable
+Recd A
+Recd B
+Recd C
+Recd D
+
+- The ExhaustMap differs from the MergeMap, SwitchMap & ConcatMap the way it handles the inner observable. ExhaustMap always waits for the inner observable to finish. It ignores any value it receives from the source during this period. Any value it receives after the inner observable is finished is accepted and it creates a new inner observable.
+
+- The exhaustMap is useful in scenarios, where you want to prevent submission of duplicate values
+
+For Example, the user clicking on the Submit button twice will trigger two HTTP calls to the back end. The ExhaustMap will prevent the creation of new HTTP call until the previous one finishes
+
 12.take, takeUntil, takeWhile, takeLast
+https://www.tektutorialshub.com/angular/take-takeuntil-takewhile-takelast-in-angular-observable/
+
+- The take, takeUntil, takeWhile & takeLast operators allow us to filter out the emitted values from the observable. The take(n) emits the first n values, while takeLast(n) emits the last n values. The takeUntil(notifier) keeps emitting the values until it is notified to stop. takeWhile(predicate) emits the value while values satisfy the predicate. All of the stops emitting once done.
+
+- Take
+Take operator emits the first n number of values before completing. Any reminder values are ignored.
+
+Syntax - take(n)
+
+If the source emits more than n values, then take emits only n values and completes. If the source emits less than n number of values, then take emits all of them before completing.
+
+Ex -
+export class AppComponent {
+ 
+  takeFive = interval(1000).pipe(take(5));
+ 
+  ngOnInit() {
+    this.takeFive.subscribe(val => console.log(val));
+  }
+}
+ 
+****Console ******
+0
+1
+2
+3
+4
+
+- TakeUntil
+The takeUntil operator returns an Observable that emits value from the source Observable until the notifier Observable emits a value.
+
+Syntax:
+TakeUntil(notifier: Observable): Observable
+
+- TakeUntil emits the values from the Source Observable as long as it does not receive any value from the notifier observable
+
+Ex -
+import { Component, VERSION } from "@angular/core";
+import { of, interval, Subject, Observable } from "rxjs";
+import { take, takeUntil, tap } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  notifier = new Subject();
+ 
+  obs = interval(1000).pipe(takeUntil(this.notifier));
+ 
+  ngOnInit() {
+    this.obs.subscribe(val => console.log(val));
+  }
+ 
+  stopObs() {
+    this.notifier.next();
+    this.notifier.complete();
+  }
+}
+
+<h1>TakeUntil Example</h1>
+ 
+<button (click)="stopObs()">Stop</button>
+<br>
+
+- One of the use cases of takeUntil is to automatically unsubscribe all the observables.
+
+- TakeWhile
+TakeWhile operator will keep emitting the value from the source observable as long as they pass the given condition (predicate). When it receives a value that does not satisfy the condition it completes the observable. No further values are emitted even if they satisfy the condition.
+
+Syntax -
+takeWhile(predicate: function(value, index): boolean,
+inclusive?: boolean): Observable
+
+If inclusive is true, then the emits the value, which does not pass the condition before terminating the observable.
+
+
+Ex -
+import { Component, VERSION } from "@angular/core";
+import { of, interval, Subject, Observable } from "rxjs";
+import { take, takeUntil, takeWhile, tap } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  obs = of(1, 2, 3, 1, 2, 3, 1, 2, 3)
+    .pipe(
+      takeWhile(val => val < 3)
+    );
+ 
+  ngOnInit() {
+    this.obs.subscribe(val => console.log(val));
+  }
+}
+ 
+ 
+*** Console ***
+1
+2
+
+With inclusive is set to true, takewhile also emits the value 3 before completing the observable.
+Ex -
+export class AppComponent {
+  obs = of(1, 2, 3, 1, 2, 3, 1, 2, 3)
+    .pipe(
+       takeWhile(val => val < 3, true)
+    );
+ 
+  ngOnInit() {
+    this.obs.subscribe(val => console.log(val));
+  }
+}
+ 
+*** Console ***
+1
+2
+3
+
+- TakeWhile Vs Filter
+Both takeWhile & filter uses the condition to filter out the incoming stream. Both allows only the matching values to pass through discarding the others.
+
+- The difference is that takeWhile discards the rest of the stream, when it receives the first value that does not satisfy the condition (If the inclusive is set to true, then it also emits the last value even when it does not satisfy the condition). The filter operator never stops the observable.
+
+- TakeLast
+TakeLast operator emits the last n number of values from the source observable. Where n is the maximum number of values to emit. If the source emits less than the n number of values then it emits all of them
+
+Ex -
+import { Component, VERSION } from "@angular/core";
+import { of, range, Observable } from "rxjs";
+import { takeLast } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  obs = range(1, 100).pipe(takeLast(3));
+ 
+  ngOnInit() {
+    this.obs.subscribe(val => console.log(val));
+  }
+}
+ 
+***Console****
+98
+99
+100
+
 13.First, last & Single
+https://www.tektutorialshub.com/angular/first-last-single-operator-in-angular-observable/
+- The first emits the first matching value, the Last emits the last matching value & the Single emits only if a single value matches the predicate.
+
+- First Operator
+The first operator emits the first value that meets the condition. If no condition is specified, then it will emit the first value it receives.
+
+Syntax: 
+first<T, D>(predicate?: (value: T, index: number, source: Observable<T>) => boolean,  defaultValue?: D) : OperatorFunction<T, T | D>
+
+Ex -
+import { Component, VERSION } from "@angular/core";
+import { timer, interval, of } from "rxjs";
+import { first } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  src = of(1, 2, 3, 4, 5).pipe(first());
+ 
+  id = Date.now();
+ 
+  constructor() {}
+ 
+  ngOnInit() {
+    console.log("Component Created " + this.id);
+ 
+    this.src.subscribe(value => {
+      console.log(value);
+    });
+  }
+}
+ 
+ 
+*** Result ****
+1
+
+src = of(1, 2, 3, 4, 5).pipe(first(val => val > 10,100));
+ 
+ 
+***Console**
+100
+
+- First Vs Take(1)
+The first() (without condition & default value) and take(1) returns the first value they receive from the source and closes the observable.
+
+But they have a difference in behavior when the source does not emit anything. The first() send an error notification, while take(1) will not emit anything, but closes the observable.
+
+- Last Operator
+The last operator emits the last value that meets the condition. If no condition is specified, then it will emit the last value it receives.
+
+Ex -
+src = of(1, 2, 3, 4, 5).pipe(last(val => val < 3));
+ 
+ 
+***Console**
+2
+
+- Last Vs TakeLast(1)
+The last() (without condition & default value) and takeLast(1) returns the last value they receive from the source observable.
+
+But they have a difference in behavior when the source does not emit anything. The last() send an error notification, while takeLast(1) will not emit anything, but closes the observable.
+
+- Single
+The Single operator emits a single value that meets the condition.
+
+The Single operator waits for the source to complete before emitting the value
+Emits a single value that meets the condition
+If more than one value satisfies the condition, then it raises an error notification
+If no value satisfies the condition, then it emits the value undefined
+Raises the error notification, if the source does not emit any value.
+
+* Interview question 
+Waits for the observable to finish. Hence the following will never emit a value.
+
+src = interval(1000).pipe(single(val => val == 3));
+ 
+**Console*
+
+Raises error notification as there are more than one value that satisfies the condition.
+
+Ex -
+src = of(1, 2, 3, 4, 3).pipe(single(val => val == 3));
+ 
+**Console**
+ERROR
+Sequence contains more than one element
+
+
 14.Skip, SkipWhile, SkipUntil & SkipLast
+https://www.tektutorialshub.com/angular/skip-skipuntil-skipwhile-skiplast-operators-in-angular/
+
+- The Skip, SkipUntil, SkipWhile skips the values from the start of the source. The SkipLast Operator skips elements from the end of the source.
+
+Ex -
+import { Component } from "@angular/core";
+import { skip } from "rxjs/operators";
+import { interval, of } from "rxjs";
+ 
+@Component({
+  selector: "my-app",
+  template: `
+    <h1>Skip Example</h1>
+ 
+    <br />
+    <br />
+  `,
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  ngOnInit() {
+    of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+      .pipe(
+        skip(5),
+      )
+      .subscribe(val => console.log(val));
+  }
+}
+ 
+ 
+** Console **
+6
+7
+8
+9
+10
+
+- SkipWhile
+- The SkipWhile operator skips values from the source observable as long as the specified condition is true. But once the condition becomes false, it starts to emit the values and continues to do so even if the condition becomes true again.
+
+Ex -
+of( 2, 4, 5, 6, 7, 8, 9, 10)
+      .pipe(
+        skipWhile(val => val % 2==0),
+      )
+      .subscribe(val => console.log(val));
+ 
+ 
+**Console**
+5
+6
+7
+8
+9
+10
+
+- Filter Vs SkipWhile
+The SkipWhile skips the values if the predicate is true, While the filter emits the values if the predicate is true.
+
+- Once the predicate becomes false, the SkipWhile stops using the predicate and emits all the remaining values. The filter keeps using the predicate to filter out the remaining values.
+
+- SkipUntil
+- The SkipUntil operator skips the values from the source observable as long as the second observable does not emit any value. But once the second observable emits a value, it starts to emit the values and continues to do so as long as the source emits values.
+
+It is very similar to SkipWhile except that the condition is provided by another observable.
+
+- The interval creates an observable, which emits a value for every 1000 ms. The SkipUntil operator uses the timer(6000) observable, which emits a value after 6000ms. Hence the SkipUntil skips the first 5 values (0 to 4) and starts to emit the values from 5
+
+Ex -
+interval(1000)
+      .pipe(
+        skipUntil(timer(6000)),
+      )
+      .subscribe(val => console.log(val));
+ 
+***Console **
+5
+6
+7
+8
+....
+
+- SkipLast
+The SkipLast operator skips the last count number of values from the source observable and returns the rest of the source as an observable. It is exactly opposite of skip(count), which skips the first count number of values
+
+Ex -
+of(1,2,3,4,5,6,7,8,9,10)
+      .pipe(
+        skipLast(5)
+      )
+      .subscribe(val => console.log(val));
+ 
+**Console*
+1
+2
+3
+4
+5
+
+- SkipLast delays the values
+
 15.Scan & Reduce
+https://www.tektutorialshub.com/angular/the-scan-reduce-operators-in-angular/
+- The Scan & Reduce Operators in Angular applies an accumulator function on the values of the source observable. The Scan Operator returns all intermediate results of the accumulation, while Reduce only emits the last result. Both also use an optional seed value as the initial value.
+
+- Scan in Angular
+The scan operator applies an accumulator function over the values emitted by the source Observableble sequentially and emits each value.
+
+- The accumulator function gets three argument.
+
+acc is the accumulator variable where the values are accumulated.
+value comes from the source observable,
+index of the value.
+
+Ex - 
+import { Component } from "@angular/core";
+import { map, scan } from "rxjs/operators";
+import { interval, of } from "rxjs";
+ 
+@Component({
+  selector: "my-app",
+  template: `
+    <h1>Scan Operator Example</h1>
+  `,
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  reTryCount = 0;
+ 
+  ngOnInit() {
+    of(1, 2, 3, 4, 5)
+      .pipe(scan((acc, value) => acc + value, 0))
+      .subscribe(
+        val => console.log(val),
+        e => console.log(e),
+        () => console.log("Complete")
+      );
+  }
+}
+ 
+ 
+***Console***
+ 
+1
+3
+6
+10
+15
+Complete
+
+- The value for acc starts with the seed value i.e. 0. The variable value gets the value 1, which is the first value emitted by the source. The scan operator runs the accumulator function (acc + value = 1) and emits the result.
+
+The result of the previous accumulator function becomes the input (acc) of the next scan. It is added to the next value (i. e. 2) emitted from the source and the result becomes 3.
+
+-In the following code, we change the seed to 10. Now the accumulator starts with 10 instead of 0.
+
+of(1, 2, 3, 4, 5)
+      .pipe(scan((acc, value) => acc + value, 10))
+      .subscribe(
+        val => console.log(val),
+        e => console.log(e),
+        () => console.log("Complete")
+      );
+ 
+*** Result ***
+11
+13
+16
+20
+25
+Complete
+
+- Reduce in Angular
+The Reduce operator applies an accumulator function over the values emitted by the source Observation sequentially and returns the accumulated result when the source completes.
+
+- The Reduce operator behaves exactly like the scan operator, except for the following differences:
+It does not return the intermediate results.
+It returns only after the source completes.
+
+- The following example is similar to the scan example above. The only difference is that you will not see the intermediate results i.e. 1, 3, 6 10.
+Ex -
+  ngOnInit() {
+    of(1, 2, 3, 4, 5)
+      .pipe(reduce((acc, value) => acc + value, 0))
+      .subscribe(
+        val => console.log(val),
+        e => console.log(e),
+        () => console.log("Complete")
+      );
+  }
+ 
+ 
+** Console **
+ 
+15
+Complete
+
+
 16.DebounceTime & Debounce
+https://www.tektutorialshub.com/angular/debouncetime-debounce-in-angular/
+
+
+
 17.Delay & DelayWhen
 18.ThrowError
 19.CatchError
