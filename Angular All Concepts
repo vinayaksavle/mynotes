@@ -5681,33 +5681,643 @@ Complete
 16.DebounceTime & Debounce
 https://www.tektutorialshub.com/angular/debouncetime-debounce-in-angular/
 
+- DebounceTime & Debounce are the Angular RxJs Operators. Both emit values from the source observable, only after a certain amount of time has elapsed since the last value. Both emit only the latest value and discard any intermediate values. In this tutorial, we will learn how to use both DebounceTime & Debounce with examples.
 
+- The typeahead/autocomplete fields are one of the most common use cases for Debounce Operators. As the user types in the typeahead field, we need to listen to it and send an HTTP request to the back end to get a list of possible values. If we send HTTP requests for every keystroke, we end up making numerous unneeded calls to the server. By using the Debounce Operators, we wait until the user pauses typing before sending an HTTP Request. This will eliminates unnecessary HTTP requests.
+
+- DebounceTime
+The Debouncetime emits the last received value from the source observable after a specified amount of time has elapsed without any other value appearing on the source Observable.
+
+- How it works
+First, we assign a timeout duration (dueTime) to the Debouncetime operator.
+The Debouncetime operator starts counting time after it receives a value.
+If the source observable emits a value before the timeout duration, then counting is reset to zero & started again.
+When the timeout duration elapses the operator emits the last value and the counting stops.
+Counting starts again when the operators receive another value.
+
+Ex -
+  ngOnInit() {
+    this.obs=this.mform.valueChanges
+      .pipe(
+        debounceTime(500),
+        switchMap(id => {
+ 
+          console.log(id)
+          return this.http.get(url)
+ 
+        })
+      )
+      .subscribe(data => console.log(data));
+  }
+
+- Debounce
+The Debounce operator is similar to the DebounceTime operator, but another observable will provide the time span. By Using the Debounce, we can set the time span dynamically.
+
+The following example works the same as the previous example. Instead of using the hardcoded time span, we create a new observable using the interval operator.
+
+Ex -
+  delay = 500;
+ 
+  obs: Subscription;
+ 
+  ngOnInit() {
+    this.obs = this.mform.valueChanges
+      .pipe(
+        debounce(() => {
+          this.delay = this.delay + 100;
+          console.log(this.delay);
+          return interval(this.delay);
+        })
+      )
+      .subscribe(data => console.log(data));
+  }
 
 17.Delay & DelayWhen
+https://www.tektutorialshub.com/angular/delay-delaywhen-in-angular/
+
+Delay & DelayWhen Operators in Angular delays the emission of values from the source observable. The Delay operator delays by a given timeout or until a given Date. The DelayWhen delays until it receives a notification from another observable.
+
+-Delay
+Delays the emission of items from the source Observable by a given timeout or until a given Date.
+
+Ex -
+In the following example, we add a delay of 1000ms. After 1000ms all the values appear instantly.
+
+import { Component, VERSION } from "@angular/core";
+import { of } from "rxjs";
+import { delay, map,  tap } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  template: `
+    <h1>Delay & DelayWhen Example</h1>
+  `,
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  ngOnInit() {
+    of(1, 2, 3, 4, 5)
+      .pipe(
+        tap(val => console.log("Before " + val)),
+        delay(1000)
+      )
+      .subscribe(
+        val => console.log(val),
+        e => console.log(e),
+        () => console.log("Complete")
+      );
+  }
+}
+ 
+ 
+Before 1
+Before 2
+Before 3
+Before 4
+Before 5
+ 
+1
+               //Appears after a delay of 1000ms
+2
+3
+4
+5
+Complete
+
 18.ThrowError
+https://www.tektutorialshub.com/angular/using-throwerror-in-angular-observable/
+
+- Angular ThrowError operator returns an observable, which on subscription immediately errors out. It does not emit any results. ThrowError creates a new observable. Hence we must subscribe to it. The following example creates an ThrowError observable and then subscribes to it.
+
+Ex -
+import { Component, VERSION } from "@angular/core";
+import { Observable, of, from, throwError } from "rxjs";
+import { map, catchError } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  name = "Angular " + VERSION.major;
+ 
+  obs = throwError("Error From ThrowError observable");
+ 
+  ngOnInit() {
+    this.obs.subscribe(
+      el => {
+        console.log("Value Received :" + el);
+      },
+      err => {
+        console.log("Error caught at Subscriber :" + err);
+      },
+      () => console.log("Processing Complete")
+    );
+  }
+}
+ 
+ 
+ 
+****Console Window
+ 
+Error caught at Subscriber: Error From ThrowError observable
+
+- Throw Error Vs ThrowError
+It is very easy confuse between the Throw Error With ThrowError.
+
+Throw Error throws an error. It is a JavaScript construct and is not part of the RxJs. We need to use the try/catch block to catch the errors thrown from the Throw Error. The RxJS uses the try/catch block to catch any errors thrown from the observables. And when they catch one, they emit an error notification (raises the error callback), and then the observable stops.
+
+ThrowError does not throw errors like throw Error. It returns a new observable, which emit an error notification (raises the error callback), and then stops.
+
+Throw Error Example -
+
+import { Component, VERSION } from "@angular/core";
+import { Observable, of, from, throwError } from "rxjs";
+import { map, catchError } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+ 
+ 
+  srcArray = from([1, 2, "A", 4]);
+ 
+  obs = this.srcArray.pipe(
+    map(val => {
+      let result = (val as number) * 2;
+      if (Number.isNaN(result)) {
+        console.log("Error in the observable");
+        throw Error("Not a Number");
+      }
+      return result;
+    })
+  );
+ 
+  ngOnInit() {
+    this.obs.subscribe(
+      el => {
+        console.log("Value Received :" + el);
+      },
+      err => {
+        console.log("Error caught at Subscriber :" + err);
+      },
+      () => console.log("Processing Complete.")
+    );
+  }
+}
+ 
+ 
+***Console ****
+ 
+Value Received :2
+Value Received :4
+Error in the observable
+Error caught at Subscriber :Error: Not a Number
+
+The observable emits values 2 & 4.
+
+When map operators receive the value A it uses throw Error to throw an error. The observable catches this error and raises the error notification and terminates.
+
+The last value 8 is never emitted.
+
+- ThrowError
+import { Component, VERSION } from "@angular/core";
+import { Observable, of, from, throwError } from "rxjs";
+import { map, catchError } from "rxjs/operators";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  name = "Angular " + VERSION.major;
+ 
+  srcArray = from([1, 2, "A", 4]);
+ 
+  obs = this.srcArray.pipe(
+    map(val => {
+      let result = (val as number) * 2;
+      if (Number.isNaN(result)) {
+        console.log("Error in the observable");
+        return throwError("Not a Number");
+      }
+      return result;
+    })
+  );
+ 
+  ngOnInit() {
+    this.obs.subscribe(
+      (el: any) => {
+        console.log("Value Received :" + el);
+      },
+      err => {
+        console.log("Error caught at Subscriber :" + err);
+      },
+      () => console.log("Processing Complete.")
+    );
+  }
+}
+ 
+ 
+****Console ********
+Value Received :2
+Value Received :4
+Error in the observable
+Value Received :[object Object]
+Value Received :8
+Processing Complete
+
+- The observable emits values 2 & 4.
+
+When the map operator receive the value A it returns throwError. Remember throwError returns an observable. It will raise the error notification, only if you subscribe to it.
+
+The map operator does not subscribe to the observable. It just returns it to the subscriber.
+
+Hence the subscriber receives the throwError observable as value. Hence you see [object Object] in the console.
+
+Since there is no error raised, the observable continues and emits the next value 8 and then completes.
+
+- CatchError will catch this error. We use the CatchError to handle the errors thrown by the Angular Observable. Once we handle the error, we must return an observable. We can either return a replacement observable or return an error. The observable returned from CatchError is immediately subscribed.
+
+
 19.CatchError
+https://www.tektutorialshub.com/angular/angular-catcherror/
+
 20.ReTry & ReTryWhen
+https://www.tektutorialshub.com/angular/retry-retrywhen-in-angular-observable/
+
+- ReTry
+The ReTry Angule RxJs operator retries a failed source observable count number of times. If the count is not provided then it tries indefinitely
+
+- ReTryWhen
+The RetryWhen Angule RxJs operator retries the failed Observable every time a Notification Observable emits the next value.
+
 21.Unsubscribe from an observable
+https://www.tektutorialshub.com/angular/unsubscribing-from-an-observable-in-angular/
+
+- An observable which is not Unsubscribed will lead to memory leak & Performance degradation.
+
+- Why Unsubscribe
+In the example below, we have ChildComponent, which subscribes to an observable in its ngOnInit hook. The observable emits a new value for every 2000 ms.
+
+In the AppComponent, we use the ngIf to show and remove the ChildComponent.
+
+<h1>Angular Unsubscribe from Observable Example</h1>
+ 
+Show Child :
+<input
+  type="checkbox"
+  id="showChild"
+  name="showChild"
+import { Component, VERSION } from "@angular/core";
+ 
+@Component({
+  selector: "my-app",
+  template: `
+    <h1>Angular Unsubscribe from Observable Example</h1>
+ 
+    Show Child :
+    <input
+      type="checkbox"
+      id="showChild"
+      name="showChild"
+      [(ngModel)]="showChild"
+    />
+ 
+    <app-child-component *ngIf="showChild"></app-child-component>
+  `,
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  name = "Angular " + VERSION.major;
+ 
+  showChild = false;
+}
+ 
+import { Component, OnInit } from "@angular/core";
+import { timer, interval } from "rxjs";
+ 
+@Component({
+  selector: "app-child-component",
+  templateUrl: "./child.component.html",
+  styleUrls: ["./child.component.css"]
+})
+export class ChildComponent implements OnInit {
+  src = interval(2000);
+  id = Date.now();
+ 
+  constructor() {}
+ 
+  ngOnInit() {
+    console.log("Component Created " + this.id);
+ 
+    this.src.subscribe(value => {
+      console.log("Received " + this.id);
+    });
+  }
+ 
+  ngOnDestroy() {
+    console.log("Component Destroyed " + this.id);
+  }
+}
+ 
+The subscription starts to emit values when the child component is rendered by Angular. But when we destroy the component, the observable still keeps emitting new values. We can see this in console window.
+
+If we render the child component again, it starts a new subscription. Now we have two subscriptions running. As and when we create a new instance of the child component, it will create a new subscription, and those subscriptions never cleaned up.
+
+- Unsubscribing from an observable as easy as calling Unsubscribe() method on the subscription. It will clean up all listeners and frees up the memory
+
+- There is no need to unsubscribe from every subscription. For Example, the observables, which are finite in nature. Although it does not harm if you do so.
+
+- In Angular you do not have to Unsubscribe in the following scenarios
+
+The HttpClient Observables like HTTP get & post, etc. They Complete after returning only one value.
+The Angular Router also emits several observables like paramMap, queryParamMap, fragment, data, URL, Events, etc. The Router Modules take care of unsubscribing.
+All finite observables.
+
+- You need to Unsubscribe in the following scenarios
+
+Any Observable that you create in your Angular component or Angular services.
+ValueChanges & StatusChanges observables from Angular Forms
+The listens to the DOM events from the Renderer2 service
+All infinite observables.
+When in doubt, always Unsubscribe
+
+- Various ways to Unsubscribe
+- Use Async Pipe
+Use Async pipe to subscribe to an observable, it automatically cleans up, when we destroy the component.
+
+- Using Take or First Operator
+Convert all infinite observables to finite observable using the Take or First Operators. The Take Operator emits the first n number of values and then stops the source observable.
+
+- Use Unsubscribe
+Store each subscription in a local variable and call unsubscribe on them in the ngOnDestroy hook
+
+- Using Array to store subscription
+Instead of local variable for each subscription, you can create an array and add each subscription into it
+
+- Using TakeUntil
+The takeUntil operator emits values from the source observable until the notifier Observable emits a value. It then completes the source observable.
+
+- Using TakeUntil in a base component
+Instead of creating the notifier observable in every component, you can create on in a BaseComponent and reuse it everywhere.
+
+22. Subjects in Angular
+https://www.tektutorialshub.com/angular/subjects-in-angular/
+
+- The Subjects are special observable which acts as both observer & observable. They allow us to emit new values to the observable stream using the next method. All the subscribers, who subscribe to the subject will receive the same instance of the subject & hence the same values.
+
+- A Subject is a special type of Observable that allows values to be multicasted to many Observers. The subjects are also observers because they can subscribe to another observable and get value from it, which it will multicast to all of its subscribers.
+
+Basically, a subject can act as both observable & an observer.
+
+- Subjects implement both subscribe method and next, error & complete methods. It also maintains a collection of observers[]
+
+- Observables are classified into two groups. Cold & Hot
+
+- Cold observable
+The cold observable does not activate the producer until there is a subscriber. This is usually the case when the observable itself produces the data.
+
+- Hot observable
+The hot observable does not wait for a subscriber to emit the data. It can start emitting the values right away. The happens when the producer is outside the observable.
+
+- There are other types of subjects
+What we have explained to you is a simple subject. But there are few other types of subjects. They are
+
+i. ReplaySubject
+ii. BehaviorSubject
+iii. AsyncSubject
+
+23. ReplaySubject, BehaviorSubject & AsyncSubject in Angular
+https://www.tektutorialshub.com/angular/replaysubject-behaviorsubject-asyncsubject-in-angular/
+
+-BehaviorSubject
+BehaviorSubject requires an initial value and stores the current value and emits it to the new subscribers.
+
+Ex -
+import { Component, VERSION } from "@angular/core";
+import { BehaviorSubject, Subject } from "rxjs";
+ 
+@Component({
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  subject$ = new BehaviorSubject("0");
+ 
+  ngOnInit() {
+    this.subject$.subscribe(val => {
+      console.log("Sub1 " + val);
+    });
+ 
+    this.subject$.next("1");
+    this.subject$.next("2");
+ 
+    this.subject$.subscribe(val => {
+      console.log("sub2 " + val);
+    });
+ 
+    this.subject$.next("3");
+    this.subject$.complete();
+  }
+}
+ 
+***Result***
+ 
+Sub1 0
+Sub1 1
+Sub1 2
+sub2 2
+Sub1 3
+sub2 3
+
+- ReplaySubject
+ReplaySubject replays old values to new subscribers when they first subscribe. The ReplaySubject will store every value it emits in a buffer. It will emit them to the new subscribers in the order it received them. You can configure the buffer using the arguments bufferSize and windowTime
+
+- AsyncSubject
+AsyncSubject only emits the latest value only when it completes. If it errors out then it will emit an error, but will not emit any values.
+
+24. Angular Observable Subject Example Sharing Data Between Components
+https://www.tektutorialshub.com/angular/angular-subject-example/
+
 
 * Styling the Application
 
 - The Angular uses several different ways to style the Application. You can style the app globally and then override it locally in the component very easily. The component styles have local scope, which is achieved using the various View Encapsulation strategies. Learn all these in the section
 
 1.Angular Global Styles
+https://www.tektutorialshub.com/angular/angular-global-css-styles/
+
+- There are several ways to add Global (Application wide styles) styles to the Angular application. The styles can be added inline, imported in index.html or added via angular-cli.json. The angular allow us to add the component specific styles in individual components, which will override the global styles.
+
+- Order of the styles sheets are important as the last one overrides the previously added CSS rules.
+
+- There are three ways you add the external style sheets.
+
+i. Copy them locally
+Ex -
+"styles": [
+  "src/styles.css",
+  "src/assets/css/morestyles.css",
+  "node_modules/bootstrap/dist/css/bootstrap.min.css"
+],
+
+ii. Import it in one of the style sheets
+Ex -
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css";
+
+iii. Adding Styles directly
+Ex -
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+
 2.View Encapsulation
+https://www.tektutorialshub.com/angular/angular-view-encapsulation/
+
+- View Encapsulation in Angular defines how the styles defined in the template affects the other parts of the application. The angular uses three strategies, while rendering the view ViewEncapsulation.Emulated, ViewEncapsulation.ShadowDOMand ViewEncapsulation.None
+
+- One of the fundamental concept in object oriented programming (OOP) is Encapsulation. It defines the idea that all the data and methods that operate on that data are kept private in a single unit (or class). It is like hiding the implementation detail from the outside world. The consumer of encapsulated object know that it works, but do not know how it works.
+
+- What is View Encapsulation in Angular ?
+The View Encapsulation in Angular is a strategy which determines how angular hides (encapsulates) the styles defined in the component from bleeding over to the the other parts of the application.
+
+- ViewEncapsulation.Emulated is the default encapsulation method.
+
+- ViewEncapsulation.None
+The ViewEncapsulation.None is used, when we do not want any encapsulation. When you use this, the styles defined in one component affects the elements of the other components. The style defined in the ViewNoneComponent is injected to the global style and overrides any previously defined style. 
+
+- ViewEncapsulation.Emulated
+In a HTML page, we can easily add a id or a class to the element to increase the specificity of the CSS rules so that the CSS rules do not interfere with each other. The ViewEncapsulation.Emulated strategy in angular adds the unique HTML attributes to the component CSS styles and to the markup so as to achieve the encapsulation. This is not true encapsulation. The Angular Emulates the encapsulation, Hence the name Emulated.If you do not specify encapsulations in components, the angular uses the ViewEncapsulation.Emulated strategy. This strategy isolates the component styles. They do not bleed out to other components.
+
+- ViewEncapsulation.ShadowDOM
+The Shadow DOM is a scoped sub-tree of the DOM. It is attached to a element (called shadow host) of the DOM tree. The shadow dom do not appear as child node of the shadow host, when you traverse the main DOM.
+
+
 3.Style binding in Angular
+https://www.tektutorialshub.com/angular/angular-style-binding/
+
+- Syntax:
+[style.style-property] = "style-value"﻿
+<p [style.color]="'red'">Give me red</p>
+
+<button [style.color]="status=='error' ? 'red': 'blue'">Button 1</button> 
+
+
 4.Class Binding in Angular
+https://www.tektutorialshub.com/angular/class-binding-in-angular/
+
+- The Angular provides the three ways to add/remove classes to and from the element. One using the DOM ClassName Property. The second option is to use the Class shorthand. The third option is to use the NgClass directive.
+
+- You can also add class using the normal HTML way.
+<div class="red">red</div>
+but, mixing both class and [className] results in removal of class attribute. You cannot use both.
+<div class="red" [className]="'size20'">red</div>
+
+- There are another shorthand way to bind CSS Class to HTML element.
+
+<div [class.<className>]="condition"></div>
+Where className is name of the class, which you want to bind to. condition must return true or false. A return value of true adds the class and a false removes the class.
+In the following example, the class red and size20 is added to the div element.
+
+<div [class.red]="true" [class.size20]="true">Test</div>
+
+
 5.Component Styles
+https://www.tektutorialshub.com/angular/angular-component-styles/
+
+- The Angular Components maintain their own style & state. But CSS styles are global in scope. The angular encapsulates the component styles using the View Encapsulation strategies. Therefore ensuring that the styles of one component does not bleed to another view.
+
+
 6.How to Install & Use Angular FontAwesome
+npm install @fontawesome/angular-fontawesome
+
+npm install @fontawesome/fontawesome-svg-core --save
+
 7.How to Add Bootstrap to Angular
+npm install --save bootstrap
+
 
 * Others
 1.Location Service
+https://www.tektutorialshub.com/angular/angular-location-service/
+
+- The Angular Location service is used to interact with the browser URL. We can use it to track the URL changes. Use it to read the current URL, modify the URL, go back or forward through the browser history, etc.
+
+- back()
+Use location.back() to go back to the previous URL.
+
+- forward()
+Use location.forward() to go to the next URL.
+
+- path()
+The current URL path can be obtained using the location.path()
+
+- go()
+Use the location.go() to change the current URL to a new given URL. It also pushes the new URL into the browser history. The location.go() does not navigate to the new URL. To navigate to the new URL, you must use the Angular router
+
+Syntax:
+go(path: string, query: string = '', state: any = null): void
+
+location.go("/product/1");
+
+- replaceState()
+Use the location.replaceState() to change the current URL to a new given URL. It replaces the top item in the browser history.
+
+This is very similar to location.go() with one difference. The location.go() add the URL to the browser history, while location.replaceState() replaces the top item in the history with the newly added one
+
+- getState()
+The above introduced in Angular 8, returns the current value of history. state object. 
+
+You can pass the state object by using the following ways.
+
+By using routerLink directive.
+By using the router.navigateByUrl() method.
+via location.go() method of the location service
+via location.replaceState() method of the location service
+
+Ex -
+<a [routerLink]="['dynamic']" [state]="{ id:1 , name:'Angular'}">Dynamic Data</a>
+ 
+this.router.navigateByUrl('/dynamic', { state: { id:1 , name:'Angular' } });
+ 
+location.go("/product/1","", { id:1 , name:'Angular'})
+location.replaceState("/product/1","", { id:1 , name:'Angular'})
+
+- onUrlChange()
+Use onUrlChange to listen for a change in URLs. This API can be used to catch updates performed by the Angular framework. These are not detectable through “popstate” or “hashchange” events.
+
+Ex -
+ngOnInit() {
+ 
+    this.location.onUrlChange( (url: string, state: unknown) => {
+      console.log("Location changes to "+url);
+      console.log(state);
+    })
+  }
+  
+- Subscribe to the location service to listen to the platform’s popState events. The popState events are fired when
+
+User clicks on the Back/Forward button on the browser window
+location.forward() & location.back() is called. 
+
+And not fired when location.go() and location.replaceState() is used.
+
+- It’s better to use the Router service to trigger route changes. Use Location Services, only when you need to manipulate the Router, without resulting in a page refresh.
 
 * Configuration
 - The apps usually need some sort of Run-time configuration information like URL endpoint etc, which it needs to load at startup. Also, different environments like development, production & testing require different environments, etc.
 
 1.How to use APP_INITIALIZER
+https://www.tektutorialshub.com/angular/angular-how-to-use-app-initializer/
+
+
+
 2.Run time configuration
 3.Environment Variables
 
