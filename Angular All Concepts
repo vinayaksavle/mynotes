@@ -6316,20 +6316,155 @@ And not fired when location.go() and location.replaceState() is used.
 1.How to use APP_INITIALIZER
 https://www.tektutorialshub.com/angular/angular-how-to-use-app-initializer/
 
+- The APP_INITIALIZER is run when the application is initialized. The Angular suspends the app initialization until all the functions provided by the APP_INITIALIZER are run. If any of those intializers return a promise, then the angular waits for it to resolve, before continuing with the App initialization
 
+Ex -
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+ 
+import { AppRoutingModule } from './app-routing.module';
+ 
+import { AppComponent } from './app.component';
+import { AboutUsComponent } from './about-us.component';
+import { HomeComponent } from './home.component';
+import { ContactUsComponent } from './contact-us.component';
+ 
+import { AppInitService } from './app-init.service';
+ 
+export function initializeApp1(appInitService: AppInitService) {
+  return (): Promise<any> => { 
+    return appInitService.Init();
+  }
+}
+ 
+@NgModule({
+  declarations: [
+    AppComponent, AboutUsComponent,HomeComponent,ContactUsComponent
+  ],
+  imports: [
+    HttpClientModule,
+    BrowserModule,
+    AppRoutingModule,
+  ],
+  providers: [ 
+    AppInitService,
+    { provide: APP_INITIALIZER,useFactory: initializeApp1, deps: [AppInitService], multi: true}
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+- The Observables are not yet supported in APP_INITIALIZER
+
+- The APP_INITIALIZER is an instance of InjectionToken. It allows us to hook into the Angular Initialization process and run our custom logic like retrieving some important data
 
 2.Run time configuration
+https://www.tektutorialshub.com/angular/angular-runtime-configuration/
+
+- Most apps need some sort of Run-time configuration information, which it needs to load at startup. For example, if your app requires data, then it needs to know the base location of your REST endpoints. Also, development, testing & production environments may have different endpoints.
+
+- The Angular has the environment variables where you can keep the runtime settings, but it has limitations. The setting of the environment variables are defined at build time and cannot be changed at run time. We can keep the configuration information in a database. But we still need to store the REST endpoints to connect to the database.
+
+- The right approach is to store the configuration information in a config file in a secured location. We will deploy the configuration file along with the App. The App can load the configuration from it when the application loads.
+
+
 3.Environment Variables
+https://www.tektutorialshub.com/angular/angular-environment-variables/
+
 
 *  Handling Errors
 - We handle errors by setting up a Global Error handler or custom error handler. Also,.whenever the error occurs in an HTTP operation, the Angular wraps it in an httpErrorResponse Object. Learn how to handle the HTTP Errors also.
 
 1.Error Handling in Angular
+https://www.tektutorialshub.com/angular/error-handling-in-angular-applications/
+
+- Best Practices in Handling Errors
+Use a try.. catch block to handle the known errors. Handle it accordingly. If you are not able to handle it, then re-throw it.
+Use a global error handler to trap all unhandled errors and show a notification to the user.
+The ErrorHandler does not trap HTTP Errors, You need to Use HTTP Interceptors to handle HTTP Errors. You can refer to this article how to handle HTTP Errors in Angular.
+Check for type of error in the error handler and act accordingly.
+For Example, if is an error from the back end (HTTP Error) you can use the HTTP Status Code to take necessary action.
+401 Unauthorized error you can redirect the user to the login page.
+500 Internal Server Error you can ask the user to retry after some time while sending a notification to the server administrator e
+For all other unhandled errors, log the errors back to the back end server ( or to any third party error providers). You can then look at those logs and make necessary changes to the app.
+
+
 2.HTTP Error Handling
+https://www.tektutorialshub.com/angular/angular-http-error-handling/
+
+- The HttpClient captures the errors and wraps it in the generic HttpErrorResponse, before passing it to our app. The error property of the HttpErrorResponse contains the underlying error object. It also provides additional context about the state of the HTTP layer when the error occurred.
+
+Ex -
+public getRepos() {
+    this.loading = true;
+    this.errorMessage = "";
+    this.githubService.getReposCatchError(this.userName)
+      .subscribe(
+        (response) => {                           //Next callback
+          console.log('response received')
+          this.repos = response;
+        },
+        (error) => {                              //Error callback
+          console.error('error caught in component')
+          this.errorMessage = error;
+          this.loading = false;
+    
+          //throw error;   //You can also throw the error to a global error handler
+        }
+      )
+  }
+  
+  getRepos(userName: string): Observable<repos[]> {
+    return this.http.get<repos[]>(this.baseURL + 'usersY/' + userName + '/repos')
+      .pipe(
+        catchError((err) => {
+          console.log('error caught in service')
+          console.error(err);
+ 
+          //Handle the error here
+ 
+          return throwError(err);    //Rethrow it back to component
+        })
+      )
+  }
+  
+- The Right thing to do is to handle only the errors specific to this API call in this component/service and move all the common errors to one single place. This is where we use the HTTP Interceptor.
+
+- The HTTP Interceptor is a service, which we create and register it globally at the root module using the Angular Providers. Once defined, it will intercept all the HTTP requests passing through the app. It intercepts when we make the HTTP request and also intercepts when the response arrives. This makes it an ideal place to catch all the common errors and handle it
+
+Ex -
+import {Injectable} from "@angular/core";
+import {HttpEvent, HttpHandler, HttpInterceptor,HttpRequest,HttpResponse,HttpErrorResponse} from '@angular/common/http';
+import {Observable, of, throwError} from "rxjs";
+import {catchError, map} from 'rxjs/operators';
+ 
+@Injectable()
+export class GlobalHttpInterceptorService implements HttpInterceptor {
+    
+  constructor(public router: Router) {
+  }
+ 
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+ 
+    return next.handle(req).pipe(
+      catchError((error) => {
+        console.log('error is intercept')
+        console.error(error);
+        return throwError(error.message);
+      })
+    )
+  }
+}
+
 
 * Angular CLI
 
 1.Angular CLI Tutorial
+https://www.tektutorialshub.com/angular/angular-cli-tutorial/
+
+
+
 2.Upgrading Angular App to the latest version
 3.Multiple App in One Project
 
