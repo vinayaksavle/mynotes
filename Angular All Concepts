@@ -6473,21 +6473,282 @@ https://www.tektutorialshub.com/angular/angular-cli-tutorial/
 - You need to set up Title & Meta Tags for each page. Ensure that the search engines can crawl and read your page. Set the correct Canonical URL for each page etc.
 
 1.Title Service Example
+- Changing the page title is very important as it helps the search engines to know the purpose of the page and index it properly. It also helps users to know, which page they are in.
+
+Being a single page app, the angular does not reload the entire page. The page is loads only once at the startup. Only part of the page gets loaded when you navigate from one route to another.
+
+The title of the page is set in the index.html as shown below. We use the HTML title tag to set the title of the app. Since it is loaded only at the start, all other pages or routes get the same title.
+
+- How to Use Title Service
+import { BrowserModule, Title } from '@angular/platform-browser';
+
+Note that the title service is part of the platform-browser package. i.e because the title meta tag is applicable to the HTML page in the browser. If you are using any other platform like NativeScript for mobile apps, you need a different service. The service, which understands the platform.
+
+- Like all other Angular services, we need to register the title service with the Angular Providers in the root Angular module.
+
+@NgModule({
+  declarations: [
+  ],
+  imports: [
+    BrowserModule,
+  ],
+  providers: [
+    Title                   //Register the Service
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+- Inject Title service in the component
+export class TitleComponent implements OnInit {
+  constructor(private title:Title) { }
+}
+
+- The title service provides only two methods. SetTitle & GetTitle. We use SetTitle to set the title of the page and GetTitle to find out the current title of the page.
+
+ngOnInit() {
+   this.title.setTitle("How to use title service in Angular")
+}
+
+import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'title Service Example';
+ 
+  constructor(private titleService:Title) {
+  }
+ 
+  ngOnInit() {
+    this.titleService.setTitle(this.title);
+  }
+}
+
 2.Dynamic Title based on Route
+https://www.tektutorialshub.com/angular/dynamic-page-title-based-on-route-in-angular/
+
+- Setting the title in each component is somewhat a tedious task. You may miss some of the components. The simpler solution is to define the title along with the routes and use it to update the title. To achieve that, we will make use of Angular route data Property.
+
+- Open the app-routing.module.ts and the routes as shown below. Add the title property in route data. Route data can be used to pass the static data or dynamic data to routed components.
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { OneComponent } from './one.component';
+import { TwoComponent } from './two-component';
+import { ThreeComponent } from './three.component';
+import { TwoAComponent } from './two-a.component';
+import { HomeComponent } from './home.component';
+ 
+ 
+const routes: Routes = [
+  {path:'',component:HomeComponent, data : {title:'Title for Home Component'}},
+  {path: 'one', component:OneComponent, data :{ title:'Title for One Component'}},
+  {path: 'two', component:TwoComponent, 
+      data :{ title:'Title for Two Component'},
+      children: [
+          {path:'a',component:TwoAComponent, data : {title:'title for two a component'}}
+      ]
+    },
+  {path: 'three', component:ThreeComponent, data :{ title:'Title for three Component'}},
+];
+ 
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+- Listen to Navigation Changes
+The trick to change the title is to know when the route changes. This we can do by listening to the NavigationEnd event.We also need to listen to every route change event in the app. The app.component.ts is the topmost component in our app. It loads when the app starts. It lives as long as the app lives. Hence the best place to listen to the route changes is in the app.component.ts
+
+import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+ 
+  constructor(private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private titleService: Title) {
+  }
+ 
+  ngOnInit() {
+ 
+    this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd),
+      )
+      .subscribe(() => {
+ 
+        var rt = this.getChild(this.activatedRoute)
+ 
+        rt.data.subscribe(data => {
+          console.log(data);
+          this.titleService.setTitle(data.title)})
+      })
+ 
+  }
+ 
+  getChild(activatedRoute: ActivatedRoute) {
+    if (activatedRoute.firstChild) {
+      return this.getChild(activatedRoute.firstChild);
+    } else {
+      return activatedRoute;
+    }
+ 
+  }
+ 
+}
+
+- In ngOnInit, we listen to the router events. We use the filter operator to listen to only to the NavigationEnd event.
+
+
 3.Meta Service
+https://www.tektutorialshub.com/angular/meta-service-in-angular-add-update-meta-tags-example/
+
+- The Angular Meta Service makes it easier to set different meta tags to different pages. It provides methods such as addTag(), addTags(), getTag(), getTags(),  updateTag(),  removeTag(), removeTagElement() etc. We can use them to manipulate meta tags. 
+
+- Meta tags describe details about your page content to search engines. Hence setting the right Meta tags is very important for SEO. These tags appear only in the <head> section of the HTML and not visible to the user. But search engines / social media sites use them to find more about your page. Meta tags in a typical <head> section might look like this
+
+Ex -
+constructor(private metaService: Meta) {
+    this.addTag();
+}
+ 
+addTag() {
+   this.metaService.addTag({ name: 'description', content: 'Article Description' });
+   this.metaService.addTag({ name: 'robots', content: 'index,follow' });
+   this.metaService.addTag({ property: 'og:title', content: 'Content Title for social media' });
+}
+
+This results in the following HTML.
+
+<meta name="description" content="Article Description">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Content Title for social media">
+
+
+
 4.Dynamic Meta Tags
 5.Canonical URL
 6.Lazy Load Images in Angular
+https://www.tektutorialshub.com/angular/lazy-load-images-in-angular/
+
+- With the images comes the issue of Page Load speed. More images you have slower it takes to download them and display them to users. Page load speed is a very important factor determining the user experience and also one of the factors in Ranking.
+
+You can optimize the image size using services like ShortPixel, which vastly reduces the size of images. But it won’t be enough if you have many images on the page. This is where the lazy loading of the images comes into picture
+
+- Lazy Loading Images is a technique, where we delay the loading of images until we need them. For Example, load only those images which are above the fold. The images below the fold are loaded only when the user scrolls to that location. This helps to load the page the quickly.
+
+- There are many third-party libraries available. One of the popular package is ng-lazyload-image.
+
+npm install ng-lazyload-image --save
+
+Ex -
+import { Component } from '@angular/core';
+ 
+@Component({
+  selector: 'app-root',
+  template: `
+  <h1>Lazy Load Images</h1>
+ 
+ 
+  <img height="700" width="700" [lazyLoad]="imageSrc1">
+  <img height="700" width="700" [lazyLoad]="imageSrc2">
+  <img height="700" width="700" [lazyLoad]="imageSrc3">
+  <img height="700" width="700" [lazyLoad]="imageSrc4">
+  
+  `,
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'lazyLoadImages';
+ 
+  imageSrc1="https://images.dog.ceo/breeds/poodle-toy/n02113624_5584.jpg"
+  imageSrc2="https://images.dog.ceo/breeds/terrier-border/n02093754_175.jpg"
+  imageSrc3="https://images.dog.ceo/breeds/terrier-lakeland/n02095570_4188.jpg"
+  imageSrc4="https://images.dog.ceo/breeds/keeshond/n02112350_9431.jpg"
+ 
+}
+
+
 
 * Angular Universal
 
 The following Angular Universal Tutorial explains how to achieve Server Side Rendering using Angular Universal. The rendering the App on the server side makes it load quickly and also ensures that the search engines can crawl the content
 
 1. Server-Side Rendering Angular Universal Tutorial
+https://www.tektutorialshub.com/angular/server-side-rendering-using-angular-universal/
+
+- The Angular Universal renders the HTML view of the requested URL at the server, before sending it to the user’s browser. This will make the app load faster and more importantly search engine friendly.
+
+- What is Server-Side Rendering
+Server-Side Rendering or SSR is a technique, which executes the javascript and generates the HTML file on the server and sends it to the client-side.
+
+- Implementing SSR does not speed up your site all by itself. Because you are only moving the rendering to the server from the browser. In fact, if the server is busy, it may slow your site down. But, you get a great speed when you cache the rendered response. Serving the cached response to the user eliminates the rendering process and serves the HTML instantly to the user. This is possible only with the SSR.
 
 * Building & Hosting
 
 1. Requested URL Not found on this server
+- You have built an Angular app and created a production build with ng build --prod You deploy it to a production server. Everything works fine until you refresh the page. The app throws The requested URL was not found on this server message (Status code 404 not found). It appears that angular routing not working on the production server when you refresh the page.
+
+- The error appears on the following scenarios
+
+When you type the URL directly in the address bar.
+When you refresh the page
+The error appears on all the pages except the root page.
+The error occurs only if you are using HTML 5 Routing or PathLocationStrategy
+
+- Reason for the requested URL was not found on this server error
+In a Multi-page web application, every time the application needs to display a page it has to send a request to the webserver. You can do that by either typing the URL in the address bar, clicking on the Menu link/ button. Every such action results in a new request being sent to the Web server. For each request, a corresponding page must exist on the server. The server locates that page and returns it back to the client.
+
+But in Angular Apps, the app starts when the main page (index.html) is loaded. Any subsequent requests do not reload the page but only load a part of the page. The requests are not sent to the server but handled by the Angular router at the client-side. You can read more about it from the article Angular bootstrap process
+
+For Example, when you request for example.com the request is sent to the server, which returns the index.html.This will bootstrap the Angular.
+
+Now when you click on example.com/products, the request is not sent to the server but handled at the client-side by the Angular Router. The Router loads the component associated with the products route. The products component may send an HTTP request to fetch the list of products to display. But the request to display the products page is never sent to the server.
+
+What happens when somebody types the example.com/products in the address bar or refreshes the page. Now the request to fetch the products page is sent to the server. Since there is no products page available in the server it returns the The requested URL was not found on this server or 404 error page
+
+- Workaround
+The workaround to this problem is to instruct the server to load the index.html no matter what. So when the request comes to example.com/products page, the server serves the index.html page. This bootstraps the Angular app and the Angular router is smart enough to read the requested URL and load the products component.
+
+To instruct the server to load the index.html for every request require a configuration change at the Web server level. The configuration settings depend on the server used.
+
+- IIS Server
+First, install the IIS URL Rewrite module. Copy the following to web.config file to the root of the application.
+
+- <?xml version="1.0" encoding="utf-8"?>
+<configuration>
+<system.webServer>
+ 
+  <rewrite>
+    <rules>
+      <rule name="Angular Routes" stopProcessing="true">
+        <match url=".*" />
+        <conditions logicalGrouping="MatchAll">
+          <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+          <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+        </conditions>
+        <action type="Rewrite" url="./index.html" />
+      </rule>
+    </rules>
+  </rewrite>
+ 
+</system.webServer>
+</configuration>
+
 
 * Angular Resources
 
