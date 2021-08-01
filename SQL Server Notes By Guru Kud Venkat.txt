@@ -408,4 +408,390 @@ Use to return values like name, count etc.
 22. Built in string functions in sql server 2008 Part 22
 https://www.youtube.com/watch?v=qJFr-R76r9A&list=PL08903FB7ACA1C2FB&index=23&ab_channel=kudvenkat
 
+1. ASCII(Character_Expression) - Returns the ASCII code of the given character expression.
+2. CHAR(Integer_Expression) - Converts an int ASCII code to a character. The Integer_Expression, should be between 0 and 255.
+3. LTRIM(Character_Expression) - Removes blanks on the left handside of the given character expression.
+4. RTRIM(Character_Expression) - Removes blanks on the right hand side of the given character expression.
+5. LOWER(Character_Expression) - Converts all the characters in the given Character_Expression, to lowercase letters.
+6. UPPER(Character_Expression) - Converts all the characters in the given Character_Expression, to uppercase letters.
+7. REVERSE('Any_String_Expression') - Reverses all the characters in the given string expression.
+8. LEN(String_Expression) - Returns the count of total characters, in the given string expression, excluding the blanks at the end of the expression.
+
+23. LEFT, RIGHT, CHARINDEX and SUBSTRING functions in sql server Part 23
+
+1. LEFT (Character_Expression, Integer_Expression) - Returns the specified number of characters from the left hand side of the given character expression.
+
+2. RIGHT(Character_Expression, Integer_Expression) - Returns the specified number of characters from the right hand side of the given character expression.
+
+3. CHARINDEX('Expression_To_Find','Expression_To_Search','Start_Location') - Returns the starting position of the specified expression in a character string.
+
+4. SUBSTRING('Expression','Start','Length') - Returns substring (part of the string), from the given expression.
+
+24. Replicate, Space, Patindex, Replace and Stuff string functions in sql server 2008 Part 24
+https://www.youtube.com/watch?v=ALnM6d7OQUs&list=PL08903FB7ACA1C2FB&index=25
+
+- REPLICATE(String_To_Be_Replicated, Number_Of_Times_To_Replicate) - Repeats the given string, for the specified number of times.
+
+Ex - Mask the email with 5 * (star) symbols
+SELECT FirstName, LastName, SUBSTRING(Email, 1, 2) + REPLICATE('*',5) + SUBSTRING(Email, CHARINDEX('@',Email), LEN(Email) - CHARINDEX('@',Email)+1) as Email FROM tblEmployee
+
+O/P - Sam@aaa.com -> Sa*****@aaa.com
+
+- SPACE(Number_of_Spaces) - Returns number of spaces, specified by the Number_of_Spaces argument.
+
+Ex - The SPACE(5) function, inserts 5 spaces between FirstName and LastName.
+
+SELECT FirstName + SPACE(5) + LastName as FullName from tblEmployee.
+
+- PATINDEX('%Pattern%', Expression) - Returns the starting position of the first occurence of a pattern in a specified expression. It takes two arguments, the pattern to be searched and the expression. PATINDEX() is similar to CHARINDEX(). With CHARINDEX() we cannot use wildcards, wehre as PATINDEX() provides this capability. If the specified pattern is not found, PATINDEX() returns ZERO.
+
+SELECT PATINDEX('%@aaa.com',Email) FROM tblEmployee WHERE PATINDEX('%@aaa.com',Email) > 0
+
+O/P - Sam@aaa.com - 4
+
+- REPLACE(String_Expression,Replacement_Value) - Replaces all occurences of a specified string value with another string value.
+
+Ex - All.COM strings are replaces with .NET
+SELECT Email, REPLACE(Email, '.com', '.net') from tblEmployee.
+
+O/P - Sam@aaa.com -> Sam@aaa.net
+
+- STUFF(Original_Expression, Start, Length, replacement_expression) - It inserts Replacement_expression, at the start position specified, along with removing the characters specified using Length parameter.
+
+Ex - SELECT STUFF(Email, 2, 3, '*****') FROM tblEmployee
+
+O/P - Sam@aaa.com -> S*****aaa.com
+
+
+25. DateTime functions in SQL Server Part 25
+https://www.youtube.com/watch?v=6_95vbBrrXI&list=PL08903FB7ACA1C2FB&index=26
+
+- UTC stands for Coordinated Universal Time, based on which the world regulates clocks and time. There are slight differences between GMT and UTC, but for most common puposes, UTC is synonymous with GMT.
+
+- time 
+Format - hh:mm:ss[.nnnnnnn]
+Range - 00:00:00.0000000 through 23:59:59.9999999
+
+- date
+Format - YYYY -MM-DD
+Range - 00001-01-01 through 9999-12-31
+
+- smalldatetime 
+Format - YYYY-MM-DD hh:mm:ss
+Range - 1900-01-01 throgh 2079-06-06
+
+- datetime
+Format - YYYY-MM-DD hh:mm:ss[.nnn]
+Range - 1753-01-01 through 9999-12-31
+
+- datetime2
+Format - YYYY-MM-DD hh:mm:ss[.nnnnnnn]
+
+- datetimeoffset
+Format - YYYY-MM-DD hh:mm:ss[.nnnnnnn] [+|-] hh:mm
+
+- GETDATE(), CURRENT_TIMESTAMP, SYSDATETIME(), SYSDATETIMEOFFSET(), GETUTCDATE(), SYSUTCDATETIME()
+
+26. IsDate, Day, Month, Year and DateName DateTime functions in SQL Server Part 26
+
+- ISDATE() - Checks if the given value, is a valid date, time, or datetime. Returns 1 for success, 0 for failure.
+
+SELECT ISDATE(GETDATE()) -- returns 1
+SELECT ISDATE('2012-09-01 11:34::21.1918447') -- returns 0
+
+Note: For datetime2 values, IsDate return ZERO
+
+- DAY() - Returns the 'Day number of the Month' of the given date 
+SELECT DAY('01/31/2012') -- Returns 31
+
+- Month() - Returns the 'Month number of the year' of the given date 
+SELECT DAY('01/31/2012') -- Returns 1
+
+- Year() - Returns the 'Year number' of the given date
+SELECT YEAR('01/31/2012') -- Returns 2012
+
+- DateName(DatePart, Date) - Returns a string, that represents the part of the given date. This function takes 2 parameters. The first parameter DatePart specifies, the part of the date, we want. The second parameter, is the actual date, from which we want the part of the Date.
+
+DatePart - year, quarter, month, dayofyear, day, week, weekday, hour, minute, second, milisecond, microsecond, nanosecond, TZoffset
+
+Ex - SELECT DATENAME(WEEKDAY,GETDATE()) as Day From tblEmployees.
+
+27. DatePart, DateAdd and DateDiff functions in SQL Server Part 27
+
+https://www.youtube.com/watch?v=eYsizQVa_EU&list=PL08903FB7ACA1C2FB&index=28
+
+- DatePart(DatePart, Date) - Returns an integer representing the specified DatePart. This function is similar to DateName(). DateName() returns nvarchar, where as DatePartb returns as integer.
+
+Examples:
+Select DATEPART(weekday, '2012-08-30 19:45:31.793') -- returns 5
+Select DATENAME(weekday, '2012-08-30 19:45:31.793') -- returns Thursday
+
+- DATEADD(datepart, NumberToAdd, date) Returns the DateTime, after adding specified NumberToAdd, to the datepart specified of the given date.
+
+Examples:
+Select DateAdd(DAY, 20, '2012-08-30 19:45:31.793') 
+-- Returns 2012-09-19 19:45:31.793
+Select DateAdd(DAY, -20, '2012-08-30 19:45:31.793') 
+-- Returns 2012-08-10 19:45:31.793
+
+- DATEDIFF(datepart, startdate, enddate) - Returns the count of the specified datepart boundries crossed between the specified startdate and enddate.
+
+Examples:
+Select DATEDIFF(MONTH, '11/30/2005','01/31/2006') -- returns 2
+Select DATEDIFF(DAY, '11/30/2005','01/31/2006') -- returns 62
+
+- Calculating Age Function
+DOB - 1980-12-30 -> 31 Years 8 Months 2 Days old
+
+CREATE FUNCTION fnComputeAge(@DOB DATETIME)
+RETURNS NVARCHAR(50)
+AS
+BEGIN
+
+DECLARE @tempdate DATETIME, @years INT, @months INT, @days INT
+SELECT @tempdate = @DOB
+
+SELECT @years = DATEDIFF(YEAR, @tempdate, GETDATE()) - CASE WHEN (MONTH(@DOB) > MONTH(GETDATE())) OR (MONTH(@DOB) = MONTH(GETDATE()) AND DAY(@DOB) > DAY(GETDATE())) THEN 1 ELSE 0 END
+SELECT @tempdate = DATEADD(YEAR, @years, @tempdate)
+
+SELECT @months = DATEDIFF(MONTH, @tempdate, GETDATE()) - CASE WHEN DAY(@DOB) > DAY(GETDATE()) THEN 1 ELSE 0 END
+SELECT @tempdate = DATEADD(MONTH, @months, @tempdate)
+
+SELECT @days = DATEDIFF(DAY, @tempdate, GETDATE())
+
+DECLARE @Age NVARCHAR(50)
+SET @Age = Cast(@years AS  NVARCHAR(4)) + ' Years ' + Cast(@months AS  NVARCHAR(2))+ ' Months ' +  Cast(@days AS  NVARCHAR(2))+ ' Days Old'
+RETURN @Age
+
+End
+
+Using the function in a query to get the expected output along with the age of the person.
+Select Id, Name, DateOfBirth, dbo.fnComputeAge(DateOfBirth) as Age from tblEmployees
+
+28. Cast and Convert functions in SQL Server Part 28
+
+- To convert one data type to another, CAST and CONVERT functions can be used. 
+
+Syntax of CAST and CONVERT functions from MSDN:
+CAST ( expression AS data_type [ ( length ) ] )
+CONVERT ( data_type [ ( length ) ] , expression [ , style ] )
+
+From the syntax, it is clear that CONVERT() function has an optional style parameter, where as CAST() function lacks this capability.
+
+- The following 2 queries convert, DateOfBirth's DateTime datatype to NVARCHAR. The first query uses the CAST() function, and the second one uses CONVERT() function. The output is exactly the same for both the queries as shown below.
+Select Id, Name, DateOfBirth, CAST(DateofBirth as nvarchar) as ConvertedDOB
+from tblEmployees
+Select Id, Name, DateOfBirth, Convert(nvarchar, DateOfBirth) as ConvertedDOB
+from tblEmployees
+
+Ex - 
+1980-12-30 00:00:00.000 -> Dec 30 1980 12:00AM
+
+- Now, let's use the style parameter of the CONVERT() function, to format the Date as we would like it. In the query below, we are using 103 as the argument for style parameter, which formats the date as dd/mm/yyyy.
+Select Id, Name, DateOfBirth, Convert(nvarchar, DateOfBirth, 103) as ConvertedDOB
+from tblEmployees
+
+Ex -
+1980-12-30 00:00:00.000 -> 30/12/1980
+
+The following table lists a few of the common DateTime styles:
+101 - mm/dd/yyyy
+102 - yy.mm.dd
+103 - dd/mm/yyyy
+104 - dd.mm.yy
+105 - dd-mm-yy
+
+- In SQL Server 2008, Date datatype is introduced, so you can also use
+SELECT CAST(GETDATE() as DATE)
+SELECT CONVERT(DATE, GETDATE())
+
+Note: To control the formatting of the Date part, DateTime has to be converted to NVARCHAR using the styles provided. When converting to DATE data type, the CONVERT() function will ignore the style parameter.
+
+- In this query, we are using CAST() function, to convert Id (int) to nvarchar, so it can be appended with the NAME column. If you remove the CAST() function, you will get an error stating - 'Conversion failed when converting the nvarchar value 'Sam - ' to data type int.'
+Select Id, Name, Name + ' - ' + CAST(Id AS NVARCHAR) AS [Name-Id]
+FROM tblEmployees
+
+Sam - 1
+
+- Write a query which returns the total number of registrations by day
+
+Query :
+Select CAST(RegisteredDate as DATE) as RegistrationDate,
+COUNT(Id) as TotalRegistrations
+From tblRegistrations
+Group By CAST(RegisteredDate as DATE)
+
+- CAST vs CONVERT
+1. Cast is based on ANSI (American National Standards Institute) standard and Convert is specific to SQL Server. So, if portability is a concern and if you want to use the script with other database applications, use Cast(). 
+2. Convert provides more flexibility than Cast. For example, it's possible to control how you want DateTime datatypes to be converted using styles with convert function.
+
+The general guideline is to use CAST(), unless you want to take advantage of the style functionality in CONVERT().
+
+
+29. Mathematical functions in sql server Part 29
+
+- ABS ( numeric_expression ) - ABS stands for absolute and returns, the absolute (positive) number. 
+
+For example, Select ABS(-101.5) -- returns 101.5, without the - sign.
+
+- CEILING ( numeric_expression ) and FLOOR ( numeric_expression )
+CEILING and FLOOR functions accept a numeric expression as a single parameter. CEILING() returns the smallest integer value greater than or equal to the parameter, whereas FLOOR() returns the largest integer less than or equal to the parameter. 
+
+Examples:
+Select CEILING(15.2) -- Returns 16
+Select CEILING(-15.2) -- Returns -15
+
+Select FLOOR(15.2) -- Returns 15
+Select FLOOR(-15.2) -- Returns -16
+
+- Power(expression, power) - Returns the power value of the specified expression to the specified power.
+
+Example: The following example calculates '2 TO THE POWER OF 3' = 2*2*2 = 8
+Select POWER(2,3) -- Returns 8
+
+- SQUARE ( Number ) - Returns the square of the given number.
+
+Example:
+Select SQUARE(9) -- Returns 81
+
+- SQRT ( Number ) - SQRT stands for Square Root. This function returns the square root of the given value.
+
+Example:
+Select SQRT(81) -- Returns 9
+
+- RAND([Seed_Value]) - Returns a random float number between 0 and 1. Rand() function takes an optional seed parameter. When seed value is supplied the 
+
+RAND() function always returns the same value for the same seed.
+
+Example:
+Select RAND(1) -- Always returns the same value
+
+If you want to generate a random number between 1 and 100, RAND() and FLOOR() functions can be used as shown below. Every time, you execute this query, you get a random number between 1 and 100.
+Select FLOOR(RAND() * 100)
+
+The following query prints 10 random numbers between 1 and 100.
+Declare @Counter INT
+Set @Counter = 1
+While(@Counter <= 10)
+Begin
+ Print FLOOR(RAND() * 100)
+ Set @Counter = @Counter + 1
+End
+
+- ROUND ( numeric_expression , length [ ,function ] ) - Rounds the given numeric expression based on the given length. This function takes 3 parameters. 
+1. Numeric_Expression is the number that we want to round.
+2. Length parameter, specifies the number of the digits that we want to round to. If the length is a positive number, then the rounding is applied for the decimal part, where as if the length is negative, then the rounding is applied to the number before the decimal.
+3. The optional function parameter, is used to indicate rounding or truncation operations. A value of 0, indicates rounding, where as a value of non zero indicates truncation. Default, if not specified is 0.
+
+Examples:
+-- Round to 2 places after (to the right) the decimal point
+Select ROUND(850.556, 2) -- Returns 850.560
+Select ROUND(850.554, 2) -- Returns 850.550
+Select ROUND(850.544, 1) -- Returns 850.500
+Select ROUND(850.554, 1) -- Returns 850.600
+
+-- Truncate anything after 2 places, after (to the right) the decimal point
+Select ROUND(850.556, 2, 1) -- Returns 850.550
+
+-- Round to 1 place after (to the right) the decimal point
+Select ROUND(850.556, 1) -- Returns 850.600
+
+-- Truncate anything after 1 place, after (to the right) the decimal point
+Select ROUND(850.556, 1, 1) -- Returns 850.500
+
+-- Round the last 2 places before (to the left) the decimal point
+Select ROUND(850.556, -2) -- 900.000
+
+-- Round the last 1 place before (to the left) the decimal point
+Select ROUND(850.556, -1) -- 850.000
+
+30. Scalar user defined functions in sql server Part 30
+
+- In SQL Server there are 3 types of User Defined functions
+1. Scalar functions
+2. Inline table-valued functions
+3. Multistatement table-valued functions
+
+- Scalar functions may or may not have parameters, but always return a single (scalar) value. The returned value can be of any data type, except text, ntext, image, cursor, and timestamp.
+
+To create a function, we use the following syntax:
+CREATE FUNCTION Function_Name(@Parameter1 DataType, @Parameter2 DataType,..@Parametern Datatype)
+RETURNS Return_Datatype
+AS
+BEGIN
+    Function Body
+    Return Return_Datatype
+END
+
+- Let us now create a function which calculates and returns the age of a person. To compute the age we require, date of birth. So, let's pass date of birth as a parameter. So, AGE() function returns an integer and accepts date parameter.
+Ex -
+CREATE FUNCTION Age(@DOB Date)  
+RETURNS INT  
+AS  
+BEGIN  
+ DECLARE @Age INT  
+ SET @Age = DATEDIFF(YEAR, @DOB, GETDATE()) - CASE WHEN (MONTH(@DOB) > MONTH(GETDATE())) OR (MONTH(@DOB) = MONTH(GETDATE()) AND DAY(@DOB) > DAY(GETDATE())) THEN 1 ELSE 0 END  
+ RETURN @Age  
+END
+
+
+When calling a scalar user-defined function, you must supply a two-part name, OwnerName.FunctionName. dbo stands for database owner.
+Select dbo.Age( dbo.Age('10/08/1982')
+
+You can also invoke it using the complete 3 part name, DatabaseName.OwnerName.FunctionName.
+Select SampleDB.dbo.Age('10/08/1982')
+
+- Scalar user defined functions can be used in the Select clause as shown below.
+Select Name, DateOfBirth, dbo.Age(DateOfBirth) as Age from tblEmployees
+
+- Scalar user defined functions can be used in the Where clause, as shown below.
+Select Name, DateOfBirth, dbo.Age(DateOfBirth) as Age 
+from tblEmployees
+Where dbo.Age(DateOfBirth) > 30
+
+- A stored procedure also can accept DateOfBirth and return Age, but you cannot use stored procedures in a select or where clause. This is just one difference between a function and a stored procedure. There are several other differences, which we will talk about in a later session.
+
+- To alter a function we use ALTER FUNCTION FuncationName statement and to delete it, we use DROP FUNCTION FuncationName.
+
+31. Inline table valued functions in sql server Part 31
+
+- A scalar function, returns a single value. on the other hand, an Inline Table Valued function, return a table. 
+
+Syntax for creating an inline table valued function
+CREATE FUNCTION Function_Name(@Param1 DataType, @Param2 DataType..., @ParamN DataType)
+RETURNS TABLE
+AS
+RETURN (Select_Statement)
+
+- Create a function that returns EMPLOYEES by GENDER.
+CREATE FUNCTION fn_EmployeesByGender(@Gender nvarchar(10))
+RETURNS TABLE
+AS
+RETURN (Select Id, Name, DateOfBirth, Gender, DepartmentId
+      from tblEmployees
+      where Gender = @Gender)
+	  
+- If you look at the way we implemented this function, it is very similar to SCALAR function, with the following differences
+1. We specify TABLE as the return type, instead of any scalar data type
+2. The function body is not enclosed between BEGIN and END block. Inline table valued function body, cannot have BEGIN and END block.
+3. The structure of the table that gets returned, is determined by the SELECT statement with in the function.
+
+Calling the user defined function
+Select * from fn_EmployeesByGender('Male')
+
+- As the inline user defined function, is returning a table, issue the select statement against the function, as if you are selecting the data from a TABLE.
+
+- Where can we use Inline Table Valued functions
+1. Inline Table Valued functions can be used to achieve the functionality of parameterized views. We will talk about views, in a later session.
+2. The table returned by the table valued function, can also be used in joins with other tables.
+
+- Joining the Employees returned by the function, with the Departments table
+Select Name, Gender, DepartmentName 
+from fn_EmployeesByGender('Male') E
+Join tblDepartment D on D.Id = E.DepartmentId
+
+32. Multi statement table valued functions in sql server Part 32
+
+- Multi statement table valued functions are very similar to Inline Table valued functions, with a few differences. Let's look at an example, and then note the differences. 
+
 - 
