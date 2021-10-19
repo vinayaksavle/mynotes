@@ -1,0 +1,1407 @@
+1. ASP.NET MVC Interview Questions with Answers | ASP.NET Interview Questions
+
+https://www.youtube.com/watch?v=pXmMdmJUC0g
+
+Question 1 :- What is ASP.NET MVC Core ?
+ASP.NET MVC Core is an open source cross platform framework to develop web applications. It is created by Microsoft so when you develop web application using asp.net core it can run on windows, linux, mac it is cross platform. 
+
+Question 2 :- Differentiate between ASP.NET Webforms vs MVC vs MVC core ?
+Four points which I have spoken now – Cross Platform, Performance, Simplification and Cloud Ready.
+
+Question 3 :- Explain MVC Architecture ?
+In MVC architecture we divide our project into three layers – Controllers, Models and Views. The view is for look and feel, Model has a business logic and Controller binds the Model and the View.
+
+Question 4 :- Why do we have wwwroot folder ?
+We can store Static Content means content like CSS, HTML, Images..
+
+Question 5 :- Explain the importance of appsettings.json ?
+appsettings.json is a pretty simple file in a simple json format with name and value pair and it is especially used to store configuration data of your project.
+
+Question 6 :- How to read configurations from appsettings.json ?
+To read the appsettings.json file we need to provide the IConfiguration object in the Constructor and then we can say… Incase your parameter is a multilevel JSON for example this ConnString was the direct value but let us say you have environment and in that we have Production and Test then we have to say here [Environment:Production] , [Environment:Test]. To read appsettings.json file we need to provide the IConfiguration in the constructor of the controller.
+
+Question 7 :- What is dependency injection ?
+DI is a practice of providing dependent objects for a class from outside rather than the class creating the dependent objects. Dependency Injection is a practice wherein the dependent objects of a class is injected from outside through an constructor or through a property rather than the caller himself create it.
+
+Question 8 :- Why do we need dependency injection ? What is the benefit of moving this object creation outside the column?
+Let us say you have new version of CustDbContext called as CustDbContextnewVersion , now how many places you have to make the change. You have to make the changes in so many controllers. The problem by putting the new keyword or putting the object creation inside the caller or giving the job object creation to the caller is that it become tightly coupled system. If I say I do not worry about what kind of objects will come it is possible you can give me custDbContextVersion1, Version2 you just say inject it out here. By doing dependency injection we have a more decoupled system rather than the caller creating
+the object and the caller says I don’t worry about from where this object comes, what kind of version comes in you just inject me out here and I will use it accordingly. By implementing dependency injection, you create a more decoupled system. He wants to hear that by doing Dependency Injection you have a better architecture because you change at one place now so somewhere at one place you will change this and automatically everybody will get custDbContextVersion1 or
+custDbContextVersion2.
+
+Question 9 :- How do we implement dependency injection ?
+To implement dependency injection we need to provide dependency object in the ConfigureServices method by using AddScoped or by using AddSingleton or by using AddTransient.
+
+Question 10 :- What is the use of Middleware ?
+Middleware helps to insert pre-processing logic before request hits the to the controller.
+
+Question 11 :- How to create a Middle ware ?
+It is a three steps process, first you need to add the middleware class by using the template. Second, write your custom logic in the invoke method and then in the configure method we need to plug the middleware into the pipeline. So by using app.Middleware syntax we need to plug the middleware into the pipeline. Three steps – add the template, write your custom logic into the invoke method into the pipeline using app.
+
+Question 12 :- What does startup.cs file do ? Question 13 :- ConfigureServices vs Configure method ?
+It helps us to configure our dependency injection objects and helps us to configure our Middleware. This Startup.cs file has two methods ConfigureServices and Configure. This ConfigureServices method helps to configure our dependency injection objects. The configure method helps to configure middleware. In configure services you will always see these methods like Services.Add, Services.Add while in configure you will see app.UseMiddleware, app.UseSession so this configures the middleware in the pipeline which object has to be executed and configure services for dependency injection.
+
+Question 14 :- Explain the different Ways of doing DI?
+There are three ways of doing dependency injection in MVC Core. The first one is AddScoped, the second one is AddSingleton and the third one is AddTransient.
+
+Question 15 :- Explain Scoped vs Transient vs Singleton ? 
+AddScoped instantiates object per request, for every request a single instance is created and the same instance is injected again and again for every dependency injection object in the constructor.
+Add.Transient creates fresh instances for every dependency injected object. Add.Transient injects new instances for every dependency injection object.
+AddSingleton only one big singleton object is created for the whole application. For whole application lifecycle only one global instances is created. There will be one global instance of customer so you send req1 the same instance is injected.
+
+Question 16 :- What is Razor ?
+Razor is a view engine, it is a markup syntax which helps us to write HTML and Server side code using C# or VB.NET , it helps us to write server side code and HTML in web pages.
+
+Question 17 :- How to pass Model data to a View ?
+In order to pass a Model object to a View we can say return View (the view name) and the second parameter is the object name. 
+
+Question 18 :- What is the use of Strongly typed views ?
+Strongly Typed views are those views wherein we get the intellisense for the model.
+
+Question 19 :- Explain the concept of ViewModel in MVC ?
+A ViewModel is a wrapper class over multiple models and it represents the data what your view needs.
+
+Question 20 :- What is Kestrel Web Server ?
+Kestrel is a free open source lightweight, default web server of ASP.NET core which ships ASP.NET Core setup.
+
+Question 21 :- Why Kestrel when we have IIS server ?
+ASP.NET Core is suppose to run cross platform while Internet Information Server(IIS web server) runs only on windows. does Kestrel replace IIS? The answer is NO, web servers like IIS or apache and tom cat ngnx, these web servers are very old they are time tested in terms of performance, in terms of security so Kestrel cannot directly be a public facing server. Kestrel is very specific to MVC it understands MVC Core architecture and ASP.NET component very well. In production nobody just uses Kestrel they use the combination of IIS + Kestrel or apache + kestrel or ngnx + kestrel, they make it work by using Reverse proxy architecture.
+
+Question 22 :- What is the concept of Reverse proxy ?
+In reverse proxy architecture when any end user sends a request the first request will go to server like IIS/Apache and so on. This strong time tested server will forward the request to kestrel and kestrel will then forward the request to your MVC , it will create the instance of the controller do the View model takes the request back and forward it back to your IIS web server. This is termed as a reverse proxy architecture wherein your kestrel is acting like a mediator. Kestrel ships with ASP.NET, it is part of the ASP.NET core setup. It is a default web server, it is a in process server you cannot run MVC
+directly inside IIS or apache. The first request comes to IIS, IIS forwards it to Kestrel, Kestrel forwards it to MVC and responds back, this is termed as a Reverse proxy architecture. Remember, the interviewer wants to hear from you that in production you are using both of them, you are using a strong front-end server like IIS, Apache ngnx and also kestrel is by default running inside the asp.net core process.
+
+Question 23 :- What are cookies ?
+Cookies are text files with small pieces of data which is stored in the end users computer regarding the website. 
+
+Question 24 :- What is the need session management ?
+There are basically three ways of doing session management one is session variables http context, ViewData, Tempdata
+
+Question 25 :- What are the various ways of doing Session management in ASP.NET ?
+Question 26  :- What exactly is a session ?
+Question 27  :- Explain "HTTP is a stateless protocol" ?
+Question 28  :- What are various way of doing session management ?
+  Question 29  :- Are sessions enabled by default ?
+  Question 30  :- How to enable sessions in MVC core ?
+  Question 31  :- Are sessions variables shared(global) between users ?
+  Question 32  :- Do session variables use cookies ?
+  Question 33  :- What is a cookie ?
+  Question 34  :- Explain idle time out in sessions ?
+  Question 35  :- What does a Context means in HTTP ?
+  Question 36 :- When should we use viewdata ?
+  Question 37 :- How to pass data from controller to view ?
+  Question 38 :- In same request can viewdata persist across actions ?
+  Question 39 :- ViewData vs ViewBag
+  Question 40 :- How does ViewBag work internally?
+  Question 41 :- Explain ViewModel?
+  Question 42 :-  ViewBag vs ViewModel whats the best practice?
+  Question 43  :- Explain tempdata ?
+  Question 44  :- Can tempdata persist across action redirects ?
+  Question 45  :- How is tempdata different from viewdata ?
+  Question 46  :- If tempdata is read is it available for next request ?
+  Question 47  :- How to persist tempdata ?
+  Question 48  :- What does Keep do in tempdata ?
+  Question 49  :- Explain Peek in tempdata ?  
+  Question 50  :- How is tempdata different from session variables ?
+  Question 51  :- If i restart the server does tempdata,session stay ?
+  Question 52  :- Is tempdata private to a user ?  
+  Question 53  :- ViewData vs ViewBag vs Tempdata vs Session variables 
+  Question 54  :- What is  WebAPI ?
+  Question 55  :- What is the advantage of WebAPI ?
+  Question 56  :- Explain REST and Architectural constraints of REST?
+  Question 57  :- Can we use  TCPIP protocol with Web API?
+  Question 58  :- How WebAPI different from MVC controller ?
+  Question 59  :- What is content negotiations in Web API ?
+  Question 60  :- WebAPI vs WCF ?
+  Question 61  :- WCF REST vs WebAPI REST ?
+  Question 62  :- How to return HTTP status codes ?
+  Question 63  :- For error which status code is returned ?
+  Question 64  :- How did you secure your web API ?
+  Question 65  :- How do current JS frameworks work with webAPI ?
+  Question 66  :- How did you implement JWT token security ?
+
+
+2. Angular Interview Questions and Answers | Angular Interview Questions | Top Angular Questions
+
+https://www.youtube.com/watch?v=-jeoyDJDsSM
+25 Angular Interview questions and answers :-
+
+
+Question 3 :-  What are directives in Angular ?
+Question 4 :- Explain the different types of Angular directives ?
+Question 5  :- Explain the importance of NPM and Node_Modules folder ?
+Question 6 :- Explain the importance of Package.json file in Angular ?
+Question 7 :- What is typescript and why do we need it ?
+Question 8 :- Explain importance of Angular CLI ?
+Question 9 :- Explain the importance of Component and Modules ?
+Question 10 :- What is a decorator in Angular ?
+Question 11 :- What are Annotationa or MetaData ?
+Question 12 :- What is a template ?
+Question 13 :- Explain the four types of Data bindings in Angular ?
+Question 14 :- Explain architecture of Angular ?
+Question 15 :- What is SPA in Angular ?
+Question 16 :- How to implement SPA in Angular ?
+Question 17 :- How to implement routing in Angular ?
+Question 18 :- Explain Lazy Loading ? 
+Question 19 :- How to implement Lazy Loading in Angular ?
+Question 20 :- Define Services ?
+Question 21 :- What is Depedency Injection ?
+Question 22:- How to implement Depedency Injection ?
+Question 23 :- Whats the benefit of Depedency Injection ?
+Question 24 :- Differentiate between ng Serve and ng build ?
+Question 25 :- Explain the --prod parameter in ng build ?
+
+Question 1 : - What is Angular?
+Angular is a JavaScript UI binding framework which helps to bind the view. To bind the view with the model then we write lot of binding code in between we type on the UI. It should send message to the Model. We can say that Angular is a JavaScript UI framework which helps to implement MVW architecture inside the browser.
+
+Question 2 - Differentiate between AngularJS VS Angular.
+The first thing is the Language in the AngularJS we use JavaScript and in Angular TypeScript. AngularJS uses controller where as Angular uses component based architecture.
+
+Question 3 : - What re directives in Angular?
+Directives help to attach behavior or in simplify words we can say that directives are angular syntaxes which we write inside HTML. On the html code out here
+there are couple of directive syntaxes ngModel, hidden and value is the directive. There are three kinds of directives
+
+i. Structural Directive
+ii. Attribute directive
+iii. Component directive
+
+Question 12 - What are templates in Angular?
+Templates are html view of Angular. This template url is pointing towards the HTML. In this HTML view we can write angular syntaxes or angular directives like expressions we can use pipes, directives like formGroup, ngModel and so on.
+
+Question 13 - What are the different types of Data binding?
+Data Binding in Angular defines how the view and component communicate with each other. Expression binding or an interpolation binding the data flows from the controller to the view then we can mix that data inside html. Interpolation or expression is wherein the flows from the controller to the view. Property binding
+the data flows from the controller to the view but then it gets attached to some user input like a textbox. The third kind of binding what we have here is the event binding. Event means when somebody clicks on a button somebody goes and track some events from the view to the component or send some events from the view to the component that's where we have event binding. Event binding we use the round bracket. A click event will go from the view to the component. The last one is termed as two way binding. We are using both of them, we are using the square bracket as well as round bracket. We can send the data from the controller to the view also if some event happens that will also go from the view to the controller.
+
+Question 14 - Explain the architecture of Angular
+i. Template is the html View. This View talks with a component
+ii. Component, A group of component is logically put into Modules.
+iii. Modules, 
+iv. Binding, The binding between the View and the Components are done by the bindings. We have the [ ] bracket the ( ) bracket the ( ) bracket sends events from view to the component. The [ ] bracket sends from the Component to the View.
+v. Directives. Inside the View we have different directives like interpolation we can have ngModel Click and so on.
+vi. Service, In a project we always want to share common logic or have some common things which want to share for that we need to create a service. When this service is consumed inside component the object not created it is injected. When we have services which we want to put across all the components then they use
+Dependency Injection the injector.
+vii. Dependency Injection.
+
+Question 15 - Explain the term SPA.
+SPA stands for Single Page Application. Single Page Application is a concept wherein we load the UI once and we do not reload it again and again. When we talk about a typical website, it has a left menu and have a footer and Banner. In Single Page Application these sections are loaded only once. When end user clicks on any hyperlink of the left menu only that section or the necessary UI will be loaded from the server. By this we will get performance improvement.
+
+Question 16 - Single Page Application using Angular
+To implement Single Page Application in Angular we need to use the Angular Routing. what exactly is Routing in Angular and how do we actually implement it. Routing is a very simple collection in Angular and the main goal of routing is to define navigation of the
+Angular application.
+We have a HomeRoutes which has two things
+one is
+url
+and this url says where we will be navigating. For example if somebody hits a login
+it will go to the login component.
+The login component will go to the login view.
+If we navigate to Home url
+it will go to the Home component and load the home page.
+Routing helps to define the navigation of the application
+and it has two things, one is it has url
+and what exactly that url will load.
+How exactly routing implemented in Angular?
+the first step for routing is that we need to define a collection
+and say for which url component will be loaded.
+If somebody tries to navigate to login
+it will load the LoginComponent.
+If somebody will try to navigate to Home it will load the HomeComponent.
+Then in the html we need to define router-outlet.
+This router-outlet is a place where the page will be loaded.
+We also need to define router-link
+When somebody clicks on this home
+it will first go to this
+collection and say Home and for Home we have
+the HomeComponent.
+then it will load
+this Home.html inside the router-outlet.
+When we click on Customer/Add in this route
+it will load the customer page inside the router-outlet
+To implement routing we need three things
+first is we need the collection
+saying which url will go to which component.
+Second one is we need to have the router outlet where exactly
+that navigation will load.
+We need to define the routerLink incase of html.
+and say the url name.
+To do routing from code behind or from
+the component
+then we need to say
+router.navigate
+To do routing from html
+use routerLink
+in the anchor tag
+or in the button.
+To do it from the component we need to say this.route.navigate and the UI.
+Question 18 - What exactly is Lazy Loading in Angular?
+Lazy Loading means
+on demand loading or loading what is essential and necessary.
+This is dummy website we have
+when we load this
+website it has loaded certain js files
+but has still not loaded the customer user interface.
+When we click on customer
+only at that time it will load the customerjs
+When we click on Customer
+then it loads the Customerjs
+but in the first
+time when we logged in it did not
+load the customer module.
+Question 19 - How can we implement Lazy Loading in Angular?
+To implement Lazy Loading we need at least two things, the first is we need to divide the project into separate separate modules.
+If that is not there then Lazy Loading is not possible.
+We have divided the project into the Customer module and Home module. The first step is we need divide the project into separate separate modules
+Then the module which we want to do lazy loading use the loadChildren in the
+routes collection. It says loadChildren and load the CustomerModule on demand or on the fly--
+We need to use loadChildren
+and divide the project
+modules.
+Question 20 - What are Services?
+When we talk about enterprise application we can have lot of Views, Components, Models
+and multiple Modules.
+You can see on the screen
+this is one Module which is grouping multiple components.
+We can have another module which
+again
+groups
+some other components.
+For that we need to create a Service.
+To share
+common functionality across the modules
+create a Service.
+The Service can be common functionality like validations,
+logging, loggers,
+http
+service.
+This service then can be used by this module and this module and so on.
+To share common functionality across the projects
+use
+Service.
+One of the patterns which we noticed in Angular interviews is
+once the interviewer asks questions around Services
+the next question is around Dependency Injection.
+Question 21 - What exactly is Dependency Injection?
+How to implement the same using Angular?
+Dependency Injection is an application design pattern
+wherein the class
+rather than instantiating the dependencies from the class
+it prefers to
+get injected from outside or somebody else will instantiate and send it to the class.
+Over here we have the class MasterPageComponent
+and it is trying to use the logger class for logging
+Rather than creating a instance from here
+in the constructor
+we are telling Angular to inject it.
+Rather than instantiating
+the dependencies from the class itself
+in Dependency injection Angular injects it from outside.
+The next connected question comes in it
+Question 22- How do we implement Dependency Injection in Angular?
+To implement Dependency injection in Angular
+we need to use
+the Provider attribute.
+We have this providers attribute belongs to the
+ngModule
+decorator.
+to create a module we use this ngModule
+In this we have the provider, over here we will say
+provide
+If somebody asking in the constructor this BaseLogger
+inject HttpLogger
+Over here we will use the
+providers collection
+in that we will provide
+that for this class
+what instance to be injected.
+To do dependency injection in Angular
+we need to use
+the providers property
+which belongs to the ngModule Metadata or to the Decorator
+In component it will give BaseLogger
+and Angular will inject the BaseLogger
+depending on what we have provided here.
+The next connected question around dependency injection is
+Question 23 - What is the benefit of using Dependency Injection?
+Different developers perceive Dependency Injection in different ways.
+The biggest benefit of dependency injection is decoupling
+or when we change at one place we do not have to change at lot of places.
+Basically when we talk about good software architecture
+if we change something we change at one place and it should be reflected all across the project.
+Here we are using BaseLogger
+assume that in this application
+at this moment the BaseLogger is a base class
+we are using AlertLogger across the project.
+Whenever there is any logging errors and warnings it is showing it in a Alert box of JavaScript.
+Everywhere this BaseLogger injects the AlerLogger instance.
+Lets say we do not want to use AlertLogger
+change it to HttpLogger
+Now we have to change just over here in the providers.
+Everywhere across the components it will inject HttpLogger.
+The biggest benefit of Dependency Injection is change at one place and
+the object instances are injected all across the project
+We do not have to say new new keyword.
+If we do not use DI then we have to say here
+and if someone says change it to AlertLogger then we have to again go to all the components
+and say AlertLogger.
+One of the biggest disadvantage of instantiating the class by using the new keyword is
+it does tight coupling.
+The class will be tightly coupled as soon as we start instances within the class
+but when we use dependency injection
+that means we have given this work to someone else.
+In this case it is Angular
+and Angular will ensure that we inject the instance.
+Question 24 - What is the difference between
+ng serve and ng build?
+Normally working with Angular we have ng serve and ng build.
+ng serve builds angular application in-memory inside RAM.
+For doing development ng serve is good
+when we want to go into production---
+then we need to use ng build
+ng build builds angular application into the hard disc
+It creates a dist folder
+It puts down all the binaries or whatever the final compile code into dist folder.
+while ng serve builds in-memory.
+Question 25 - What does --prod flag in ng build ?
+People who are in production will see --prod
+
+3. C# Interview Questions and Answers | Important Csharp Interview Questions | C# Questions
+
+Questions 1 - Explain the difference between .NET and C#. 
+C# is a programming language it has a syntaxes, semantics, grammars, source codes while .NET framework is a collection of libraries as well as it helps you to run your .NET application or C# application. Using both of them we create an application. You will use C# and you will invoke the .NET framework libraries. From C# you will invoke .NET framework library.
+
+Questions 2 - Differentiate between .NET framework vs .NET Core vs .NET 5.0.
+.NET framework which is old one which was created 18 years back only works for Windows while the .NET core is cross platform so it works on linux, mac, windows as well and so on while .NET 5.0 is the unification of both of them. You can say that .NET 5.0 has all that good things what we did for past 18 years also it has those new features which are coming in .NET core. Performance of .NET Core is better than .NET framework. What is the reason for it? .NET Core performance is better because they have divided big big DLLs into small small pieces. In case of .NET Core you can fire commands through the command line for example you can see this .NET core application. I can go to the command line and fire from my command line dotnet build , dotnet run, what happens when you can fire things through command line what is the advantage of firing through command line is that I can integrate with any IDE , I can even code in a simple notepad but when it comes to .NET framework you don't have too many choices you have to literally go through only visual studio, go through that templates if you want to create
+a project. Here, to create a project you need to do dotnet new console and it creates a console application. 
+
+Question 3 - What is IL code and Questions 4 - Why do we need JIT?
+First thing when you say your C# code has to run inside a computer it has to be converted to an assembly language or it has to be converted to machine code
+or converted to a machine language. This is your higher level language you can say. When the compiler compiles it has to get converted into this machine language but what C# compiler does is, it does not directly convert this into the machine language it first converts it into a partially compiled code called as
+IL Code or Intermediate Language code. IL stands for Intermediate Language code and it is a partially compiled code and later when you run your program when you say now I want to run my program and execute my program at that time we have somebody called as the JIT. This JIT which stands for Just In Time compiler runs over this IL code and compiles it into the machine language. IL code is an intermediate language code it is a partially compiled code. JIT stands for Just In Time compiler and JIT compiles IL code into machine language.
+
+Question 5 - Is it possible to see this IL code visually? 
+Yes it is possible to see this IL code visually by using Disassemblers like ILDSM or ILSpy. For example you can see here this is my compile code which is a DLL (Dynamic Link Library) to see this I will run ILDSM which is a Disassembler which comes with the visual studio command prompt.
+
+Question 6 - What is the benefit of compiling in to IL code or why do you want to compile into an IL code? 
+Here what the interviewer want to ask is that this C# code why do we have to compile it to Inteemdiate language like IL Code why can't just like C or C++ compilers wherein directly they go and compile into a machine language and assembly language? Why can't we do the same with .NET and C#? The reason for this is difference between the development environment and the runtime environment. This is your C# code let us say the developer is using windows 10 he is using 65 bit machine and so on. But the runtime environment can be Windows 8, it can be Windows XP or Windows 7 and nowadays with .NET core this can be Linux as well. The runtime environment can be very very different. because of that .NET compiles it into IL code and then depending on what is your OS it says what is the best code for Windows 8, what can be the best code which can be generated for Windows XP or the best best compilation I mean and for Linux and so on. That's why we have an IL code to put things together.
+The runtime environment and development environment can be different so that's why we compile into IL Code then depending on what kind of environment it is JIT generates or compiles an optimal code as per that runtime and as per that operating system or hardware of that execution enviroment.
+
+Question 7 - Does .NET support multiple programming languages?
+The answer here is yes .NET framework supports multiple programming languages. Finally if you start executing it compiles to IL code no matter which language.
+
+Question 8 - Explain the importance of CLR? 
+CLR stands for Common Language Runtime. It is a runtime execution environment of .NET. CLR helps to execute your .NET application. It converts your IL code to Native language, second it runs your application and when your application runs if there is any kind of unused memory that is claimed by this garbage collector so running of the garbage collector is also part of CLR.
+
+Question 9 - What is the different between managed code and unmanaged code?
+Code that executes under the environment of CLR is called as a manage code and unmanaged codes are those codes which run outside the CLR execution environment like C++, VC++, VB6 and they have their own compilers they have their own runtimes they have their own way of doing the memory allocation. All the code what we write in C# or we write in VB.NET which gets converted into IL code is all managed code because the CLR compiles it to the native language. The garbage collector collects when the objects are not used. Code which does not run under the control of CLR execution for example C++ code, VC++ or VB6 code. In this code you can see I am importing a user32.dll this user32.dll is probably is C, C++ or VC++ they have their own compilers and own runtimes CLR does not control them. 
+
+Questions 10 - Explain the importance of Garbage Collector?
+Garbage collector is a background process which keeps running continuously and claims any kind of unused managed resources. If there is any unused managed resources while your .NET program is running, Garbage Collector comes now and then and starts cleaning them up.
+ 
+Question 11: - Can garbage collector claim unmanaged objects?
+Unmanaged resources means objects which are getting created by C++ or objects which are created by some other programming language, the answer is NO. Garbage collector cannot collect objects which are created outside CLR runtime.
+
+Question 12 :- Explain the importance of CTS? 
+CTS stands for Common Type System. .NET is a framework and it supports many programming languages you can invoke the .NET library using C#, you can invoke the .NET library using VB.NET, F# VC++ .NET. There are many programming languages which can compile to IL Code. But each one of these programming languages when they define their data type they have their own way of doing it. For example you can see on the screen I've C# out here in C# when we define a data type we say int i = 0; and in VB.NET Dim i as Integer and in VC++ we can see other way of doing it or in F# we have some other way of declaring the data types. Suppose that I want to use this VB.NET code inside C# then how do I go about it? There should be some common platform because the data types are so different of each languages. What the .NET compiler does is or when the compiler is compiling the code it compiles them into a common type system. It says your VB.NET says Dim i as integer C# says i. Both of them get compiled into a common type system which is int 32. In the same way for other data types if you have string, char, double , decimal so common type system ensures whichever language you coding your data types will get mapped to a Common data type of the .NET framework.
+
+Questions 13 :- Explain the importance of CLS?
+CLS stands for Common Language Specification. NET supports multiple programming languages. These programming lnaguages are different in terms of data types and behavior so the data types difference is handled by Common Type System but also the behavior of the languages are different. C# is case sensitive so in C# if you say int i = 0; and int I = 0; both of them are different they are different variables. But in case of VB.NET it is not case sensitive, if you say Dim i as integer and Dim I as Integer you can't have like this in VB.NET, you will be getting an error. In other words if I want to consume C# code inside VB.NET it would be difficult so the common language specification is set of guidelines which says guideline no.1 dont use case sensitiveness, guideline no. 2 don't use pointers, guideline no. 3 and guideline no. 4. If you follow those guidelines then inside your .NET environment you can easily consume a VB.NET code inside C#, you can consume F# code inside C# and C# code inside F#. You can have cross interoperability between the languages. I repeat, common language specification is set of guidelines if that is followed then the languages the code what you write in different languages can resuse very easily while common type system which we discussed prviously is nothing but when the data types of the languages are different. So common type system more deals with data types saying Dim i as Integer and int i let me bring them into a common platform . CLS deals with different behaviors of the language while CTS deals with the data types.
+
+Question 14 :- Explain the difference between Stack and Heap?
+Stack and Heap are memory types inside .NET application. When your .NET application runs ther are two memory types one is a stack and another one is a heap. On stack primitive data types are allocated means data types like integer, boolean, double, decimal and on the stack the variable and the value both are stored at the same place. In case of stack the variable, the data and the memory location all are at one place. In heap objects are stored, Stack stores primitive data types while heap stores objects.
+
+Questions 15 :- What are Value types & Reference types?
+Value types are stored on stack while reference types are stored on heap. Value types are your normal data types like int, bool, double and reference types are all objects.
+
+Question 16 : - Explain boxing and unboxing?
+Boxing is nothing but it is when your data moves from a value type to a reference type. In this code we have int i = 10 which is a value type because it is allocated on a stack. We have object y , now we are trying to move this value i to y this is termed as boxing. When you are moving value type to a reference type is termed as boxing. When you are moving from reference type to value type is termed as Unboxing. The next line out here is unboxing because you are trying to move from a reference type to a value type.
+
+Question 17 :What is the consequence of Boxing and Unboxing.
+The consequence of boxing and unboxing is performance because now your data is jumping from value type to a reference type, it is jumping from stack memory to heap then you are jumping from heap to a stack. If you are doing this more and often definitely you will
+have a performance implication.
+
+Question 18 :- Explain casting, implicit casting and explicit casting?
+Casting means you are trying to move from one data type to another data type. For example you can see this is integer i here and you are trying to move from integer to a double data type, this is termed as Casting. If casting is happening automatically means you don't have to do anything then it is termed as implicit
+casting. When you are moving from a lower data type to an higher data type you will normally have implicit casting like when you are trying move from integer to a double int is a lower data type and double is higher data type this is termed as implicit casting. If you want to move from double to int it is showing me
+an exception. It is saying I cannot cast this automatically you need an explicit, here i have to say (int) this is termed as explicit casting. Implicit casting means you do not have to do anything special the value just moves from one data type to another data type while explicit casting means you are trying to move from a higher data type to lower data type and you need to specify the data type before the variable name like this.
+
+Question 19 :- What can happen during explicit casting? What is the consequences of explicit casting? 
+The consequence of explicit casting can be data loss. In this case because there is no data loss C# just allows you to do the casting but in this case you can have a data loss because integer does not support decimals. In explicit casting there is a possibility of data loss and we should be careful of about it.
+
+Question 20 :- Array VS ArrayList.
+An array is a fixed length size. You can resize the array but it is quite of a ceremony for example I can say array.resize, resize method again belong to an array then I have to pass in myarray. It is quite tideous to resize an array because the whole goal of array was is fixed length. Array is strongly type in other words this array is very specific type of interger that means in the array i cannot push here string.  
+When it comes to ArrayList it is flexible in terms of number of elements. I can say here mylist.Add(1); mylist.Add(2); and I can say mylist.Add("Shiv"); First is the size is flexible when it comes to ArrayList the second important thing is it is not strongly typed. Down below I can add number, string then I can
+add a boolean, add an object. 
+
+Question 21 :- Whose performance is better Array or ArrayList?
+When it comes to performance definitely array is better because it is strongly type. If you look at ArrayList I can add a number, string, boolean and so on that means I can add anything in my arraylist so this leads to boxing and unboxing. Basically I am moving from value type to a reference type that leads to boxing and unboxing, because of that the performance of arraylist is not good in comparison with array but arraylist has flexibility but that comes as a cost the
+performance is comparitively slower when it comes to array because of boxing and unboxing.
+
+Question 22 :- What are generic collections? 
+Generic collections takes all the good things of array and takes all the good things of arraylist it is flexible. In a generic collection I can say List geneint = new List(); this is a generic collection. Firstit is strongly typed. Second is I can add any number of elements so it is flexible. A generic collection is strongly typed and also in terms of size it is flexible.
+
+Question 23 :- What are Threads(Multithreading) in C#? Or How to implement Multithreading in C#?
+Multithreading or Threads in C# helps you to execute code parallely. If you want to do parallel execution of your code then you need to use Thread. You can see in my code out here we have Method1 and Method2. If I want to execute both of these Methods parallely then I need to create a thread. With this what happens is both of these Methods will run parallely and to implement threading we need to use Namespace System.Threading. If I run this code out here it will run Method 1 sometimes and Method2 sometimes. If you want to implement parallel execution or if you want to run your code parallely then you need to use Threads.
+
+Question 24 :- What's the difference between Threads and TPL?
+In .NET 4.x there was something released was called as TPL (Task Parallel Library). You can achieve the same thing what you can achieve by Threads. The same code which I have written here I can use task like this. And this code will also run parallely. The interviewer is trying to understand what's the difference between using a Thread and using TPL. In case of threads vs task if you tell him TPL has async and await must be it will not convince him. Task does parallel processing the name itself for task or TPL is Task Parallel Library. It actually does parallel processing means what?  The first point which should come out in this difference is that task utilizes your processors it utilizes your hardware properties. We don't have to write extra code for it while threads have a CPU affinity and the third point is in case of task I can return a result in case of thread I can't. To get result from a thread I will use delegates, events and so on. I can capture a task, change task, wait for the other task to finish, I can use async and await. TPL is a wrapper or it is an abstraction which is over threads and it provides lot of things. First one it provides Parallel processing second one it provides Pooling rather than building from scratch the objects are taken from the pool and then lot of plus lot of extra things it has it can return a result from a parallel process you can chain a task, wait for a task to finish, you can use async and await and so on.  One of the things during the TPL and thread conversation I would surely send to the interviewer is that in today's age I will always use TPL because TPL is a wrapper on the threads providing all these features so why would I ever use threads. In case I have legacy code in .NET 2.0 or 3.0 it make sense to use threads but if you talk about .NET core or if you talk about .NET 4.x any version we would just use TPL and not the old threads.
+
+Question 25 :- How are exceptions handled in C#?
+Exceptions are handled by using the try/catch blocks. In whichever places you will get an exception you will wrap that place with try block. In the catch block I can decide what to do when this error happens. Here I will say if exception happens then just show Divide by zero error, rather than value. Exceptions are handled by using try catch block. If I run this my application has handled exception gracefully. If you do not have a try catch block it just throws up the exception and it leaves it to the application to handle it. if the exceptions are not handled the application just crashes like this. Exception are handled by using the try catch block.
+
+Question 26 :- What is the need of finally block?
+Finally block is a place where you write the code which would execute irrespective you have an exception or you do not have an exception. In the finally block you want to write some clean up code , some memory and so on. You can write that in the finally block. 
+
+Question 27 :- Why do we need the Out keyword? What is the use of out keyword in C#?
+When you write a c# functions it returns only one value. But what if you want to return multiple value? In this case you want to return an addition, multiplication, division you want multiple return values then you will use the out keyword. Here I can create an out which is an addition, an out which is subtraction and so on. I can say here add = num1 + num2; I don't need return type means the output will be sent in these variables then I will say sub = num1 - num2; then on the caller side we can say this will have the value of subtraction and then we can invoke the MyMaths function and we can say whatever is the calculated value in this add and sub please send it back to add here and please send it back to sub here.  The whole goal of the Out keyword is to return multiple values from a function.
+
+Quesiton 28 :- What is the need of Delegates?
+Delegate is a pointer to function and it is very useful when you talk about communicating between threads. If you have a multi-threaded environment and if you want to communicate between those threads then delegate is a way to go ahead. Delegate is a call back it is a pointer to a function to communicate between threads.
+
+Question 29 :- What are events? 
+Events are wrapper over delegates, they are encapsulation over delegates. They ensure delegates cannot be tempered by anyone. Events change the delegates to a publisher subscriber model.
+
+Question 30 :- Whats the difference between Abstract Class and Interface?
+Abstract class is a half defined parent class so it comes inheritance. If you have many classes and have any common logic between them then probably it is good to go and create an abstract class, parent class and put the common functionalities into the parent class while interface is a contract and it has to be implemented. Interface kind of forces a structure into a class. 
+
+What is the need of delegates? It is a call back, a pointer to a function. 
+What are events? Events are encapsulation over delegates what's
+Difference between abstract class and interface. Abstract class is a half defined parent class while interface is a contract.
+
+
+3. JWT Token using MVC Core | JWT Token in ASP.NET Core | JWT Token Using In MVC Core | JSON Web Token
+
+https://www.youtube.com/watch?v=bWA-pZJrOFE
+
+
+4. Static class vs Singleton in C# | C# Interview Questions & Answers | Static & Singleton in CSharp
+
+https://www.youtube.com/watch?v=csQdTkEdhME
+
+Singleton = Static (Global Object) + Thread Safety + Lazy Loading + Encapsulated + Iterator
+
+5. RxJS Interview Questions and Answers | RxJS Interview Questions | RxJS in Angular
+
+https://www.youtube.com/watch?v=eUYigtm3Sdc
+
+Following is the Q&A syllabus of the video :- 
+Question 1 :- Whats the full form of RxJs ?
+- Reactive extensions for JavaScript
+
+Question 2 :- What is the purpose of RxJs ?
+- To handle asynchronous data stream easily. Asynchronous meaning data comes in small interval of time.
+
+Question 3 :- What are observables and observers ?
+- observables is RxJS object which actually emits out data stream. observer is a listener who is actually interested to listen this data stream.
+
+Question 4 :- Explain the use of Subscribe with sample code ?
+- 
+function AsyncStream(observer){
+var t1 = setInterval(() => {
+observer.next(Math.random());
+},1000)
+}
+
+var observ = Observable.create(AsyncStream);
+
+observ.subscribe(res => Lstener(res));
+
+function Listener(res){
+console.log(res);
+}
+
+Question 5 :- How to unsubscribe in RxJs ?
+var subscription = observ.subscribe(res => Lstener(res));
+
+function Listener(res){
+console.log(res);
+subscription.unsubscribe();
+}
+
+ Question 6 :- Explain concept of operators with sample code ?
+ Take example of map, filter.
+ var step1stream = subscription.pipe(filter(x=>x>4));
+ 
+ 
+ Question 7 :- How to install RxJs ?
+ npm install rxjs
+ 
+ Question 8 :- Differentiate between promise and RxJs ?
+ RxJS -
+ Observable return stream of data.
+ You can subscribe and unsubscribe stream.
+ 
+ Promise -
+ Promise return single value.
+ You cannot cancel a promise.
+ 
+ Question 9 :- In Angular where have you used RxJs ?
+ - In Http calls mostly I have used RxJS.
+ 
+ 
+ Question 10 :- Which operators have you used from RxJs ?
+ - Map: Transform data in a observavble into a differen format.
+ - Filter: Allows data which meets conditions.
+ - Merge: This operator will combine multiple Observables into one. So if one of observable emit a value the combines one will emit as well.
+ - Concat: Only when observable completed, it will start the next observable.
+ - From: This operator will turn array, promise or iterable into an observable.
+ - debounceTime: discard emitted values if acertain time didn't pass between the last input.
+ - distinctuntilchanged: only emits a value if it is different than the last one.
+ - pluck: select a propety to emit.
+ - delay: emits a value with a delay.
+ 
+ 
+ Question 11 :- What is Push/reactive vs Pull/Imperative ?
+- Imperative programming means listener code is responsible to pull stream of data. Reactive programming means you register a callback and the stream is responsible to push data. Some devs also visualize it as publisher and subscriber model as well.
+
+5. ASP.NET MVC Interview questions and answers on Dependency Injection | ASP.NET Interview Questions
+
+https://www.youtube.com/watch?v=yVKTvtevM0w&list=PLLdoxBLglKrwlMSoaCnipQi2fIL0JKsvb&index=34&t=4s
+
+Question 1: What is DI ?
+Dependency injection is a methodology wherein rather than caller creating the instance it is injected by someone else or injected by some framework or something.
+
+Question 2: Explain IOC (Inversion of Control) ?
+Inversion of Control is not a technical thing it is more of a concept where we say any kind of unnecessary things what you are doing should be delegated to someone else and you should focus on your work.
+
+Question 3: What is benefit of DI ?
+The main benefit of DI is that change at one place and changes will reflect at lot of places. It helps to achieve decoupled architecture means this HomeController is just receiving DBContext it has no idea that DBContext can be a SQLServerContext, MongoDBcontext, FileContext, OracleContext. Every where in all the controllers will say receive this dependency injection i.e MyDbContext then from one place I can say whenever there is MyDbContext inject SQLServerContext. I changed at this one place our here and all over the project SQLServerContext is injected. If changing from SQL Server to Oracle just say OracelContext. The whole goal of Dependency Injection is good architecture and what exactly is a good architecture? A good architecture is decoupled architecture where you change at one place or at less places and the changes reflected across many of the code. That's what exactly is dependency injection.
+
+Question 4: Difference between Scoped vs Transient vs Singleton?
+All of these three techniques define the lifetime of injected object. They define how much time the object will be live and injection will happen. 
+
+Singleton:
+When we say Services.AddSingleton and when you ask for that service, I have set services.AddSingleton only one instance of the object is created for all the http request or all clients for everything. Throughout the server there is one big global instance which is created for example in this caching object once the object is created i have created a guid. In case if fresh instances are created this is guid would be same. Because fresh instances will not be created for every request the same instance will be injected. If I run this and in caching will find that this is the guid and send a request again to home the same guid will be there, even if I login as another user or open in incognito mode like a new user but even if it is coming from a different user also the same instance.
+When we say Singleton that means the same instance of the object is created throughout the project.
+
+AddScoped:
+AddScope, one more way of injecting the object is by using AddScoped. When you are explaining this answer to the interviewer two statements should come out very distinctly and clearly so there is no confusion with the interviewer. 
+
+Point no. 1: The first one is for every single request AddScoped will inject a new instance. Every single request either it comes from the same user or different user the instances will be new. This MyDbContext is injected in a scoped way. Now this MyDbContext guid is now showing "c56.............dfc". If I again come back, this is one request which is completed now doing second request we can see new instance is created the new guid "e6df.............fe26". Either sending the request from the same browser or new user. In this example i am trying to come as a new user. For every request different different instances will be injected, this is the first statement you will give. 
+
+Point no. 2: The second statement is within the same request if you are asking dependency injection inject the object two or three times the same instance will be injected means over here if i will ask for MyDbContext obj1 or I ask two and three times. If i dependency inject in the constructor multiple times the same instance will be injected. For the same request it will inject the same instance in a single http request. This is obj guid , obj1 has same instance and obj2 has same instance. Within a same request the scoped will do dependency inject the same object. If you ask many times the object it will be dependency injected with the same instance. When you are explaining scope two statements :- For Every http request new instance will be created of the DbScoped object but within the single http request if you are asking for the object two times or three times or four times the same instance will be injected.
+
+Transient:
+When you talk about transient to interviewer two statements should come out, 
+
+Point no. 1: For every request a new instance will be created so same like scoped for every request a new instance get created. 
+
+Point no. 2: Within the same request if you ask for the object multiple times new new instances will be injected. The second statement which is very opposite to scoped, in case of scoped the same instance was injected but in case of transient new new instances will be injected within the same request. If I run this, here is obj.guid is different than the obj1.guid and obj2.guid. All the guids are different.
+
+Question 5: When should we use what ?
+Singleton is one big global object which is shared across the whole server or whole website where singleton will be used like caching, your caching master state, master currency, master configuration where we don't want to hit the database. Second one is HitCounter, you want to just count how many times the website was hit by how many users hit counter. Any kind of SharedService or SharedData singleton is a most easiest one keep some good examples
+ready like here some examples given caching, hitcounter and SharedService.
+
+In case of Scoped most of the time you will be using scoped. Whenever you say you want to do dependency injection the singleton is very clear but when it comes choosing between scoped and transient most of the time it will be scoped because in a single request we use the same instance most of the time. Remember that all of these instances created here point to the same reference means if we change here this obj.value to shiv everyone's value obj2 will also change because it is a same instance. When we talk about scoped the same instance is injected. For now obj1's value is null, obj's value is null, obj2's value is null. If I change anyone of these instances, in startup.cs I have set this is AddScoped and if I make any change in one of the objects, all the object's value is changed because they are pointing to the same instance. By default we have AddScoped, let us say using this MyDbContext and in single request all the objects should be added in the same commit, same transaction and same context. Add the some value1 and second instance obj1.Add this data is connected to some value1. Adding customer, adding address of that customer. That means if I obj.Commit everyone should get committed so when we talk about DbContext most of the time will use code to ensure in the same connection in the same context you would like to do a commit, do rollback. Most of the time it would be scoped.
+
+Transient, this is where some good examples we should have. Use transient if in the constructor we putting obj1, obj2 because here it definitely means we expecting new new copies of the instance or saying scoped would just put one value. Putting multiple values means already the decision is done for separate separate copies of the instance, that is one sign where I see AddTransient by default comes in. This obj is adding Some Value1 so this obj.committ will commit only value1. Obj1 is adding some another value with different committ. When we want the instances should not have any connection between them they are separate
+instance, separate copies like use this context to add Some Value1 and it has no connection with some other value that is a different transaction. In this case that means it is different transaction, the context has to be different and it should be a fresh instance. In some situation we want complete different cloned copy and want to operate on that one copy and the operation of the one should not affect the other copy use Transient. Another example of transient is multi-threading, in multi-threating we create two different instances to avoid any kind of multi-threading side-effects. One instance will work in one copy and another instance will work in one copy. See these examples while speaking in the interview. 
+
+Singleton is about Caching, Shared Services, HitCounter and other things. Scoped is used for same instance has to be reused in the same request like all the transaction should belong to one DbContext use Scoped but for two different copies where one copy should not affect the other then it is Transient.
+
+
+
+
+
+
+* SQL Server Interview Questions and Answers | SQL Interview Questions
+https://www.youtube.com/watch?v=SEdAF8mSKS4
+
+Question 1  :- Explain normalization ?
+Normalization is a database design technique to remove redundant data or to avoid redundant data. For example now let's say you have a transaction table and in the transaction table let us say you have country data so in the country data you know you can have data like india and then ind or nepal or npl now ind and india means one and the same thing right so this is called as redundant data so so to avoid such kind of redundant data we use normalization design technique.
+
+Question 2  :- How to implement normalization ?
+Normalization is implemented by splitting tables so for example you can see here this country data was having redundant data right so what you do is that you create a master table must be or must be a reference table where you say one for india and two for nepal right so you can see now there is no ind there is no npl and so on right and then in your transaction table you just give the references so for example one for india, 2 is for nepal now we don't have any redundant data so to implement normalization we split the tables one table has the reference data and that reference id is referenced in the transaction table or in the other table.
+
+Question 3  :- What is denormalization ?
+In normalization we split data into separate separate tables to remove redundancy we have to fetch data from multiple tables so sql query can become very slow
+so in in denormalization what we do we go opposite of normalization we merge the table we are okay with having duplicate data because our goal is to improve search performance so just putting it very nicely before the interviewer denormalization is a database technique which focuses on improving search performance so when we do denormalization we try to merge tables we are okay with having duplicate data
+
+Question 4  :- Explain OLTP (Online Transaction Processing) vs OLAP (Online Analytical Processing) ?
+So oltp and olap are nothing but you know they are systems wherein in the online transaction processing system we follow normalization we want to avoid redundancy while in olap system we denormalize we want the selects to be faster. Create two different databases one database which they term it as the oltp system and another database they term it as a olap system. So when it comes to inserts updates and deletes right it's all sent to this oltp system and when it comes to fetching records or doing analysis or doing reads right or doing selects is all done through this olap system a for analytical
+
+Question 5  :- Explain 1st,2nd and 3rd Normal form ?
+The first normal form a table is in a first normal form design when the column have atomic values a database is in a first normal form or it fulfills first normal form when the columns have atomic values or they do not have repeating groups so what do you mean by atomic values, atomic values means for example look at this there is a name column out here so this is a primary key this is the name of the person and in this name of the person you know I have then we have the first name so shiv is the first name hari is the middle name and koirala is the surname right and what i've done is i have just stuffed them into this column name out here with comma separated so this is called as repeating groups so the first normal form says that if your database design is not following first normal form you can have insert update and delete anomalies anomaly means when you want to do an insert when you want to do an update when you want to do
+a delete you have to write weird code think about it if i want to go to the second record raju and if i want to go and update the surname what kind of query i have to write let us say that if i want to go and delete the surname let's say if i have to delete this third record surname what kind of query i have to write i have to write weird queries right so it leads to very weird insert update and delete right so the first normal form says is that create different different columns create every column should have a single value so you should have you should be having like first name you should be having like middle name and you should be having like last name right so atomic value so that means that that hurry goes here and then goes here like this so this is called as you are satisfying the first normal form so it should have atomic values.
+
+The second normal form in second normal form first all the rules of first normal form should be followed means the table should have atomic values and should not
+have repeating groups second all non-key columns for example here you can see in this table we have like four non-key columns all non-key columns should be fully
+dependent on the primary key so we can see here we have a joint primary key of id and the country id okay so first name yes it is fully dependent on the key also this middle name and last name they are also fully dependent on the key but look at this country name the country name is only dependent on this partially dependent on the country id it is not not directly connected with the customer so we already have the country id and on that it is partially dependent right so we should not have any column which is having partial dependency on the key so what we do out here we remove this country name and we move it out from here and
+because this country id is already here right so in the master table you already have country id so we just move it out here in a master table or something and we remove the column from there so we say that a table is in second normal form when there is no non-key column which is partially dependent on the primary key
+it should be fully dependent on the primary key 
+
+The third normal form in third normal form first thing the table should satisfy all the first normal form and second normal form in third normal form we should not have any transient dependency transient dependency means there should not be any non key column which should be depend in which should depend indirectly on a other non key column for example you can see here this is the the customer list and it says that this customer has bought shoes shirts and shoes now every product has a cost now that cost is also here in this table now this per cost per product cost you know is is dependent on this product out here this non-key columns value is dependent on this non-key columns value right so this is a transient dependency now what should really happen out here you should have a product master right somewhere and that you should have the cost and the size of the product whatever it is right so we'll say here okay shoes is 10 and shirts is 20 right you know extra large or whatever you know size of eight and so on and and then we don't need it here right so when we say okay shoes we look up here and we get the cost so there should not be any transient dependency of non-key column on the other non-key column. 
+
+So in other words putting forward a complete answer
+you can remember this word APT
+
+A for atomic values all the columns you know should have atomic values we should not have repeating groups
+P for partial dependency partial dependency means you know we should not have any non-key column which is dependent on the partially dependent on the primary key
+T for transient dependency we should not have any non-key column which is dependent on another non-key column right
+
+Question 6  :- Primary Key vs Unique key ?
+The two N's nulls and numbers nulls in unique key you can have nulls but not in primary key. While in terms of numbers you can have many unique keys in a table but you can have only one primary key.
+
+Question 7  :- Differentiate between Char vs Varchar ?
+char is fixed length while varchar is variable length. If varchar(10) is mentioned and size of value is 7 then it will take 7 only while in case of char it will take always fixed length which we have declared.
+
+Question 8  :- Differentiate between Char vs NChar ? 
+If you want to just store english characters then use char, For multilingual language (Non-English) or unicode characters use NChar. 
+
+Question 9  :- Whats the size of Char vs NChar ?
+1 char = 1 bytes
+1 nchar = 2 bytes
+
+Question 10 :- What is the use of Index ?
+Indexes helps you to increase the sql server search performance so when you say you want to go ahead and increase the select performance or the search performance right indexes is your friend.
+
+Question 11 :- How does it make search faster?
+Search becomes faster because of Balance tree structure. Internally it creates Node and Leaf nodes to reach to the data quick.
+
+Question 12 :- What are the two types of Indexes ?
+Question 13 :- Clustered vs Non-Clustered index
+Question 14 :- Function vs Stored Procedures
+Question 15 :- What are triggers and why do you need it ?
+Question 16 :- What are types of triggers ?
+Question 17 :- Differentiate between After trigger vs Instead Of ? 
+Question 18 :- What is need of Identity ?
+Question 19 :- Explain transactions and how to implement it ?
+Question 20 :- What are inner joins ?
+Question 21 :- Explain Left join ?
+Question 22 :- Explain Right join ?
+Question 23 :- Explain Full outer joins ?
+Question 24 :- Explain Cross joins ?
+
+
+ right so for example now
+you can see here let us say that you
+have these records in sql server one two
+three four five six till ninety nine
+hundred so let us say if you don't have
+an index you know then it will do a
+sequential search right it will it will
+start like one two three so let's say
+you want to locate 99 it will go
+sequentially until it locates 99 so that
+is quite performance intensive so what
+happens is when you create an index it
+creates nodes and leaf nodes and so on
+right so it creates a b tree structure a
+balanced tree structure so what what
+happens is when you go and you create an
+index it will go ahead it will create a
+node here for example this node says
+okay less than 50 right and this there
+is one more node here must be which is
+more than 50 i'm sorry this is 50 right
+so
+there's less than 50 covers from here
+till 50 and more than 50 covers from
+here till 50. remember that in in actual
+practice you can have lot of
+nodes and leaf nodes at this moment i
+have just created one level of node
+right so now what happens when an end
+user says i want to go and search for
+let us say 52 or 54 so you will say okay
+is 52 greater than 50 he will say yes
+so it will it will start from searching
+here so let us say you are searching 52
+is 52 greater than 50 it goes here in
+short it completely now
+does not scan from 1 to 50. it bypasses
+all these records it goes here 51 and
+says 52
+and it locates the record right so
+rather than going and scanning all this
+right away because of the structure
+because of the node and the leaf nodes
+so this is termed as a leaf node and
+this is termed as a node right because
+of this
+b tree structure this balance tree
+structure your search
+performance has improved
+right
+you what you can also do is you know
+during the interview you can give an
+example of an index of a book you know
+so for example if you look at a book
+right in a book let us say you want to
+locate chapter 20 okay so for chapter 20
+how do you do it you will look at the
+index in the index you will say okay
+this is chapter 20 on page number 100
+and you will go straight forward to page
+number 100 so must be when you're giving
+this answer you can give give the
+example of of for example of a book to
+make it easy for the interviewer to
+understand right so
+what is the use of index index helps you
+to increase your search performance how
+does it do it it does by creating nodes
+and leaf nodes it creates a balanced
+tree structure and because of that you
+know it can locate the records faster
+what are the two types of indexes
+there are two types of indexes in sql
+server one is the clustered index and
+another one is the non-clustered index
+what is the difference between a
+clustered index and a non-cluster index
+first thing
+any index either it is a cluster index
+or either it is a non-cluster index they
+will have a b tree a balanced tree so
+you can see here
+this is a cluster index which is on id
+right
+this is a cluster index which is on an
+invoice number
+right
+so
+when you create any index there will be
+a balanced restructure
+in case of clustered index
+in case of cluster index the leaf node
+will point towards the actual data so
+you can see this is a cluster index
+which is on id column
+and this is the leaf node right
+in this case of non-cluster index this
+is the leaf node right so the leaf node
+of the cluster index points towards the
+actual data
+right the actual record right but in
+case of non-cluster index the leaf node
+point towards the clustered index so it
+uses the clustered index
+nodes to further go and
+locate the data
+right i again repeat
+in case in cluster indexes
+first thing both in clustered and
+non-cluster indexes they will have a
+leaf node like this one here is the leaf
+node of
+this non-cluster index of invoice number
+this one here is a leaf node of uh
+the clustered index of id so both
+non-clustered and cluster index will
+have a b tree structure right balance
+tree structure
+in case of cluster index the leaf node
+will point towards the actual data but
+in case of non cluster index the leaf
+node will take help of the cluster index
+nodes later to locate the data right
+that's why you know you have you can
+have only
+one cluster index and many non-cluster
+indexes
+because in case of cluster index you can
+point towards the data in only one and
+one way that's why you can have only one
+cluster index and you can have many
+non-cluster index
+right
+again answer to the point
+both cluster indexes and non-cluster
+indexes will have a b tree structure
+the cluster index leaf node points
+towards the actual data
+right while the non cluster index leaf
+node takes the help of the cluster index
+to points towards the data
+and there can be only one cluster index
+and there can be many non-cluster
+indexes
+what is the difference between a
+function and a stored procedure
+now whenever you are said to compare two
+entities
+always first talk about the main
+difference first talk about the goal the
+core thing you know why that entity
+exists
+and then start with smaller things for
+example you know many developers what
+they do if you say to compare two things
+like function and stored procedures they
+will start with something saying that
+okay function cannot be can be called in
+a select and stored procedures cannot be
+called in a select these are small
+things start with the main goal hit with
+the main goal and then start talking
+about other things right so let us let
+us start here what is the difference
+between a function and stored procedure
+the whole goal of function is to have is
+to get computed values to do computation
+so for example you have an interest
+calculation uh function or you have some
+kind of a function which does a count
+and a sum and an average right that kind
+of a function right so it's it's main
+thing is computation and because
+the main theme is computation right you
+know in in functions you cannot do
+inserts updates and deletes you cannot
+make permanent changes to the
+environment so any kind of permanent
+changes to sql server you can't do by
+using functions because the whole goal
+is to get computations
+while when you talk about stored
+procedure it's it's almost like a
+program it's like a mini program which
+can change the environment which can do
+inserts which can do updates which can
+do deletes
+um
+it can it can go and it can drop a
+database and it can do anything and
+everything you know within sql server so
+it's like a mini batch program
+once we have spoken about the goal now
+we can talk about byproducts now we can
+talk about the brownie points or i will
+say now we can talk about the low
+hanging fruits so the next thing is
+execution
+you can execute a function you know from
+many places because the goal of function
+is to reuse some computation logic so it
+has some computation logic and you want
+to call that from multiple places so
+that's why a function can be called from
+a select it can be called from a where
+clause it can be called you know from
+another stored procedures procedure but
+when you talk about stored procedure it
+is like a it's like a mini batch program
+so it cannot be executed from a select
+or a where clause or even from a
+function you cannot call a stored
+procedure a stored procedure can be
+called you know directly from the
+environment for example it can be called
+from a c sharp code it can be called
+um
+from
+you know directly from sql server
+writing execute but it cannot be it
+cannot be reused at a mini level because
+it's a program by itself right so it
+cannot be called in a select or a where
+clause or from other functions and so on
+and the last one is the output right so
+when you talk about functions right you
+can have a single value you can have
+a what you call a multiple table valued
+function as well um
+and in case of stored procedures also
+you can have a single or multiple
+outputs but mostly if you see mostly if
+you see right in functions
+mostly developers use functions you know
+to return scalar values so i call a
+function and then i want to get a single
+value so most of the time
+functions are used
+to get some computed scalar values out
+right
+as i've said again you can have multiple
+sets of output from a function as well
+but mostly it is used for scalar values
+so remember the main goal
+function is for computation and because
+it is for computation it does not make
+any kind of permanent changes to the
+environment well when you talk about
+stored procedures it is a mini batch
+program it can change the environment it
+can do inserts updates and deletes
+this computation logic you know can be
+reused you know in a select in a where
+clause or call from other stored
+procedure but when it comes to stored
+procedure procedures
+it can it cannot be used in a select or
+where clause and mostly mostly
+functions are used to return a scalar
+value you can return a set value but
+most of the time you know they are used
+to return a scalar value so these are
+some of the important points and you can
+highlight
+why you are answering this question also
+i am flashing you know one or two
+one-liners at the top which you can
+remember while you're answering this
+question
+what are triggers in sql server triggers
+are nothing but they are small piece of
+logic which you want to execute when
+certain events like insert update or
+delete or
+any other events happen and once those
+events happen you want to go and execute
+that logic
+so you can see here this is a very
+simple trigger out here it says that
+when any insert update or delete happens
+on the tpl customer go and make an
+insert into the audit table or with the
+current date and time
+so you can see here when as soon as any
+insert happens on insert update and
+delete happens on tbl customer
+this trigger will fire and it will make
+a insert into the audit table with the
+current date and time right so you can
+see here right away here
+this is the logic so now if you go to
+this dbl customer right and let us say i
+go and i delete something i go and i
+delete this thing out here so at the
+back end now the trigger would have
+fired so if i go to my audit table
+it will show me that this last updated
+time so if i go and if i modify
+something like this
+if i go here again it will make an entry
+over here so you can see this again an
+entry is made here right
+so
+trigger is nothing but small piece of
+logic you know which you want to execute
+when insert update delete
+or lot of other events like even login
+and log off and some other events also
+you can track and execute triggers
+what are the two different types of
+triggers
+there are two different types of
+triggers in sql server one is the after
+trigger and one is the instead of
+trigger
+so after trigger is not is the trigger
+you know which fires after the event has
+happened means for example
+after the insert has happened this
+uh insert to tbl audit logic will get
+executed after the delete has happened
+after the update has happened but we
+also have something called as
+instead of
+instead of trigger fires instead of
+insert means the insert delete and
+updates don't get executed but instead
+of these
+[Music]
+you know these dml statements
+your logic gets executed so for example
+you can see here i'm going to go and
+execute this i have just changed the
+after trigger to instead of right
+so
+now what will happen is
+if i go to my tbl customer and if i
+change something for example i'm
+changing this to qqq to let's say shiv
+you can see it did not change it
+it did not update it but instead of that
+it
+executed this this trigger again i can
+show that so if i change this to test
+nothing happens but instead of that
+it fires the audit table if i go and if
+i delete it
+the delete will not get executed right
+the delete has not got executed
+uh
+instead of that so if
+you can see you must be thinking it has
+deleted no if you try to edit it back
+again
+you can see that record still exit exit
+the record still exists
+so there are two types of triggers one
+is the after trigger right which happens
+after the insert update delete or any
+dml statement happens and one is the
+instead of trigger which fires instead
+of the insert delete and update
+what exactly is an identity column in
+sql server on identity column so if you
+see an sql server when you select any
+numeric data type you get something here
+called as an identity specification so
+what exactly is this identity
+specification when you define a column
+as identity specification as yes
+the values increment automatically so it
+is an auto incremented column by sql
+server so for example you can see on
+this tbl customer this id is auto
+increment and we can see now it is
+disabled i can't put values
+myself out here right it will be
+automatically incremented from 11 to 12
+and from 12 to 13. so for example if i
+put a value here that is 12 it is 13 it
+is 14 right so an identity specification
+is an auto incremented column um
+and the goal of this auto incremented
+column you can see that some values are
+coming as null but don't worry i'll just
+re-edit it again i'm sure that the
+values are there right so it is an auto
+increment column
+which is automatically incremented by
+sql server
+what exactly is a transaction
+and how can we implement the same in sql
+server transaction helps us to treat
+series of activities as one logical unit
+right so for example you can see here
+i'm inserting into table inserting into
+tbl customer shape one shift to probably
+i can
+i can do some more activities here like
+delete or i can do an update or i can do
+something else right so you can see here
+we have series of activity which is
+happening insert two inserts one delete
+must be one update so all of these
+series of activity it will treat as one
+single unit one single unit means either
+all of these activities will commit or
+either all of these activities will roll
+back
+so in other words either all of them are
+successful if any one of them is not
+successful then everything will get
+rolled back right so for example now if
+you see
+i have opened up a transaction here this
+is how you write a transaction in sql
+server you will say begin trans and then
+you will say commit trans
+in case if there is any issue in case if
+there is any error you can see i have
+written a try catch
+right and in the catch i have rolled
+back so if there is any error
+i want everything to be rolled back so
+i'm going to go and execute this
+so you can see one row affected one row
+affected so two rows are affected
+and if i go out here
+and if i just
+select
+you can see both shiv 1 and shift 2
+have committed successfully
+right now let me go and delete this
+now let me go and put some bug out here
+so
+this first name you know has 20
+characters what i will do is i will go
+and i will add more than 20. so you can
+see here i've added more than 20
+characters
+so once i've added more than 20
+characters
+the this
+uh
+value will not be saved into database
+right this first statement will be
+successful but the second statement
+won't be successful so in the second
+statement what it will do is it will
+come to this
+roll back it will come to this
+catch block and it will roll back and it
+will roll back even shift one so shift
+one will also not get saved
+even though shift one has been
+successful but because you know we have
+said begin trans and commit trans
+it would roll back right so i'm going to
+go and execute this
+and you can see here uh zero rows
+affected so it first it made a insert so
+this one row affected was this one but
+later on there was error out here and
+because of that error he just rolled
+back and he said that in total zero rows
+have been affected so if i go and if i
+make a select here
+shift one
+and also whatever that shift to both
+have not
+been saved successfully right so
+transaction means it reads a series of
+activity as
+one logical unit
+either all of them is successful or
+either all of them fails i repeat this
+whenever you are answering this question
+in the interview please make it very
+simple and clear
+transaction
+helps us to treat series of activity as
+one logical unit wherein either all the
+activities are saved successfully or all
+of them are rolled back and how do you
+implement transaction by using begin
+trans commit runs and roll back
+now i want to make a very very very very
+strong statement here i will stop
+teaching sql server if you come across
+any sql server interview
+where you are not asked question around
+writing sqls writing complex sqls
+and specifically questions around joins
+you know joins are the most sorted one
+and if you are not able to answer
+questions on
+sql writing or like inner join left join
+right join full outer join and cross
+join
+your sql server interview is not going
+to be successful so let us quickly go
+and revise what exactly is the inner
+join left join
+right join full outer join and cross
+join
+i also want to make a very strong
+statement out here
+specifically for people who are like
+freshers or one or two years of
+experience right even for seniors i
+would suggest this is very much valid
+many times you know the interviewer will
+tell you to write sql and your basic
+structure of sql should not go wrong
+you know sometimes think about it you
+are told to write inner join and you
+don't know how to write it it will send
+a message to the interviewer that you do
+not know sql writing and your interview
+is not continuing ahead it sends
+a very bad message that you are not able
+to write a sql right so first thing let
+us go and get started with inner join
+what exactly is an inner join a inner
+join selects matching records from both
+the tables look at my answer straight
+forward to the point
+when you make an inner join between two
+tables it will select the matching
+records for example you can see here
+there is this tbl customer and this tbl
+customer is having a reference of
+country id from the mst country table
+right so if you want to go and select
+matching records then
+we will say here select
+star from
+[Music]
+tbl customer now look at this you can
+see that how
+you know i am hands-on in sql writing so
+here you need to be a little bit careful
+that you don't make silly mistakes right
+so you inner join
+on
+ms inner join mst
+country
+on
+ah
+on
+tbl customer dot
+country id and match it with ms3 country
+dot country id
+and i will say that i want to select
+only the name of the customer write the
+first name
+from here right
+so i would like to go and select the
+first name and from here i would like to
+go and select the country code right
+country
+code
+so
+let me execute this so if you see here
+if you see the output right
+it has only selected raju and raja
+because the test and abc
+have nulls as a reference so only the
+matching record so raju is having
+country id which is mapping so matching
+so he has pulled up ind he has pulled up
+npl but he has not pulled up other
+countries which is usa or uk right so
+basically when you say that you want to
+go and select only matching records then
+you will use a inner join
+now let's talk about
+left join
+so in case of left join
+so
+the same statement i will just make it
+left out here when i say left join means
+left table
+if you see at this moment you know
+wherever i am sitting right from there
+this is the left table and this is the
+right table this is the left table this
+is the right table i am looking from the
+side of the laptop from the computer
+this is the left table
+towards the monitor this is the left
+table and this is the right table right
+so when you see a left join
+all the records from the tbl customer
+will be selected from the left table
+will be selected
+and only the matching records from the
+mst country will be selected so if mst
+country has any kind of unmatching
+records those won't be selected so if
+you see here if i execute this
+you can see that
+this mst country also has
+some so let me do a select
+star from mst country so if you see here
+this mst country also has usa and uk so
+for us and uk we do not have any
+matching entries so you can see here
+what he has done he has only selected
+npl and ind but the test and abc if you
+remember do not have any matching
+records still they are selected so all
+the
+matching all the records from the left
+table will be selected and only matching
+records from the
+right table and when you say right join
+that means from the right table
+all the records will be selected and
+from the left table only matching one so
+you can see here now only raja and raju
+is seen out here but from the country
+table even things which are
+unmatching is also selected
+then we have the full outer join
+in case of a full outer join if you look
+at the output of full outer join
+all the matching unmatching records from
+the left table and all the unmatching
+and matching records from the right
+table both of them are selected for
+example you can see raju it is matching
+with npl so yes raju has a country code
+of ind but for test and abc there is
+nothing he has given out null here for
+usa and uk there is nothing so the first
+name is null so when you say full outer
+join all matching unmatching records of
+both the tables are selected
+and then we come finally to cross join
+cross join is nothing but a cartesian
+product right so when you do a cross
+join you cannot use the on clause
+because cross join means every record of
+the customer table will be mapped to the
+ma to the mst country so every record
+will be cartesian or multiplied with the
+with the mst country so here if you try
+to use on clause you can see it is
+saying incorrect syntax because in cross
+join we will not have a criteria as such
+there is no matching criteria it is
+just on cartesian product so you can see
+here raju he has uh you know made an
+entry with ind raja he has again said
+ind test ind raju with npl raju with usa
+raju with uk so every record of
+the the customer table
+is joined with every record of mst
+underscore country so this is called as
+the cartesian product so very quickly
+wrapping up inner joins only matching
+records
+left join all the records from the left
+table and only matching records from the
+right table right join opposite of left
+join from the right table
+all the matching all the all the records
+and from left table only matching full
+outer join matching and unmatching
+records from both the tables and finally
+cross join it is a cartesian product
+which takes every record of the left
+table and multiplies it with the right
+table
+okay so congratulations kudos and
+congratulations to you and
+congratulations to me as well to you
+because you completed this one-hour
+video series and to me because i created
+this one-hour video series right now
+this was part one so what we will do in
+part two and part three we will focus on
+sql query writing when you talk about
+any sql server interview if you are not
+good in sql query writing your interview
+is not continuing ahead right so the
+coming
+part two and part three which is like 30
+30 minutes of video we will focus on sql
+query writing part four we'll talk about
+views and so on so this complete sql
+server interview question video series
+continues right
+and now the remaining parts in the
+remaining parts are available on
+questpond.com so you can either go to
+questconn.com and get access to the
+remaining parts or else you can go to
+the youtube membership area so down
+below you can see that there is a join
+button and also you can see
+on the
+on the description you know there is a
+youtube youtube membership area where
+you get access to
+to this sql server interview questions
+right and msb interview questions and
+mvc and
+ant.net and she sharp and angular and so
+many interview questions out there right
+so hope you have enjoyed this video and
+very quickly before i sign off remember
+if you go and if you share this video on
+your facebook on your twitter you get
+access to this beautiful 200 plus
+interview question ebook so go ahead
+share the video share this video link
+and get access to this sql server
+interview question ebook once you share
+the video you have to
+send us a mail at questpond at
+quest1.com right
+so thank you very much happy learning
+happy job hunting i hope that you gland
+up into a nice job you get nice packages
+and hope that you and your family
+stay happy thank you
+[Music]
+[Music]
+[Music]
+you
+
+
+
