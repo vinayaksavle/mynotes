@@ -1,5 +1,1087 @@
 Interview questions to be revised:
 
+* OOP'S C#
+
+- Encapsulation : Encapsulation is a process of binding the data members and member functions into a single unit. In c#, the class is the real-time example for encapsulation because it will combine various types of data members and member functions into a single unit. If we define class fields with properties, then the encapsulated class won’t allow us to access the fields directly. Instead, we need to use getter and setter functions to read or write data based on our requirements. You can make a property read-only or write-only by making it's accessor private. You can't do that with a field. Properties can also be virtual, while fields cannot.
+
+* Property is an extension of the class variable. It provides a mechanism to read, write, or change the class variable's value without affecting the external way of accessing it in our applications. Generally, in object-oriented programming languages like c# you need to define fields as private and then use properties to access their values in a public way with get and set accessors. In c#, properties will enable class variables to expose in a public way using get and set accessors by hiding implementation details. Generally, in c# the encapsulation is used to prevent alteration of code (data) accidentally from the outside functions. In c#, by defining the class fields with properties, we can protect the data from accidental corruption. If we define class fields with properties, then the encapsulated class won’t allow us to access the fields directly. Instead, we need to use getter and setter functions to read or write data based on our requirements.
+
+Ex - 
+class User
+{
+    private string name;
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+}
+
+- Abstraction : Abstraction is used to hide the implementation details and display only essential features of the object. In Abstraction, by using access modifiers, we can hide the required details of the object and expose only necessary methods and properties through an object's reference. A class is the perfect example of abstraction. In c#, we can create a class with required methods, properties and we can expose only necessary methods and properties using access modifiers based on our requirements.
+
+* Access Modifiers:
+public	It is used to specifies that access is not restricted.
+
+private	It is used to specifies that access is limited to the containing type.
+
+protected	It is used to specifies that access is limited to the containing type or types derived from the containing class.
+Ex -
+class User
+    {
+        protected string Name;
+        protected void GetUserDetails()
+        {
+           Console.WriteLine("Name: {0}", Name);
+        }
+    }
+    class Program: User
+    {
+        static void Main(string[] args)
+        {
+           User u = new User();
+           Program p = new Program();
+           // Complier Error
+           // protected members can only accessible with derived classes
+           //u.Name = "Suresh Dasari";
+           p.Name = "Suresh Dasari";
+           
+           p.GetUserDetails();
+           Console.WriteLine("\nPress Enter Key to Exit..");
+           Console.ReadLine();
+        }
+    }
+	
+If you observe the above example, we are accessing base class (User) protected members using the reference of the derived class (Program). If we uncomment the commented code, we will get a compile-time error because we are trying to access protected members with base class (User) reference instead of the derived class (Program).
+
+internal -	It is used to specifies that access is limited to the current assembly.
+
+protected internal -	It specifies that access is limited to the current assembly or types derived from the containing class.
+
+private protected -	It is used to specifies that access is limited to the containing class or types derived from the containing class within the current assembly.
+
+sealed - Class can't be inherited by a derived class. structs are implicitly sealed; they cannot be inherited. the local variables cannot be sealed.
+static - Class contains only static members.
+unsafe - The class that has some unsafe construct likes pointers.
+Abstract - The instance of the class is not created if the Class is abstract.
+
+* Inheritance : Inheritance is used to inherit the properties from one class (base) to another (child) class. The class whose members are inherited is called a base (parent) class, and the class that inherits the members of the base (parent) class is called a derived (child) class. In c#, it’s not possible to inherit the base class constructors in the derived class. The accessibility of other base class members also depends on the access modifiers that we used to define those members in a base class. Generally, c# supports only single inheritance that means a class can only inherit from one base class. However, in c# the inheritance is transitive, and it allows you to define a hierarchical inheritance for a set of types, and it is called a multi-level inheritance.
+
+Ex. of Multi-Level Inheritance - 
+public class A
+{
+// Implementation
+}
+public class B: A
+{
+// Implementation
+}
+public class C: B
+{
+// Implementation
+}
+
+If you observe the above code snippet, class C is derived from class B, and class B is derived from class A, then class C inherits the members declared in both class B and class A. This is how we can implement multi-level inheritance in our applications. As discussed, multi-level inheritance is supported in c#, but multiple inheritance is not supported. If you want to implement multiple inheritance in c#, we can achieve this by using interfaces.
+
+* Method Overloading : Method Overloading means defining multiple methods with the same name but with different parameters. Method Overloading is also called compile time polymorphism or early binding.
+Ex -
+using System;
+
+namespace Tutlane
+{
+    public class Calculate
+    {
+        public void AddNumbers(int a, int b)
+        {
+           Console.WriteLine("a + b = {0}", a + b);
+        }
+        public void AddNumbers(int a, int b, int c)
+        {
+           Console.WriteLine("a + b + c = {0}", a + b + c);
+        }
+    }
+    class Program
+    {
+       static void Main(string[] args)
+       {
+          Calculate c = new Calculate();
+          c.AddNumbers(1, 2);
+          c.AddNumbers(1, 2, 3);
+          Console.WriteLine("\nPress Enter Key to Exit..");
+          Console.ReadLine();
+       }
+    }
+}
+
+* Method Overriding : Method Overriding means override a base class method in the derived class by creating a method with the same name and signatures to perform a different task. The Method Overriding in c# can be achieved using override & virtual keywords and the inheritance principle. The base class method we want to override in the derived class needs to be defined with a virtual keyword. We need to use the override keyword in the derived class while defining the method with the same name and parameters then only we can override the base class method in a derived class. Method Overriding is also called run time polymorphism or late binding.
+
+Ex. -
+using System;
+
+namespace Tutlane
+{
+    // Base Class
+    public class BClass
+    {
+       public virtual void GetInfo()
+       {
+          Console.WriteLine("Learn C# Tutorial");
+       }
+    }
+    // Derived Class
+    public class DClass : BClass
+    {
+       public override void GetInfo()
+       {
+          Console.WriteLine("Welcome to Tutlane");
+       }
+    }
+    class Program
+    {
+       static void Main(string[] args)
+       {
+          DClass d = new DClass();
+          d.GetInfo();
+          BClass b = new BClass();
+          b.GetInfo();
+          Console.WriteLine("\nPress Enter Key to Exit..");
+          Console.ReadLine();
+       }
+    }
+}
+
+O/P - 
+Welcome to Tutlane
+Learn C# Tutorial
+
+* Shadowing (method hiding)
+A method or function of the base class is available to the child (derived) class without the use of the "overriding" keyword. The compiler hides the function or method of the base class. This concept is known as shadowing or method hiding. In the shadowing or method hiding, the child (derived) class has its own version of the function, the same function is also available in the base class.
+Ex -
+public class BaseClass  
+{  
+    public string GetMethodOwnerName()  
+    {  
+       return "Base Class";  
+    }  
+}  
+public class ChildClass : BaseClass  
+{  
+    public new string GetMethodOwnerName()  
+    {  
+       return "ChildClass";  
+    }  
+} 
+
+static void Main(string[] args)  
+{  
+    ChildClass c = new ChildClass();  
+    Console.WriteLine(c.GetMethodOwnerName());  
+} 
+
+O/P -
+ChildClass
+
+If we do not use the new keyword the compiler generates the warning: Use the new keyword if hiding is intended.
+
+Ex - If we use new and instantiate with BaseClass then it will give BaseClass O/P.
+using System;
+
+public class Program
+{
+	public static void Main()
+	{
+		BaseClass c = new ChildClass();
+		Console.WriteLine(c.GetMethodOwnerName());
+	}
+
+	public class BaseClass
+	{
+		public virtual string GetMethodOwnerName()
+		{
+			return "Base Class";
+		}
+	}
+
+	public class ChildClass : BaseClass
+	{
+		public new string GetMethodOwnerName()
+		{
+			return "ChildClass";
+		}
+	}
+}
+O/P - Base Class
+
+Ex - If we use override keyword using BaseClass instance then ChildClass will get called.
+using System;
+
+public class Program
+{
+	public static void Main()
+	{
+		BaseClass c = new ChildClass();
+		Console.WriteLine(c.GetMethodOwnerName());
+	}
+
+	public class BaseClass
+	{
+		public virtual string GetMethodOwnerName()
+		{
+			return "Base Class";
+		}
+	}
+
+	public class ChildClass : BaseClass
+	{
+		public override string GetMethodOwnerName()
+		{
+			return "ChildClass";
+		}
+	}
+}
+
+O/P -ChildClass
+
+
+- Virtual: In c#, the virtual keyword is useful to override base class members such as properties, methods, etc., in the derived class to modify it based on our requirements. Generally, whenever the virtual method is invoked, the run-time object will check for an overriding member in the derived class. If no derived class has overridden the member, then the virtual method will be treated as an original member. In c#, by default all the methods are non-virtual, and we cannot override non-virtual methods. If you want to override a method, you need to define it with the virtual keyword. The virtual keyword in c# cannot be used with static, abstract, private, or override modifiers. In c#, the virtual inherited properties can be overridden in a derived class by including a property declaration that uses the override modifier.
+
+- Override: In c#, the override keyword is used to override a base class virtual members such as properties, methods, etc., in the derived class to modify it based on our requirements. 
+
+- Base: In c#, the base keyword is useful to access base class members such as properties, methods, etc., in the derived class. We can call a base class constructor from the derived class using the base keyword. 
+Ex -
+using System;
+
+namespace Tutlane
+{
+    // Base Class
+    public class BClass
+    {
+       public BClass()
+       {
+          Console.WriteLine("Welcome to Tutlane");
+       }
+       public BClass(string a, string b)
+       {
+          Console.WriteLine("Name: {0}", a);
+          Console.WriteLine("Location: {0}", b);
+       }
+    }
+    // Derived Class
+    public class DClass : BClass
+    {
+        // This constructor will call default constructor
+        public DClass(): base()
+        {
+        }
+
+       // This constructor will call parameterized constructor
+       public DClass(string x, string y): base(x, y)
+       {
+       }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+           DClass d = new DClass();
+           DClass d1 = new DClass("Suresh Dasari", "Hyderabad");
+           Console.WriteLine("\nPress Enter Key to Exit..");
+           Console.ReadLine();
+        }
+    }
+}
+
+O/P -
+Welcome to Tutlane
+Name Suresh Dasari
+Location Hyderabad
+
+* Polymorphism : Polymorphism means providing an ability to take more than one form.
+1. Compile Time Polymorphism
+Compile Time Polymorphism means defining multiple methods with the same name but with different parameters. The compile-time polymorphism can be achieved by using method overloading, and it is also called early binding or static binding. It is also known as Compile Time Polymorphism because the decision of which method is to be called is made at compile time.
+
+
+2. Run Time Polymorphism 
+Run Time Polymorphism means overriding a base class method in the derived class by creating a similar function. This can be achieved by using override & virtual keywords and the inheritance principle. Using run-time polymorphism, we can override a base class method in the derived class by creating a method with the same name and parameters to perform a different task. The run time polymorphism can be achieved by using method overriding, and it is also called late binding or dynamic binding. The compiler would not be aware of the method available for overriding the functionality, so the compiler does not throw an error at compile time. The compiler will decide which method to call at runtime and if no method is found then it throws an error.
+
+- Partial classes - Typically, a class will reside entirely in a single file. However, in situations where multiple developers need access to the same class, then having the class in multiple files can be beneficial. The partial keywords allow a class to span multiple source files. When compiled, the elements of the partial types are combined into a single assembly. If the partial type is sealed or abstract then the entire class will be sealed and abstract.
+Ex -
+using System;
+
+namespace oops
+{
+    public partial class partialclassDemo
+    {
+        public void method1()
+        {
+            Console.WriteLine("method from part1 class");
+        }
+    }
+}
+
+using System;
+
+namespace oops
+{
+    public partial class partialclassDemo
+    {
+        public void method2()
+        {
+            Console.WriteLine("method from part2 class");
+        }
+    }
+}
+
+using System;
+
+namespace oops
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //partial class instance
+            partialclassDemo obj = new partialclassDemo();
+            obj.method1();
+            obj.method2();
+        }
+    }
+}
+
+- Static classes
+A static class is declared using the "static" keyword. If the class is declared as static then the compiler never creates an instance of the class. All the member fields, properties and functions must be declared as static and they are accessed by the class name directly not by a class instance object.
+Ex -
+using System;
+
+namespace oops
+{
+    static class staticDemo
+    {
+        //static fields
+        static int x = 10, y;
+
+        //static method
+        static void calcute()
+        {
+            y = x * x;
+            Console.WriteLine(y);
+        }
+        static void Main(string[] args)
+        {
+            //function calling directly
+            staticDemo.calcute();
+        }
+    }
+}
+
+- Abstract -  In c#, abstract is a keyword, and it is useful to define classes and class members that are needed to be implemented or overridden in a derived class. The members we defined as abstract or included in an abstract class must be implemented by classes derived from an abstract class. The abstract class cannot instantiate, and it can contain both abstract and non-abstract members. The class that is derived from the abstract class must implement all the inherited abstract methods and accessors. The abstract classes can contain both abstract and non-abstract methods and accessors. Abstract classes cannot be instantiated. In c#, we should not use a sealed keyword with abstract class because the sealed keyword will make a class not inheritable, but abstract modifier requires a class to be inherited. A class that is derived from an abstract class must include all the implementations of inherited abstract methods and accessors.
+
+Abstract Method: The abstract method is a method that is declared with a abstract modifier. If we define a method with abstract modifier, then that method doesn’t contain any implementation, and method declaration ends with a semicolon. The abstract methods in c# are permitted to declare only in abstract classes, and the class that is derived from an abstract class must provide an implementation for defined abstract methods. In c#, abstract methods are internally treated as virtual methods. Hence, those methods need to be overridden in the derived class, and we should not use static or virtual modifiers during abstract method declaration.
+
+Ex -
+using System;
+
+namespace Tutlane
+{
+     abstract class Info
+     {
+         public void Welcome()
+         {
+             Console.WriteLine("Welcome to Tutlane");
+         }
+         public int age = 32;
+         public abstract void GetDetails(string x, string y);
+     }
+     class User: Info
+     {
+         public override void GetDetails(string a, string b)
+         {
+            Welcome();
+            Console.WriteLine("Name: {0}", a);
+            Console.WriteLine("Location: {0}", b);
+            Console.WriteLine("Age: {0}", age);
+         }
+     }
+     class Program
+     {
+        static void Main(string[] args)
+        {
+            User u = new User();
+            Console.WriteLine("****Abstract Class Example****");
+            u.GetDetails("Suresh Dasari", "Hyderabad");
+            Console.ReadLine();
+        }
+     }
+}
+O/P - 
+Welcome to Tutlane
+Name: Suresh Dasari
+Location: Hyderabad
+Age: 32
+
+- Interface -  The interface is same as a class, but the only difference is class can contain both declarations and implementation of methods, properties, and events, but the interface will contain only the declarations of methods, properties, and events that a class or struct can implement. An interface in c# is more like a contract, The class or struct that implements an interface must provide an implementation for all the members specified in the interface definition. 
+Generally, c# will not support multiple inheritance of classes, but that can achieve by using an interface. Also, a structure in c# cannot be inherited from another structure or class, but that can inherit by using interfaces. By default, the members of an interface are public, and we are not allowed to include any other access modifiers. In c#, an interface cannot be instantiated directly, but it can be instantiated by a class or struct that implements an interface.
+
+
+Ex -
+using System;
+
+namespace Tutlane
+{
+    interface IUser
+    {
+       void GetDetails(string x);
+    }
+    class User: IUser
+    {
+        public void GetDetails(string a)
+        {
+           Console.WriteLine("Name: {0}", a);
+        }
+    }
+    class User1: IUser
+    {
+       public void GetDetails(string a)
+       {
+          Console.WriteLine("Location: {0}", a);
+       }
+    }
+    class Program
+    {
+       static void Main(string[] args)
+       {
+          IUser u = new User();
+          u.GetDetails("Suresh Dasari");
+          IUser u1 = new User1();
+          u1.GetDetails("Hyderabad");
+          Console.WriteLine("\nPress Enter Key to Exit..");
+          Console.ReadLine();
+       }
+    }
+}
+O/P - 
+Name : Suresh Dasari
+Location: Hyderabad
+
+* SOLID Principles
+
+1. S – Single Responsibility Principle
+“Each software module or class should have only one reason to change“. In other words, we can say that each module or class should have only one responsibility to do.
+Ex - 
+We are going to create an Invoice class with four functionalities as Adding and Deleting Invoices, Error Logging as well as Sending Emails. As we are putting all the above four functionalities into a single class or module, we are violating the Single Responsibility Principle in C#. This is because Sending Emails and Error Logging are not a part of the Invoice module. The following is the complete code and it is self-explained, so please go through the comments.
+
+namespace SOLID_PRINCIPLES.SRP
+{
+    public class Invoice
+    {
+        public long InvAmount { get; set; }
+        public DateTime InvDate { get; set; }
+
+        public void AddInvoice()
+        {
+            try
+            {
+                // Here we need to write the Code for adding invoice
+                // Once the Invoice has been added, then send the  mail
+                MailMessage mailMessage = new MailMessage("EMailFrom", "EMailTo", "EMailSubject", "EMailBody");
+                this.SendInvoiceEmail(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                //Error Logging
+                System.IO.File.WriteAllText(@"c:\ErrorLog.txt", ex.ToString());
+            }
+        }
+
+        public void DeleteInvoice()
+        {
+            try
+            {
+                //Here we need to write the Code for Deleting the already generated invoice
+            }
+            catch (Exception ex)
+            {
+                //Error Logging
+                System.IO.File.WriteAllText(@"c:\ErrorLog.txt", ex.ToString());
+            }
+        }
+
+        public void SendInvoiceEmail(MailMessage mailMessage)
+        {
+            try
+            {
+                // Here we need to write the Code for Email setting and sending the invoice mail
+            }
+            catch (Exception ex)
+            {
+                //Error Logging
+                System.IO.File.WriteAllText(@"c:\ErrorLog.txt", ex.ToString());
+            }
+        }
+    }
+}
+
+Now let us discuss how to implement the above functionalities in such a way that, it should follow the Single Responsibility Principle.
+
+Example: Implementing the SRP in C#
+Now we are going to create three classes. In the invoice class, only the invoice-related functionalities are going to be implemented. The Logger class is going to be used only for logging purposes. Similarly, the Email class is going to handle Email activities. Now each class having only its own responsibilities, as a result, it follows the Single Responsibility Principle in C#.
+
+Solution Ex.
+Logger.cs
+Add a class file with the name Logger.cs and then copy and paste the following code in it.
+
+namespace SOLID_PRINCIPLES.SRP
+{
+    public interface ILogger
+    {
+        void Info(string info);
+        void Debug(string info);
+        void Error(string message, Exception ex);
+    }
+    public class Logger : ILogger
+    {
+        public Logger()
+        {
+            // here we need to write the Code for initialization 
+            // that is Creating the Log file with necesssary details
+        }
+        public void Info(string info)
+        {
+            // here we need to write the Code for info information into the ErrorLog text file
+        }
+        public void Debug(string info)
+        {
+            // here we need to write the Code for Debug information into the ErrorLog text file
+        }
+        public void Error(string message, Exception ex)
+        {
+            // here we need to write the Code for Error information into the ErrorLog text file
+        }
+    }
+}
+As you can see in the above class file, we are defining all the logging activities i.e. info, debug and error. 
+
+MailSender.cs
+Now, we need to add another class file with the name MailSender.cs and then copy and paste the following code.
+
+namespace SOLID_PRINCIPLES.SRP
+{
+    public class MailSender
+    {
+        public string EMailFrom { get; set; }
+        public string EMailTo { get; set; }
+        public string EMailSubject { get; set; }
+        public string EMailBody { get; set; }
+        public void SendEmail()
+        {
+            // Here we need to write the Code for sending the mail
+        }
+    }
+}
+In the above MailSender class, we are defining the send mail activities. 
+
+Modifying the Invoice class:
+Finally, modify the Invoice class as shown below.
+
+using System.Net.Mail;
+namespace SOLID_PRINCIPLES.SRP
+{
+    public class Invoice
+    {
+        public long InvAmount { get; set; }
+        public DateTime InvDate { get; set; }
+        private ILogger fileLogger;
+        private MailSender emailSender;
+        public Invoice()
+        {
+            fileLogger = new Logger();
+            emailSender = new MailSender();
+        }
+        public void AddInvoice()
+        {
+            try
+            {
+                fileLogger.Info("Add method Start");
+                // Here we need to write the Code for adding invoice
+                // Once the Invoice has been added, then send the  mail
+                emailSender.EMailFrom = "emailfrom@xyz.com";
+                emailSender.EMailTo = "emailto@xyz.com";
+                emailSender.EMailSubject = "Single Responsibility Princile";
+                emailSender.EMailBody = "A class should have only one reason to change";
+                emailSender.SendEmail();
+            }
+            catch (Exception ex)
+            {
+                fileLogger.Error("Error Occurred while Generating Invoice", ex.Message);
+            }
+        }
+        public void DeleteInvoice()
+        {
+            try
+            {
+                //Here we need to write the Code for Deleting the already generated invoice
+                fileLogger.Info("Delete Invoice Start at @" + DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                fileLogger.Error("Error Occurred while Deleting Invoice", ex);
+            }
+        }
+    }
+}
+As you can see, the Invoice class delegating the logging activity to the “Logger” class. In the same way, delegate the Email Sending activity to the “MailSender” class. Now, the Invoice class now only concentrates on Invoice related activities.
+
+
+2. O – Open Close Principle
+The Open-Closed Principle states that “software entities such as modules, classes, functions, etc. should be open for extension, but closed for modification“. The Open for extension means we need to design the software modules/classes in such a way that the new responsibilities or functionalities should be added easily when new requirements come. On the other hand, Closed for modification means, we should not modify the class/module until we find some bugs.
+
+within the Invoice class we have created the GetInvoiceDiscount() method. As part of that GetInvoiceDiscount() method, we are calculating the final amount based on the Invoice type. As of now, we have two Invoice Types as the Final Invoice and the Proposed Invoice. So we have implemented the logic using if-else. Tomorrow, if one more Invoice Type comes into the picture then we need to modify the GetInvoiceDiscount() method logic by adding another else if block to the source code. As we are changing the source code for the new requirement, we are violating the Open-Closed principle in C#. 
+
+Example: Without using the Open-Closed Principle in C#
+namespace SOLID_PRINCIPLES.OCP
+{
+    public class Invoice
+    {        
+        public double GetInvoiceDiscount(double amount, InvoiceType invoiceType)
+        {
+            double finalAmount = 0;
+            if (invoiceType == InvoiceType.FinalInvoice)
+            {
+                finalAmount = amount - 100;
+            }
+            else if (invoiceType == InvoiceType.ProposedInvoice)
+            {
+                finalAmount = amount - 50;
+            }
+            return finalAmount;
+        }
+    }
+    public enum InvoiceType
+    {
+        FinalInvoice,
+        ProposedInvoice
+    };
+}
+The problem with the above example is that if we want to add another new invoice type, then we need to add one more “else if” condition in the same “GetInvoiceDiscount” method, in other words, we need to modify the Invoice class. If we are changing the Invoice class again and again then we need to ensure that the previous functionalities along with the new functionalities are working properly by testing both the functionalities again. This is because we need to ensure that the existing clients, which are referencing this class are working properly as expected or not.
+
+Open-Closed Principle in C#
+As per the Open-Closed principle, Instead of MODIFYING, we should go for EXTENSION. If you want to follow the Open-Closed Principle in the above example, when a new invoice type needs to be added, then we need to add a new class. As a result, the current functionalities that are already implemented are going to be unchanged. The advantage is that we just only need to test and check the new classes.
+
+Example: With Open-Closed Principle in C#
+The following code example follows Open Closed Principle (OCP) in C#.
+
+namespace SOLID_PRINCIPLES.OCP
+{
+    public class Invoice
+    {
+        public virtual double GetInvoiceDiscount(double amount)
+        {
+            return amount - 10;
+        }
+    }
+    
+    public class FinalInvoice : Invoice
+    {
+        public override double GetInvoiceDiscount(double amount)
+        {
+            return base.GetInvoiceDiscount(amount) - 50;
+        }
+    }
+    public class ProposedInvoice : Invoice
+    {
+        public override double GetInvoiceDiscount(double amount)
+        {
+            return base.GetInvoiceDiscount(amount) - 40;
+        }
+    }
+    public class RecurringInvoice : Invoice
+    {
+        public override double GetInvoiceDiscount(double amount)
+        {
+            return base.GetInvoiceDiscount(amount) - 30;
+        }
+    }
+}
+As you can see in the above code, we have created three classes FinalInvoice, ProposedInvoice, and RecurringInvoice. All these three classes are inherited from the base class Invoice and if they want then they can override the GetInvoiceDiscount() method. Tomorrow if another Invoice Type needs to be added then we just need to create a new class by inheriting it from the Invoice class. The point that you need to keep the focus on is we are not changing the code of the Invoice class.
+
+Modify the Main method of the Program class as shown below to test the application.
+using System;
+namespace SOLID_PRINCIPLES.OCP
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Invoice FInvoice = new FinalInvoice();
+            Invoice PInvoice = new ProposedInvoice();
+            Invoice RInvoice = new RecurringInvoice();
+            double FInvoiceAmount = FInvoice.GetInvoiceDiscount(10000);
+            double PInvoiceAmount = PInvoice.GetInvoiceDiscount(10000);
+            double RInvoiceAmount = RInvoice.GetInvoiceDiscount(10000);
+            Console.ReadKey();
+        }
+    }
+}
+Now, the Invoice class is closed for modification. But it is open for the extension as it allows creating new classes deriving from the Invoice class which clearly follows the Open-Closed Principle in C#. 
+
+
+3. L – Liskov Substitution Principle
+This principle states that, if S is a subtype of T, then objects of type T should be replaced with the objects of type S. In simple words we can say that, when we have a base class and child class relationships i.e. inheritance relationships, then, if we can successfully replace the object/instance of a parent class with an object/instance of the child class, without affecting the behavior of the base class instance, then it is said to be in Liskov Substitution Principle.
+
+Example: Without using the Liskov Substitution Principle in C#:
+Let us first understand one example without using the Liskov Substitution Principle in C#. In the following example, first, we create the Apple class with the method GetColor. Then we create the Orange class which inherits the Apple class as well as overrides the GetColor method of the Apple class. The point is that an Orange cannot be replaced by an Apple, which results in printing the color of the apple as Orange as shown in the below example.
+
+namespace SOLID_PRINCIPLES.LSP
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Apple apple = new Orange();
+            Console.WriteLine(apple.GetColor());
+        }
+    }
+    public class Apple
+    {
+        public virtual string GetColor()
+        {
+            return "Red";
+        }
+    }
+    public class Orange : Apple
+    {
+        public override string GetColor()
+        {
+            return "Orange";
+        }
+    }
+}
+O/P - Orange
+
+As you can see in the above example, Apple is the base class and Orange is the child class i.e. there is a Parent-Child relationship. So, we can store the child class object in the Parent Reference variable i.e. Apple apple = new Orange(); and when we call the GetColor i.e. apple.GetColor(), then we are getting the color of the Orange not the color of Apple. That means once the child object is replaced i.e. Apple storing the Orange object, the behavior is also changed. This is against the LSP Principle. The Liskov Substitution Principle in C# states that even the child object is replaced with the parent, the behavior should not be changed. So, in this case, if we are getting the color of Apple instead of Orange, then it follows the Liskov Substitution Principle. That means there is some issue with our software design. Let us see how to overcome the design issue and makes the application follow Liskov Substitution Principle.
+
+Example Using the Liskov Substitution Principle in C#
+Let’s modify the previous example to follow the Liskov Substitution Principle. Here, first, we need a generic base class such as Fruit which is going to be the base class for both Apple and Orange. Now you can replace the Fruit class object with its subtypes either Apple and Orage and it will behave correctly. Now, you can see in the below code, we created the super Fruit class as an abstract class with the GetColor abstract method and then the Apple and Orange class inherited from the Fruit class and implement the GetColor method.
+
+namespace SOLID_PRINCIPLES.LSP
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Fruit fruit = new Orange();
+            Console.WriteLine(fruit.GetColor());
+            fruit = new Apple();
+            Console.WriteLine(fruit.GetColor());
+        }
+    }
+    public abstract class Fruit
+    {
+        public abstract string GetColor();
+    }
+    public class Apple : Fruit
+    {
+        public override string GetColor()
+        {
+            return "Red";
+        }
+    }
+    public class Orange : Fruit
+    {
+        public override string GetColor()
+        {
+            return "Orange";
+        }
+    }
+}
+
+Now, run the application and it should give the output as expected. Here we are following the LSP as we are now able to change the object with its subtype.
+
+4. I –Interface Segregation Principle
+The Interface Segregation Principle states that “Clients should not be forced to implement any methods they don’t use. Rather than one fat interface, numerous little interfaces are preferred based on groups of methods with each interface serving one submodule“. As per the Single Responsibility Principle of SOLID, like classes, interfaces also should have a single responsibility. That means we shouldn’t force any class to implement any method(s) which they don’t require.
+We have an interface i.e. IPrinterTasks declared with four methods. Now if any class wants to implement this interface then that class should have to provide the implementation to all the four methods of the IPrinterTasks interface. As you can see in the above diagram, we have two classes HPLaserJetPrinter and LiquidInkjetPrinter who want the printer service. But the requirement is the HPLaserJetPrinter wants all the services provided by the IPrinterTasks while the LiquidInkjetPrinter wants only the Print and Scan service of the printer. As we have declared all the methods within the IPrinterTasks interface, then it is mandatory for the LiquidInkjetPrinter class to provide implementation to Scan and Print methods along with the Fax and PrinctDulex method which are not required by the class.
+
+Example without using the Interface Segregation Principle in C#:
+IPrinterTasks.cs
+
+namespace SOLID_PRINCIPLES.ISP
+{
+    public interface IPrinterTasks
+    {
+        void Print(string PrintContent);
+        void Scan(string ScanContent);
+        void Fax(string FaxContent);
+        void PrintDuplex(string PrintDuplexContent);
+    }
+}
+HPLaserJetPrinter.cs
+namespace SOLID_PRINCIPLES.ISP
+{
+    public class HPLaserJetPrinter : IPrinterTasks
+    {
+        public void Print(string PrintContent)
+        {
+            Console.WriteLine("Print Done");
+        }
+        public void Scan(string ScanContent)
+        {
+            Console.WriteLine("Scan content");
+        }
+        public void Fax(string FaxContent)
+        {
+            Console.WriteLine("Fax content");
+        }
+        public void PrintDuplex(string PrintDuplexContent)
+        {
+            Console.WriteLine("Print Duplex content");
+        }
+    }
+}
+LiquidInkjetPrinter.cs
+namespace SOLID_PRINCIPLES.ISP
+{
+    class LiquidInkjetPrinter : IPrinterTasks
+    {
+        public void Print(string PrintContent)
+        {
+            Console.WriteLine("Print Done");
+        }
+        public void Scan(string ScanContent)
+        {
+            Console.WriteLine("Scan content");
+        }
+        public void Fax(string FaxContent)
+        {
+            throw new NotImplementedException();
+        }
+        public void PrintDuplex(string PrintDuplexContent)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+As you can see in the above LiquidInkjetPrinter class the Fax and PrintDuplex methods are not required by the class but, still, it is implementing these two methods. This is violating the Interface Segregation Principle in C# as we are forcing the class to implement two methods that they don’t require.
+
+Example using the Interface Segregation Principle:
+namespace SOLID_PRINCIPLES.ISP
+{
+    public interface IPrinterTasks
+    {
+        void Print(string PrintContent);
+        void Scan(string ScanContent);
+    }
+    interface IFaxTasks
+    {
+        void Fax(string content);
+    }
+    interface IPrintDuplexTasks
+    {
+        void PrintDuplex(string content);
+    }
+}
+
+namespace SOLID_PRINCIPLES.ISP
+{
+    public class HPLaserJetPrinter : IPrinterTasks, IFaxTasks, 
+                                     IPrintDuplexTasks
+    {
+        public void Print(string PrintContent)
+        {
+            Console.WriteLine("Print Done");
+        }
+
+        public void Scan(string ScanContent)
+        {
+            Console.WriteLine("Scan content");
+        }
+
+        public void Fax(string FaxContent)
+        {
+            Console.WriteLine("Fax content");
+        }
+
+        public void PrintDuplex(string PrintDuplexContent)
+        {
+            Console.WriteLine("Print Duplex content");
+        }
+    }
+}
+namespace SOLID_PRINCIPLES.ISP
+{
+    class LiquidInkjetPrinter : IPrinterTasks
+    {
+        public void Print(string PrintContent)
+        {
+            Console.WriteLine("Print Done");
+        }
+
+        public void Scan(string ScanContent)
+        {
+            Console.WriteLine("Scan content");
+        }
+    }
+}
+
+5. D – Dependency Inversion Principle 
+The Dependency Inversion Principle (DIP) states that high-level modules/classes should not depend on low-level modules/classes. Both should depend upon abstractions. Secondly, abstractions should not depend upon details. Details should depend upon abstractions. When a class knows about the design and implementation of another class, it raises the risk that if we do any changes to one class will break the other class. So we must keep these high-level and low-level modules/classes loosely coupled as much as possible. To do that, we need to make both of them dependent on abstractions instead of knowing each other.
+
+Let us understand the Dependency Inversion Principle in C# with one example
+Let’s create one console application, Then create the following classes
+
+Employee.cs
+Create a class file with the name Employee.cs and then copy and paste the following code into it. The following is a simple class having 4 properties.
+
+namespace SOLID_PRINCIPLES.DIP
+{
+    public class Employee
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Department { get; set; }
+        public int Salary { get; set; }
+    }
+}
+EmployeeBusinessLogic.cs
+Create a class file with the name EmployeeBusinessLogic.cs and then copy and paste the following code into it. The following class has one constructor that is used to create an instance of EmployeeDataAccess. Here, within the constructor we call the static GetEmployeeDataAccessObj() method on the DataAccessFactory class which will return an instance of EmployeeDataAccess and we initialize the _EmployeeDataAccess property with the return instance. We have also one method i.e. GetEmployeeDetails which is used to call the GetEmployeeDetails method on the EmployeeDataAccess instance to get the employee detail by employee id.
+
+namespace SOLID_PRINCIPLES.DIP
+{
+    public class EmployeeBusinessLogic
+    {
+        EmployeeDataAccess _EmployeeDataAccess;
+        public EmployeeBusinessLogic()
+        {
+            _EmployeeDataAccess = DataAccessFactory.GetEmployeeDataAccessObj();
+        }
+        public Employee GetEmployeeDetails(int id)
+        {
+            return _EmployeeDataAccess.GetEmployeeDetails(id);
+        }
+    }
+}
+DataAccessFactory.cs
+Create a class file with the name DataAccessFactory.cs and then copy and paste the following code into it. The following class contains one static method which is returning an instance of the EmployeeDataAccess class.
+
+namespace SOLID_PRINCIPLES.DIP
+{
+    public class DataAccessFactory
+    {
+        public static EmployeeDataAccess GetEmployeeDataAccessObj()
+        {
+            return new EmployeeDataAccess();
+        }
+    }
+}
+EmployeeDataAccessLogic.cs
+Create a class file with the name EmployeeDataAccess.cs and then copy and paste the following code into it. The following class contains one method which takes the employee id and returns that Employee information.
+
+namespace SOLID_PRINCIPLES.DIP 
+{
+    public class EmployeeDataAccess
+    {
+        public Employee GetEmployeeDetails(int id)
+        {
+            // In real time get the employee details from db
+            //but here we are hard coded the employee details
+            Employee emp = new Employee()
+            {
+                ID = id,
+                Name = "Pranaya",
+                Department = "IT",
+                Salary = 10000
+            };
+            return emp;
+        }
+    }
+}
+Let us compare the above example with the Dependency Inversion Principle in C#
+As per the Dependency Inversion Principle definition, “a high-level module should not depend on low-level modules. Both should depend on the abstraction”.
+
+So, first, we need to figure out which one is the high-level module (class) and which one is the low-level module (class) in our example. A high-level module is a module that always depends on other modules. So, in our example, the EmployeeBusinessLogic class depends on EmployeeDataAccess class, so here the EmployeeBusinessLogic class is the high-level module and the EmployeeDataAccess class is the low-level module.
+
+So, as per the first rule of the Dependency Inversion Principle in C#, the EmployeeBusinessLogic class/module should not depend on the concrete EmployeeDataAccess class/module, instead, both the classes should depend on abstraction.
+
+The second rule of the Dependency Inversion Principle state that “Abstractions should not depend on details. Details should depend on abstractions”.
+
+Before understanding this let us first understand what is an abstraction.
+
+What is Abstraction?
+In simple words, we can say that Abstraction means something which is non-concrete. So, abstraction in programming means we need to create either an interface or abstract class which is non-concrete so that we can not create an instance of it. In our example, the EmployeeBusinessLogic and EmployeeDataAccess are concrete classes that mean we can create objects of it.
+
+As per the Dependency Inversion Principle in C#, the EmployeeBusinessLogic (high-level module) should not depend on the concrete EmployeeDataAccess (low-level module) class. Both classes should depend on abstractions, meaning both classes should depend on either an interface or an abstract class.
+
+What should be in the interface (or in the abstract class)?
+As you can see in the above example, the EmployeeBusinessLogic uses the GetEmployeeDetails() method of EmployeeDataAccess class. In real-time, there will be many employee-related methods in the EmployeeDataAccess class. So, we need to declare the GetEmployeeDetails(int id) method within the interface. Add one interface with the name IDataAccess and then copy and paste the following codes.
+
+IDataAccess.cs
+Create a class file with the name IEmployeeDataAccess.cs and then copy and paste the following code into it. As you can see, here we created the interface with one abstract method i.e. GetEmployeeDetails.
+
+namespace SOLID_PRINCIPLES.DIP
+{
+    public interface IEmployeeDataAccess
+    {
+        Employee GetEmployeeDetails(int id);
+    }
+}
+Now, we need to implement the IEmployeeDataAccess in EmployeeDataAccess class. So, modify the EmployeeDataAccess class as shown below
+
+EmployeeDataAccess.cs
+namespace SOLID_PRINCIPLES.DIP
+{
+    public class EmployeeDataAccess : IEmployeeDataAccess
+    {
+        public Employee GetEmployeeDetails(int id)
+        {
+            // In real time get the employee details from db
+            //but here we are hardcoded the employee details
+            Employee emp = new Employee()
+            {
+                ID = id,
+                Name = "Pranaya",
+                Department = "IT",
+                Salary = 10000
+            };
+            return emp;
+        }
+    }
+}
+Now, we need to change the factory class which will return the IEmployeeDataAccess instead of the concrete EmployeeDataAccess class as shown below.
+
+DataAccessFactory.cs
+Modify the DataAccessFactory class below. Please notice here we have changed the return type of the GetEmployeeDataAccessObj method from EmployeeDataAccess to IEmployeeDataAccess.
+
+namespace SOLID_PRINCIPLES.DIP
+{
+    public class DataAccessFactory
+    {
+        public static IEmployeeDataAccess GetEmployeeDataAccessObj()
+        {
+            return new EmployeeDataAccess();
+        }
+    }
+}
+Now, we need to change the EmployeeBusinessLogic class which will use the IEmployeeDataAccess instead of the concrete EmployeeDataAccess class as shown below.
+
+namespace SOLID_PRINCIPLES.DIP
+{
+    public class EmployeeBusinessLogic
+    {
+        IEmployeeDataAccess _EmployeeDataAccess;
+        public EmployeeBusinessLogic()
+        {
+            _EmployeeDataAccess = DataAccessFactory.GetEmployeeDataAccessObj();
+        }
+        public Employee GetEmployeeDetails(int id)
+        {
+            return _EmployeeDataAccess.GetEmployeeDetails(id);
+        }
+    }
+}
+That’s it. We have implemented the Dependency Inversion Principle in our example where the high-level module (EmployeeBusinessLogic) and low-level module (EmployeeDataAccess) depend on abstraction (IEmployeeDataAccess). Also, abstraction (IEmployeeDataAccess) does not depend on details (EmployeeDataAccess) but details depend on abstraction.
+
+
+
+
+
 1. Promise vs Observable
 Promises are eager, Observables are lazy.Function passed to Observable constructor gets called only when someone actually subscribes to an Observable.
 With a Promise you can only handle one event.
@@ -401,355 +1483,74 @@ Each object has its own set of member variables and all the member variables hav
 Auth-guard makes use of CanActivate interface and it checks for if the user is logged in or not. If it returns true, then the execution for the requested route will continue, and if it returns false, that the requested route will be kicked off and the default route will be shown.
 https://www.c-sharpcorner.com/article/protecting-routes-with-auth-guard-in-angular-7/
 
-23. Routing Flow with Resolver
+23. 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Directive, Example of Attribute Directive
+https://www.tektutorialshub.com/angular/angular-directives/
+https://www.tektutorialshub.com/angular/angular-ngclass-directive/
+
+What is Observable, normal method and observable method difference.
+
+
+
+What is Resolver in AuthGuards, resolver in routing
+Routing Flow with Resolver
 User clicks the link.
 Angular executes certain code and returns a value or observable.
 You can collect the returned value or observable in constructor or in ngOnInit, in class of your component which is about to load.
 Use the collected the data for your purpose.
 Now you can load your component.
 Steps 2,3 and 4 are done with a code called Resolver.
+So basically resolver is that intermediate code, which can be executed when a link has been clicked and before a component is loaded.
 
-24. What is Resolver in AuthGuards, resolver in routing
-Resolver acts like middleware, which can be executed before a component is loaded. To explain how a resolver can be used in Angular, let's think about the scenario when you are using *ngIf="some condition", and your logic relies on the length of an array, which is manipulated when an API call is completed. For example, you may want to display in a component the items of this array which were just fetched in an unordered list.
 
-<ul>
-<li *ngFor="let item of items">{{item.description}}</li>
-</ul>
+Lazy Loading
+what is Map
+what is Filter
+MergeMap and 
+let vs const
+uploading bulk data can we navigate to other component
+Custom directive
+ngModel we have used I have to check whether the value is entered or not, Reactive forms, How to validate model value, user clicks submit method you have to validate whether value is entered or not
+How will you declare reactive forms
+can we create multiple form form inside other form
+what type of validation you are using
+if I type something then what kind of validation you will use,  keypress event, how will you declare output
 
-In this situation, you might get into a problem because your data will come up after the component is ready. Items in the array do not really exist yet. Here, the Route Resolver comes in handy. Angular’s Route Resolver class will fetch your data before the component is ready. Your conditional statements will work smoothly with the Resolver.
-https://www.freakyjolly.com/angular-7-6-use-auth-guards-canactivate-and-resolve-in-angular-routing-quick-example/
-
-25. What is Lazy Loading and how you can achieve?
-lazy loading is the process of loading modules(images, videos, documents, JS, CSS, etc) on-demand. Lazy loading was easily achieved by using the loadChildren property. Modules are loaded on demand. Modules are loaded when the user navigates to their routes. Lazy loading decreases resources consumption (lower resource costs). Lazy loading doesn’t load everything once, it loads only what the user expects to see first.
-E.g.  loadChildren: "PATH_TO_FEATURE_MODULE_#_FEATURMODULE_CLASS_NAME"
-
-const routes: Routes = [
-  {
-    path: "",
-    component: HomeComponent
-  },
-  {
-    path: "viewdetails",
-    loadChildren: "app/viewdetails/viewdetails.module#ViewdetailsModule"
-  },
-  {
-    path: "about",
-    loadChildren: "app/about/about.module#AboutModule"
-  }
-]
-
-26. pipe, map, filter  
-pipe() is a function/method that is used to chain multiple RxJS operators while map() and filter() are operators that operate and transform the values of an Observable (sequence of values). They are similar to the map() and filter() methods of JavaScript arrays.
-E.g. const ob$: Observable<number> = of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).pipe(filter( v => v % 2 === 0), map( v => v * 10));
-ob$.subscribe(
-  next => console.log('next:', next),
-  err => console.log('error:', err),
-  () => console.log('Completed'),
-);
-
-o/p:
-next: 20
-next: 40
-next: 60
-next: 80
-next: 100
-Completed
-
-27. 
-var vs let vs const 
-* VAR
-Scope essentially means where these variables are available for use. var declarations are globally scoped or function/locally scoped. It is globally scoped when a var variable is declared outside a function. This means that any variable that is declared with var outside a function block is available for use in the whole window. var is function scoped when it is declared within a function. This means that it is available and can be accessed only within that function.
-To understand further, look at the example below.
-    var greeter = "hey hi";
-
-    function newFunction() {
-        var hello = "hello";
-    }
-
-	Here, greeter is globally scoped because it exists outside a function while hello is function scoped. So we cannot access the variable hello outside of a function. So if we do this:
-    var tester = "hey hi";
-
-    function newFunction() {
-        var hello = "hello";
-    }
-    console.log(hello); // error: hello is not defined
-We'll get an error which is as a result of hello not being available outside the function.
-
-var variables can be re-declared and updated
-
-That means that we can do this within the same scope and won't get an error.
-    var greeter = "hey hi";
-    var greeter = "say Hello instead";
-and this also
-    var greeter = "hey hi";
-    greeter = "say Hello instead";
-	
-Hoisting of var
-
-Hoisting is a JavaScript mechanism where variables and function declarations are moved to the top of their scope before code execution. What this means is that if we do this:
-    console.log (greeter);
-    var greeter = "say hello"
-it is interpreted as this
-    var greeter;
-    console.log(greeter); //greeter is undefined
-    greeter = "say hello"
-So var variables are hoisted to the top of its scope and initialized with a value of undefined.
-
-Problem with var
-
-There's a weakness that comes with var. I'll use the example below to explain this.
-    var greeter = "hey hi";
-    var times = 4;
-
-    if (times > 3) {
-        var greeter = "say Hello instead"; 
-    }
-
-    console.log(greeter) //"say Hello instead"
-So, since times > 3 returns true, greeter is redefined to "say Hello instead". While this is not a problem if you knowingly want greeter to be redefined, it becomes a problem when you do not realize that a variable greeter has already been defined before. 
-If you have use greeter in other parts of your code, you might be surprised at the output you might get. This might cause a lot of bugs in your code. This is why the let and const is necessary.
-
-* LET	
-
-let is preferred for variable declaration now. It's no surprise as it comes as an improvement to the var declarations. It also solves this problem that was raised in the last subheading. Let's consider why this is so.
-
-let is block scoped
-
-A block is chunk of code bounded by {}. A block lives in curly braces. Anything within curly braces is a block. So a variable declared in a block with the let is only available for use within that block. Let me explain this with an example.
-   let greeting = "say Hi";
-   let times = 4;
-
-   if (times > 3) {
-        let hello = "say Hello instead";
-        console.log(hello);//"say Hello instead"
-    }
-   console.log(hello) // hello is not defined
-We see that using hello outside its block(the curly braces where it was defined) returns an error. This is because let variables are block scoped .
-
-let can be updated but not re-declared.
-
-Just like var, a variable declared with let can be updated within its scope. Unlikevar, a let variable cannot be re-declared within its scope. So while this will work,
-    let greeting = "say Hi";
-    greeting = "say Hello instead";
-this will return an error.
-    let greeting = "say Hi";
-    let greeting = "say Hello instead";//error: Identifier 'greeting' has already been declared
-However, if the same variable is defined in different scopes, there will be no error.
-    let greeting = "say Hi";
-    if (true) {
-        let greeting = "say Hello instead";
-        console.log(greeting);//"say Hello instead"
-    }
-    console.log(greeting);//"say Hi"
-Why is there no error? This is because both instances are treated as different variables since they have different scopes.
-
-This fact makes let a better choice than var. When using let, you don't have to bother if you have used a name for a variable before as a variable exists only within its scope. Also, since a variable cannot be declared more than once within a scope, then the problem discussed earlier that occurs with var does not occur.
-
-Hoisting of let
-Just like var, let declarations are hoisted to the top. Unlike var which is initialized as undefined, the let keyword is not initialized. So if you try to use a let variable before declaration, you'll get a Reference Error.
-
-* CONST
-
-Variables declared with the const maintain constant values. const declarations share some similarities with let declarations.
-
-const declarations are block scoped
-
-Like let declarations, const declarations can only be accessed within the block it was declared.
-
-const cannot be updated or re-declared
-
-This means that the value of a variable declared with const remains the same within its scope. It cannot be updated or re-declared. So if we declare a variable with const, we can neither do this
-    const greeting = "say Hi";
-    greeting = "say Hello instead";//error : Assignment to constant variable. 
-nor this
-    const greeting = "say Hi";
-    const greeting = "say Hello instead";//error : Identifier 'greeting' has already been declared
-Every const declaration therefore, must be initialized at the time of declaration.
-This behavior is somehow different when it comes to objects declared with const. While a const object cannot be updated, the properties of this objects can be updated. Therefore, if we declare a const object as this
-    const greeting = {
-        message : "say Hi",
-        times : 4
-    }
-while we cannot do this
-    const greeting = {
-        words : "Hello",
-        number : "five"
-    }//error :  Assignment to constant variable.
-we can do this
-    greeting.message = "say Hello instead";
-This will update the value of greeting.message without returning errors.
-
-Hoisting of const
-
-Just like let, const declarations are hoisted to the top but are not initialized.
-
-So just in case, you missed the differences, here they are :
-var declarations are globally scoped or function scoped while let and const are block scoped.
-var variables can be updated and re-declared within its scope; let variables can be updated but not re-declared; const variables can neither be updated nor re-declared.
-They are all hoisted to the top of their scope but while varvariables are initialized with undefined, let and const variables are not initialized.
-While var and let can be declared without being initialized, const must be initialized during declaration.
-
-28. Attribute Routing
-To enable attribute routing, we need to use MapMvcAttributeRoutes() in the RouteConfig. If route URI is not defined in attribute routing then it will work as Convention Routing. We can use RoutePrefix attribute to define the prefix.  If you have already defined the Prefix for the whole controller then you can override it. To override the RoutePrefix, use ~ sign with prefix name with particular action in the Route attribute.
-
-29. What if we not declared HTTPVERBS can we access get, post
-The algorithm ASP.NET uses to calculate the "default" method for a given action goes like this:
--If there is an attribute applied (via [HttpGet], [HttpPost], [HttpPut], [AcceptVerbs], etc), the action will accept the specified HTTP method(s).
--If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
--Otherwise, the action supports the POST method. So if don't declare httpverbs by default it is POST call.
-
-30. How will you restrict action method GET, POST
-By using NonActionAttribute to restrict access to public methods of controller. 
-[NonAction]
-public void DoInternalStuff()
-{
-    Response.Write("We are doing internal stuff here!");
-    Response.End();
-}
-
+Why we use API
+WebAPI is stateful or stateless
+Attribute Routing
+Verbs in WebAPI
+What if we not declared HTTPVERBS can we access get, post
+how will you restrict action method GET, POST
+where do we register routes, RouteConfig
 What are types response types from WebAPI, what webapi will return return types
-Void, Any Entity/Datatype, HttpResponseMessage, IHttpActionResult. IHttpActionResult contains ExecuteAsync method to create an instance of HttpResponseMessage asynchronously.
-
-31.  How to disable lazy loading
-Rules for lazy loading:
-context.Configuration.ProxyCreationEnabled should be true.
-context.Configuration.LazyLoadingEnabled should be true.
-Navigation property should be defined as public, virtual. Context will NOT do lazy loading if the property is not defined as virtual.
-
-32. Why we use API & WebAPI is stateful or stateless
-WebAPI is stateless. By stateless it means that the server does not store any state about the client session on the server side. The client's application state should never be stored on the server, but passed around from the client to every place that needs it. That is where the ST in REST comes from, State Transfer. You transfer the state around instead of having the server store it. This is the only way to scale to millions of concurrent users. If for no other reason than because millions of sessions is millions of sessions.
-
-33. Why Static? When we can use static class?
-A static class is basically the same as a non-static class, but there in one difference, a static class cannot be instantiated, means we cannot use new keyword to create an object of the class. Even we cannot create any parameterized constructor because to pass the constructor value we need to create object.
-
-When we can use static class?
-We have a class Math in C#, let’s check it’s methods and operation. Say Math.Min, it takes two values of different data types and return minimum one, similarly Max, Round, Floor, Ceiling. If you notice all these methods take some values and operate only those provided values. So a static class should be container for sets of methods that just operate on input parameters and do not have to get or set any internal instance fields.
-
-What is a static class?
-
-A static class is similar to normal class with these differences:
--Contains only static members means all the methods and members must be static
-Cannot be instantiated by using new keyword
-By default it is sealed class and therefore cannot be inherited.
-It can have default constructor or
-Can have only one constructor without any parameter
-Access modifiers are not allowed on static constructors
-Cannot have instantiate constructors
-Methods can be called by using class name dot (.) method name.
-
-What is a static Method?
--Static method are similar to regular (instantiate) method, but they can be accessed directly by using the class name rather than the instance of the class, it will give error if we will try to access them with class instance.
-
-Can we have static as well as instantiate constructor in a class?
--Yes, it can be in a normal instantiate class
-Any number of instantiate constructors
-With zero to any number of parameters
-Can have only one static constructors
-Static constructor cannot have any parameter
-Static constructor are mostly used to initialize some values
-a static constructor must be parameterless
-access modifiers are not allowed on static constructors
-
-Rules for static Constructor:
--A class can have only one static constructor
-Static constructor can not have any parameter
-Static constructor can not have any access specifier
-It is used to initialize the static data members of the class
-for any number of object creation, the static constructor gets executed only once
-The static constructor gets executed when the class is used
-Static constructor can not be invoked by the programmer explicitly
-
-If you declare any variable as static, it is known static variable.
-
-The static variable can be used to refer the common property of all objects (that is not unique for each object) e.g. company name of employees,college name of students etc.
-The static variable gets memory only once in class area at the time of class loading. Suppose there are 50 employees in my company, now all instance data members will get memory each time when object is created.All employee have its unique empno and name so instance data member is good.Here, company refers to the common property of all objects.If we make it static,this field will get memory only once.
-
-why C# main method is static?
-The C# main method is static because object is not required to call static method if it were non-static method, compiler creates object first then call main() method that will lead the problem of extra memory allocation.
-Static Constructor:
-Static constructor is a special constructor that gets called before the first object of the class is created. It is used to initialize any static data, or to perform a particular action that needs performed once only.
-The time of execution of static constructor is not known but it is definitely before the first object creation – may be at the time of loading assembly.
+exception occur in WebAPI what is status code of exception and exception
+Entityframework version, mvc version
 
 
-34. Check version difference in angular, C#
-Angular 2 (Web components based architecture, Supports Hierarchical Dependency Injection, Modern, faster, and highly scalable framework, Equally useful framework for web, mobile, and desktop apps)
-Why not Angular 3 (All package names were assigned version 2, but router package by mistaken was given version 3. Therefore, the development team skipped Angular Version 3 and directly named it version 4 to maintain compatibility with Angular Router's version.)
-Angular 4 (Animation moved out to a separated package @angular/animations, Supports for if/else statement, Supports for email validator, Reduce the size of the generated bundled code up to 60%)
-Angular 5 (Make AOT the default, Easier to build progressive web apps, Type checking in templates, Support for Internationalized Number, Date, and Currency Pipes, An update to Httpclient, Zone speed improvements, New Router Lifecycle Events)
-
-C# version 1.0 (Classes, Structs, Interfaces, Events,Properties,Delegates,Expressions,Statements,Attributes)
-C# version 2.0 (Generics, Partial types, Anonymous methods, Nullable value types, Iterators, Covariance and contravariance)
-C# version 3.0 (Auto-implemented properties, Anonymous types, Query expressions, Lambda expressions, Expression trees, Extension methods, Implicitly typed local variables, Partial methods, Object and collection initializers)
-C# version 4.0 (Dynamic binding, Named/optional arguments, Generic covariant and contravariant, Embedded interop types)
-C# version 5.0 (Asynchronous members, Caller info attributes)
-C# version 6.0 (Static imports, Exception filters, Auto-property initializers, Expression bodied members, Null propagator, String interpolation, nameof operator, Index initializers)
-C# version 7.0 (Out variables, Tuples and deconstruction, Pattern matching, Local functions, Expanded expression bodied members, Ref locals and returns)
-
-35. Queries of SQL, Top highest salaries
-To find nth highest salary using subquery
-select top 1 salary from (select distinct top N salary from employees order by salary desc) result order by salary
-
-To find nth highest salary using CTE (Do not use ROW_NUMBER function it is not good for duplicate records.)
-WITH RESULT AS ( SELECT Salary, DenseRank() over (order by salary desc) AS DenseRank From Employees)
-Select top 1 salary from result where denserank = N
-
-Write a query to retrieve the first four characters of  EmpLname from the EmployeeInfo table.
-SELECT SUBSTRING(EmpLname, 1, 4) FROM EmployeeInfo;
-
-Write a query to fetch only the place name(string before brackets) from the Address column of EmployeeInfo table.
-SELECT SUBSTRING(Address, 1, CHARINDEX('(',Address)) FROM EmployeeInfo;
-
-Write a query to find the names of employees that begin with ‘S’
-SELECT * FROM EmployeeInfo WHERE EmpFname ='S%';
-
-Write a query to fetch details of employees whose EmpLname ends with an alphabet ‘A’ and contains five alphabets.
-SELECT * FROM EmployeeInfo WHERE EmpLname LIKE '____a';
-
-Write a query to calculate the even and odd records from a table.
-SELECT EmpID FROM (SELECT rowno, EmpID from EmployeeInfo) WHERE MOD(rowno,2)=0;
-SELECT EmpID FROM (SELECT rowno, EmpID from EmployeeInfo) WHERE MOD(rowno,2)=1;
-
-Write a SQL query to retrieve employee details from EmployeeInfo table who have a date of joining in the EmployeePosition table.
-SELECT * FROM EmployeeInfo E WHERE EXISTS (SELECT * FROM EmployeePosition P WHERE E.EmpId = P.EmpId);
-
-36. How many instances of static class get created when static class are invoked - Only one instance of object is created
-If you create a static class and static constructor in it. If you invoke the static method twice but constructor will fire once. This proves that only one instance of the object is created for static class.
-
-37.  Which objects are allocated on the stack and which objects are allocated on the heap?
-Note: you should never say "reference types are allocated on the heap while value types are allocated on the stack", this is a commonly repeated mistake and sets off a red flag for an experienced interviewer.
-Reference types (classes, interfaces, delegates) are always allocated on the heap.
-Value types (derived from System.ValueType, e.g. int, bool, char, enum and any struct) can be allocated on the heap or on the stack, depending on where they were declared.
--If the value type was declared as a variable inside a method then it's stored on the stack.
--If the value type was declared as a method parameter then it's stored on the stack.
--If the value type was declared as a member of a class then it's stored on the heap, along with its parent.
--If the value type was declared as a member of a struct then it's stored wherever that struct is stored.
-
-Memory used by objects stored on the heap needs to be freed up by the garbage collector. When an object stored on the heap no longer has any references pointing to it, it's considered eligible for garbage collection.
-
-38. What is the purpose of async/await keywords?
-These keywords allow writing asynchronous non-blocking code in a synchronous fashion. This feature is facilitated by the Task/Task<T> classes or ValueTask/ValueTask<T> structs. These types represent an abstraction around an operation that may execute asynchronously. We use await keyword to materialize the task into resulting value. Methods that contain await must be marked with the async keyword.
-
-Every multithreaded execution can be represented as an asynchronous operation, but not every asynchronous operation necessarily employs additional threads. 
-
-39. dispose vs finalize 
-The main difference between dispose() and finalize() is that the method dispose() has to be explicitly invoked by the user whereas, the method finalize() is invoked by the garbage collector, just before the object is destroyed. Method dispose( ) is used to free unmanaged resources whenever it is invoked. Method finalize( ) is used to free unmanaged resources before the object is destroyed.
-
-40. Tight coupling vs Loose coupling
-Tight coupling is when a group of classes are highly dependent on one another. This scenario arises when a class assumes too many responsibilities, or when one concern is spread over many classes rather than having its own class.
-
-Loose coupling is achieved by means of a design that promotes single-responsibility and separation of concerns. A loosely-coupled class can be consumed and tested independently of other (concrete) classes. Interfaces are a powerful tool to use for decoupling. Classes can communicate through interfaces rather than other concrete classes, and any class can be on the other end of that communication simply by implementing the interface.
-
-
-
-
-
-
-
-
+How to disable lazy loading
+Check version difference in angular, C#
+Queries of SQL, Top highest salaries
 Web Security
 Design patterns 
-
+Stack Heap
+Dependency Injection
+Delegate func predicate action
 CTE
 Entityframework Queries join
 How can you see plan seek and scan
@@ -758,7 +1559,7 @@ Debug vs release
 covariance and contravarince
 Why abstract and not concreate
 WebAPI Middleware
-
+Rownumber, PartitionBy, Rank, DenseRank
 webAPI code using serializer
 Question on finally block
 Dispose
@@ -768,6 +1569,19 @@ class vs structure
 Why value types in stack and reference types in heap
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+Role of model in your project
 To display list of employees, create, update, implementation of that
 
 
@@ -776,6 +1590,13 @@ Gateway
 Authorization in .NetCore, Authorization in Angular
 https://jasonwatmore.com/post/2019/10/16/aspnet-core-3-role-based-authorization-tutorial-with-example-api
 https://jasonwatmore.com/post/2019/08/06/angular-8-role-based-authorization-tutorial-with-example
+
+
+
+
+
+
+
 
 sealed class
 extension methods
@@ -811,9 +1632,15 @@ Custom library, or packages
 Custom Pipes, What is Pipe
 https://www.tektutorialshub.com/angular/angular-custom-pipes/
 
+
+
+
 Http GET, POST
 https://www.djamware.com/post/5b87894280aca74669894414/angular-6-httpclient-consume-restful-api-example
  
+
+
+
 Cloudmoyo
 
 -Abstraction and Encapsulation, Practical example of Abstraction
@@ -823,21 +1650,6 @@ https://www.tutlane.com/tutorial/csharp/csharp-abstraction
 -Pipe
 https://www.tektutorialshub.com/angular/angular-custom-pipes/
 
-
-Directive, Example of Attribute Directive
-https://www.tektutorialshub.com/angular/angular-directives/
-https://www.tektutorialshub.com/angular/angular-ngclass-directive/
-
-What is Observable, normal method and observable method difference.
-MergeMap and 
-uploading bulk data can we navigate to other component
-ngModel we have used I have to check whether the value is entered or not, Reactive forms, How to validate model value, user clicks submit method you have to validate whether value is entered or not
-How will you declare reactive forms
-can we create multiple form form inside other form
-what type of validation you are using
-if I type something then what kind of validation you will use,  keypress event, how will you declare output
-exception occur in WebAPI what is status code of exception and exception
-Entityframework version, mvc version
 
 
 
