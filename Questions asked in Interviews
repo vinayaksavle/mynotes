@@ -1,0 +1,1351 @@
+
+C# interview question
+
+Angular best Interview Questions
+https://github.com/PranamBhat/Angular-Interview-Questions
+
+Best practices in c#
+https://levelup.gitconnected.com/design-best-practices-in-net-c-8e37b7c3500a
+https://www.mygreatlearning.com/blog/c-sharp-interview-questions/
+
+Singleton design pattern
+https://dotnettutorials.net/lesson/singleton-design-pattern/
+
+SQL Queried interviw questions
+https://thispointer.com/mysql-delete-duplicate-rows-but-keep-one/#:~:text=Rows%20in%20MySQL.-,Delete%20the%20duplicate%20rows%20but%20keep%20latest%20%3A%20using%20GROUP%20BY,function%20and%20GROUP%20BY%20clause.
+
+Overloading and overriding
+https://www.dotnettricks.com/learn/csharp/understanding-virtual-override-and-new-keyword-in-csharp
+
+DI or IOC
+https://www.c-sharpcorner.com/article/overview-dependency-injection-in-asp-net-core/
+
+Best topic for method overloading
+https://www.c-sharpcorner.com/article/all-about-method-overloading-in-c-sharp/
+
+https://singztechmusings.wordpress.com/2011/06/20/sql-how-to-create-a-table-from-another-table-without-copying-any-values-from-the-old-table/
+
+https://taagung.com/method-overloading/
+
+https://www.geeksforgeeks.org/c-sharp-method-overriding/
+
+Questions asked :
+Types of classes
+https://www.c-sharpcorner.com/UploadFile/0c1bb2/types-of-classes-in-C-Sharp1/
+
+Types of Filters in ASP.NET MVC and their Sequence of Execution
+https://www.c-sharpcorner.com/article/filters-in-Asp-Net-mvc-5-0-part-twelve/
+
+Types of Result in MVC or Web API
+https://www.c-sharpcorner.com/article/types-of-web-api-action-results/
+
+When to use Patch, Put, Post
+https://programmerspub.com/blog/general/difference-between-post-vs-put-vs-patch
+
+Real life use of delegate
+https://dotnettutorials.net/lesson/delegates-real-time-example-csharp/
+https://dotnettutorials.net/lesson/anonymous-method-c-sharp/
+
+When to use interface and abstract
+https://www.infoworld.com/article/2928719/when-to-use-an-abstract-class-vs-interface-in-csharp.html
+
+What is use of constructor in abstract as it cannot be instantiated
+https://www.c-sharpcorner.com/UploadFile/955025/C-Sharpinterviewquestionpart7can-an-abstract-class-have-a-constr/
+
+Row number and rank in sql, nth highest salary query
+https://www.sqlshack.com/overview-of-sql-rank-functions/
+https://javarevisited.blogspot.com/2016/01/4-ways-to-find-nth-highest-salary-in.html?m=1
+
+Char vs Varchar difference in sql
+https://www.geeksforgeeks.org/char-vs-varchar-in-sql/
+
+JWT authentication how you passed key from angular
+https://www.dotnettricks.com/learn/angular/token-based-authentication-json-web-token-aspnet-core
+
+Can we return multiple values using sql/c# function
+https://www.c-sharpcorner.com/UploadFile/9b86d4/how-to-return-multiple-values-from-a-function-in-C-Sharp/
+https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008-r2/ms191165(v=sql.105)?redirectedfrom=MSDN
+
+What we use when use does'nt saved details and try to navigate in angular
+https://www.c-sharpcorner.com/article/create-angular-unsaved-changes-alert/
+
+Yeild, 
+https://www.c-sharpcorner.com/UploadFile/5ef30d/understanding-yield-return-in-C-Sharp/
+
+out, ref, class members are ref or value type
+https://www.geeksforgeeks.org/difference-between-ref-and-out-keywords-in-c-sharp/
+
+Why we use sealed classes
+https://www.c-sharpcorner.com/article/sealed-class-in-C-Sharp/
+
+Difference between ViewData,ViewBag, Tempdata
+https://www.c-sharpcorner.com/blogs/viewdata-vs-viewbag-vs-tempdata-in-mvc1
+
+Difference between value and reference type
+https://www.tutorialsteacher.com/csharp/csharp-value-type-and-reference-type
+
+Shallow copy deep copy
+https://dotnettutorials.net/lesson/shallow-copy-and-deep-copy/
+
+What is viewport in html
+https://www.w3schools.com/css/css_rwd_viewport.asp
+
+Difference between display none vs hidden
+https://stackoverflow.com/questions/133051/what-is-the-difference-between-visibilityhidden-and-displaynone
+
+Different ways to create object
+https://www.geeksforgeeks.org/different-ways-to-create-an-object-in-c-sharp/
+
+What is use of new keyword apart from creating objects
+https://www.c-sharpcorner.com/UploadFile/g_arora/discussing-new-keyword-of-C-Sharp/
+
+Garbage collector finalise vs 
+https://dotnetinter.livejournal.com/92200.html
+
+Dynamic x = null, var x = null
+
+Which one you will use between function and sp
+https://www.dotnettricks.com/learn/sqlserver/difference-between-stored-procedure-and-function-in-sql-server
+
+Is creating index will solve performance tuning problem
+https://dotnettutorials.net/lesson/advantages-and-disadvantages-of-indexes-sql-server/
+
+Delete vs truncate vs drop
+https://www.geeksforgeeks.org/difference-between-delete-drop-and-truncate/
+
+Multithreading
+https://www.geeksforgeeks.org/c-sharp-multithreading/
+https://www.c-sharpcorner.com/article/multithreading-in-c-sharp/
+
+Localstorage vs session storage
+https://dev.to/rohanshakya/javascript-local-storage-vs-session-storage-vs-cookies-95n
+
+Subject, behavoral subject
+https://www.tektutorialshub.com/angular/subjects-in-angular/
+https://www.tektutorialshub.com/angular/replaysubject-behaviorsubject-asyncsubject-in-angular/
+
+SQL Injection
+https://portswigger.net/web-security/sql-injection
+
+TPL in c#
+https://www.c-sharpcorner.com/article/parallel-programming-using-tpl-in-net/
+
+Using keyword 
+https://www.c-sharpcorner.com/UploadFile/manas1/usage-and-importance-of-using-in-C-Sharp472/
+
+https://www.guru99.com/mvc-interview-questions.html
+
+Linq, Lambda
+https://www.geeksforgeeks.org/linq-language-integrated-query/
+
+Delete vs truncate vs drop
+https://www.c-sharpcorner.com/blogs/difference-between-truncate-delete-and-drop-in-sql-server1
+
+why we use singleton instead of static
+https://dotnettutorials.net/lesson/singleton-vs-static-class/
+
+https://www.tutorialspoint.com/why-singleton-class-is-always-sealed-in-chash
+
+can we use protected as constructor
+https://www.codegrepper.com/code-examples/whatever/add+a+%27protected%27+constructor+or+the+%27static%27+keyword+to+the+class+declaration+program.cs
+
+can abstract class inherit abstract class also interface
+https://www.bestprog.net/en/2020/04/04/c-abstract-class-basic-concepts-examples/
+
+Can a class inherit an abstract class along with an interface?
+
+Early binding and late binding
+https://www.bestprog.net/en/2020/04/10/c-late-and-early-binding-polymorphism-basic-concepts-examples-passing-a-reference-to-a-base-class-in-a-method/
+
+JWT Token based authentication
+https://www.c-sharpcorner.com/article/how-to-use-jwt-authentication-with-web-api/
+
+Acid property
+https://www.geeksforgeeks.org/acid-properties-in-dbms/amp
+
+How to enable sessions in .net core
+https://www.c-sharpcorner.com/article/how-to-use-session-in-asp-net-core/
+
+JSON files present in .net core
+https://www.csharpstar.com/configuration-json-files-in-asp-net-core/
+
+Throw ex vs throw
+https://www.dotnetjalps.com/2013/10/throw-vs-throw-ex-csharp.html?m=1
+
+Delegates, action predicate, func
+https://www.c-sharpcorner.com/blogs/c-sharp-generic-delegates-func-action-and-predicate
+
+https://www.c-sharpcorner.com/article/func-action-predicate-delegates-in-c-sharp/
+
+Ienumerable vs iqueryble
+https://www.c-sharpcorner.com/UploadFile/a20beb/ienumerable-vs-iqueryable-in-linq/
+
+Exception handling
+https://code-maze.com/global-error-handling-aspnetcore/
+
+Scenario based questions
+http://challlengebrains.blogspot.com/2014/06/real-time-scenario-based-interview.html?m=1
+
+Static vs Singleton
+https://dotnettutorials.net/lesson/singleton-vs-static-class/
+
+Why private constructor in singleton class
+https://www.tutorialspoint.com/why-singleton-class-is-always-sealed-in-chash
+
+Abstract vs Interface
+https://www.c-sharpcorner.com/UploadFile/d0e913/abstract-class-interface-two-villains-of-every-interview/
+
+When to abstract vs interface
+https://www.infoworld.com/article/2928719/when-to-use-an-abstract-class-vs-interface-in-csharp.html
+
+Can abstract class contain constructor
+https://www.c-sharpcorner.com/UploadFile/955025/C-Sharpinterviewquestionpart7can-an-abstract-class-have-a-constr/
+
+Fork join promise observable
+https://medium.com/@swarnakishore/performing-multiple-http-requests-in-angular-4-5-with-forkjoin-74f3ac166d61
+
+Fragment caching
+https://www.c-sharpcorner.com/UploadFile/2072a9/caching-in-Asp-Net/
+
+Api versioning
+https://www.infoworld.com/article/3562355/how-to-use-api-versioning-in-aspnet-core.amp.html
+ 
+
+1.when to use linq and when to use sP's 
+
+https://www.dotnettricks.com/learn/linq/comparing-linq-with-stored-procedure 
+
+ 
+
+2.delegates 
+
+http://www.tutorialsteacher.com/csharp/csharp-delegates 
+
+ 
+
+3.content negotiation in web api 
+
+https://www.c-sharpcorner.com/UploadFile/dacca2/understand-content-negotiation-in-web-api/ 
+
+ 
+
+4.status codes in web api 
+
+https://restfulapi.net/http-status-codes/ 
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status 
+
+ 
+
+5.wcf vs web api vs web services 
+
+https://www.saksoft.com/advantages-of-web-api-over-wcf/ 
+
+ 
+
+https://www.dotnettricks.com/learn/webapi/difference-between-wcf-and-web-api-and-wcf-rest-and-web-service 
+
+ 
+
+6.web api vs mvc controller 
+
+https://www.dotnettricks.com/learn/webapi/difference-between-aspnet-mvc-and-aspnet-web-api 
+
+ 
+
+7.Increatment id value from entity class for every instance like how sql do with Identity 
+
+ 
+
+ 
+
+8.digest in angularjs 
+
+ 
+
+ 
+
+9.Best way to transafer data from component to another component in angular2 
+
+https://angularfirebase.com/lessons/sharing-data-between-angular-components-four-methods/ 
+
+ 
+
+10.how to invoke specific method in sub classes if we have same methods in two 
+
+Interfaces 
+
+https://www.c-sharpcorner.com/UploadFile/8911c4/implicit-and-explicit-interface-examples/ 
+
+ 
+
+11.can we create constructor for abstract class and interface and static class. 
+
+https://www.youtube.com/watch?v=PDcQhy2LfZs 
+
+http://www.zoeller.us/blog/2017/4/30/csharp-interfaces-with-a-constructor 
+
+https://www.c-sharpcorner.com/blogs/all-about-static-method-constructor-and-class-in-c-sharp 
+
+ 
+
+12.how to can we write the code to store hit count for website. 
+
+https://www.c-sharpcorner.com/UploadFile/cd3aa3/7526/ 
+
+ 
+
+13.how can we pass mulitple models to view without using viewmodel - using tuples (or) 
+
+viewdata or dynamic model binding 
+
+https://www.c-sharpcorner.com/UploadFile/ff2f08/multiple-models-in-single-view-in-mvc/ 
+
+ 
+
+14.write program to find second least digit of a number 
+
+https://www.w3resource.com/csharp-exercises/array/csharp-array-exercise-17.php 
+
+ 
+
+15.write program to find missing element from array which can have number from 1-10 
+
+in random order. 
+
+ 
+
+ 
+
+16.remove duplicates from string and print. 
+
+ 
+
+17.n tier architechture 
+
+https://stackify.com/n-tier-architecture/ 
+
+ 
+
+18.diff interface vs abstract 
+
+https://www.codeproject.com/Articles/11155/Abstract-Class-versus-Interface 
+
+ 
+
+19.encapsulation vs abstraction 
+
+https://www.codeproject.com/Articles/1037139/%2FArticles%2F1037139%2FDifference-between-Encapsulation-and-Abstraction-i 
+
+ 
+
+20.why do we use interface with directly access members and functions from class. 
+
+ 
+
+21.factory vs services and when do we use in real time in angular JS. 
+
+ 
+
+22.ng-if vs ng-switch 
+
+https://codecraft.tv/courses/angular/built-in-directives/ngif-and-ngswitch/ 
+
+ 
+
+23.one time biding vs one way binding vs two binding 
+
+https://blog.cloudboost.io/basic-data-binding-with-angular-67680fc149e6 
+
+ 
+
+24.scope in angularjs 
+
+ 
+
+25.user defined function vs sp's 
+
+https://www.spritle.com/blogs/2011/03/03/differences-between-stored-procedures-and-user-defined-functions/ 
+
+ 
+
+26.can we pass table as parameter to sp's 
+
+https://www.c-sharpcorner.com/blogs/userdefined-table-type-and-table-valued-parameters-in-stored-procedure-to-reduce-the-code-size-in-code-behind-file 
+
+https://www.c-sharpcorner.com/UploadFile/rohatash/passing-table-to-a-store-procedure-parameter-in-sql-server-2/ 
+
+ 
+
+@@identity vs scope_Identity 
+
+ 
+
+27.date format functions 
+
+https://www.mssqltips.com/sqlservertip/2655/format-sql-server-dates-with-format-function/ 
+
+ 
+
+28.which design pattern used in your project 
+
+ 
+
+29.what steps u should follow to improve sql query performace and optimization. 
+
+https://www.winwire.com/25-tips-to-improve-sql-query-performance/ 
+
+ 
+
+30.Attribute routing. 
+
+https://www.dotnettricks.com/learn/mvc/understanding-attribute-routing-in-aspnet-mvc 
+
+ 
+
+31.Extension methods 
+
+http://www.tutorialsteacher.com/csharp/csharp-extension-method 
+
+ 
+
+32.html helpers 
+
+http://www.tutorialsteacher.com/mvc/htmlhelper-textarea-textareafor 
+
+ 
+
+33.custom exceptions 
+
+http://www.tutorialsteacher.com/csharp/custom-exception-csharp 
+
+ 
+
+34.how to configure packages in nuget package manager 
+
+https://docs.microsoft.com/en-us/nuget/consume-packages/ways-to-install-a-package 
+
+-------------------------------------------------------------------------------------------------------------------- 
+
+35.outer join 
+
+https://www.w3schools.com/sql/sql_join_full.asp 
+
+ 
+
+36.diff left join vs left outer join 
+
+https://stackoverflow.com/questions/406294/left-join-vs-left-outer-join-in-sql-server 
+
+ 
+
+37.sql to query to get 2nd highest salary 
+
+http://www.java67.com/2015/01/second-highest-salary-in-mysql-and-sql-server.html 
+
+ 
+
+38.table have EmployeeId,employeeName and managerID 
+
+write a query to get manager name of employee an empid = xxxx, user self joins 
+
+https://www.w3schools.com/sql/sql_join_self.asp 
+
+ 
+
+39.how authentication works, if the token is stored in cookie then where do we write code 
+
+for that. 
+
+https://www.c-sharpcorner.com/article/purpose-of-validateantiforgerytoken-in-mvc-application/ 
+
+ 
+
+40.why do we use interface instead of directly using class in our projects. 
+
+ 
+
+41.what is the use of yield keyword. 
+
+https://stackoverflow.com/questions/39476/what-is-the-yield-keyword-used-for-in-c 
+
+ 
+
+42.diff array vs arrayList vs list 
+
+https://www.codeproject.com/Tips/855546/What-is-the-Difference-between-ArrayList-and-List 
+
+https://www.c-sharpcorner.com/blogs/difference-between-array-and-arraylist-in-c-sharp 
+
+ 
+
+43.diff IEnumarable vs Iqueryable 
+
+https://www.c-sharpcorner.com/UploadFile/a20beb/ienumerable-vs-iqueryable-in-linq/ 
+
+ 
+
+44.Action filters in mvc 
+
+https://www.dotnettricks.com/learn/mvc/understanding-aspnet-mvc-filters-and-attributes 
+
+https://www.c-sharpcorner.com/article/action-filter-in-mvc/ 
+
+http://www.tutorialsteacher.com/mvc/actionverbs-in-mvc 
+
+ 
+
+45.returntypes in Web API 
+
+https://www.c-sharpcorner.com/article/types-of-web-api-action-results/ 
+
+ 
+
+46.How to return XML as response in Web API 
+
+ 
+
+47.Diff between n tier and MVC 
+
+ 
+
+48.Circular dependency 
+
+49.Static, readonly, static readonly 
+
+https://www.c-sharpcorner.com/UploadFile/c210df/difference-between-const-readonly-and-static-readonly-in-C-Sharp/ 
+
+ 
+
+50.Single, singleordefault 
+
+https://www.dotnettricks.com/learn/linq/understanding-single-singleordefault-first-and-firstordefault 
+
+ 
+
+String and string 
+
+https://stackoverflow.com/questions/7074/what-is-the-difference-between-string-and-string-in-c/52841014 
+
+ 
+
+ 
+
+ 
+
+ 
+
+-------------------------subhani---------------- 
+
+1.Difference between truncate and delete 
+
+https://www.c-sharpcorner.com/blogs/difference-between-truncate-delete-and-drop-in-sql-server1 
+
+ 
+
+2.How can you increase the performance in angular js application 
+
+ 
+
+3.Difference between lList and dictionary 
+
+ 
+
+4.difference between list and arraylist 
+
+https://www.codeproject.com/Tips/855546/%2FTips%2F855546%2FWhat-is-the-Difference-between-ArrayList-and-List 
+
+ 
+
+5.error handling in MVC 
+
+https://stackify.com/aspnet-mvc-error-handling/ 
+
+6. Error handling in web api 
+
+https://stackify.com/aspnet-mvc-error-handling/ 
+
+7. Return types of web api action method 
+
+https://www.c-sharpcorner.com/article/types-of-web-api-action-results/ 
+
+8. Routing in web api 
+
+9. Routing in MVC 
+
+http://www.tutorialsteacher.com/mvc/routing-in-mvc 
+
+10. How to register exception filter globally. 
+
+https://www.c-sharpcorner.com/UploadFile/0ef46a/exception-filters-in-mvc/ 
+
+11. Angular js app life cycle 
+
+12. MVC routing life cycle. 
+
+https://www.c-sharpcorner.com/UploadFile/00a8b7/Asp-Net-mvc-life-cycle/ 
+
+13.collections 
+
+http://www.tutorialsteacher.com/csharp/csharp-collection 
+
+14.Generics 
+
+http://www.tutorialsteacher.com/csharp/csharp-generics 
+
+15. Dispose and finalize 
+
+https://www.dotnettricks.com/learn/netframework/difference-between-finalize-and-dispose-method 
+
+16.diff dictionary and hashtable 
+
+17. Diff abstract class and interface 
+
+18. Diff between http get and http post 
+
+19. What is temp table and table type 
+
+20. Oops principles(inheritance,polymorphism,abstraction,encapsulation) 
+
+21. Example for abstraction 
+
+22. Example for encapsulation 
+
+ 
+
+24. Explain digest life cycle 
+
+30. What is a promise in angular 
+
+31.diiff ref and out parameters 
+
+32. What is web api and advantages 
+
+33. Types of filters in MVC 
+
+34. Attribute based routing 
+
+35.action filters 
+
+36. Diff between view bag and view data 
+
+37. State management techniques in asp.net 
+
+38. Indexers in c# 
+
+39. Situation where you disagree with your lead or manager. 
+
+most challenging task you faced. 
+
+41. Why you want to change from your current company. 
+
+42. Http handlers 
+
+Triggers 
+
+Index 
+
+Diff between sp and function 
+
+Solid principles 
+
+https://www.codeproject.com/Articles/703634/%2FArticles%2F703634%2FSOLID-architecture-principles-using-simple-Csharp#Understanding%E2%80%9CS%E2%80%9D-SRP(Singleresponsibilityprinciple). 
+
+Delegates and events examples 
+
+What is assembly? Assembly types? 
+
+@identity and @@identity 
+
+What are views and indexes 
+
+What are dynamic scripts 
+
+Difference between variables and property in a class 
+
+ 
+
+Difference between ExecuteReader, ExecuteScalar  
+
+https://www.aspsnippets.com/Articles/Difference-between-ExecuteReader-ExecuteScalar-and-ExecuteNonQuery.aspx 
+
+ 
+
+ 
+
+------------------------------Sowdhanya--------------------------- 
+
+1. Difference between ‘==’ and ‘===’ in javascript 
+
+2. Difference between firstordefault() & singleordefault() 
+
+3. What is typescript? 
+
+4. Diff. b/w $emit & $broadcast 
+
+5. Link in custom directive (prelink, postlink) 
+
+6. Diff. b/w c# and javascript as programming languages 
+
+7. Pages in Statemanagement 
+
+8. Diff. b/w Service & factory in angularjs 
+
+9. What type of language used in angularjs 
+
+10. Types of scopes in angularjs 
+
+11. What is ng-transclude 
+
+12. What is string interpolation 
+
+13. About ur current project 
+
+14. What is unity framework 
+
+15. What is repository framework 
+
+16. Diff b/w Clustered index and non clustered index 
+
+17. What are the extension methods in c# 
+
+18. Dependency injection 
+
+19. ViewBag, ViewData and TempData 
+
+20. Difference b/w Var and dynamic 
+
+21. Difference b/w Dynamic & object 
+
+22. What is assembly? 
+
+23. Access modifiers 
+
+24. Diff. b/w IEnumerable & Enumerable, IEnumerable & IList 
+
+25. Diff. b/w Variables & properties 
+
+26. How to declare only get method to property 
+
+27. Diff. b/w application variable & Session Variable 
+
+28. Diff. b/w ng-show, ng-if, ng-hide 
+
+29. What is the scenario only where ng-if should work 
+
+30. How to pass parameters through custom directive 
+
+31. Diff. b/w angular, jquery & javascript 
+
+32. Angular.copy 
+
+33. Diff b/w shallow copy & Deep copy 
+
+34. What is digest cycle 
+
+35. One way, two way & one time binding 
+
+36. Diff. b/w abstraction & interface 
+
+37. Divide a number without division operator 
+
+38. Service & factory differences 
+
+39. When to use abstraction instead of interface 
+
+40. When to use Interface instead of abstraction 
+
+ 
+
+ 
+
+============ Hari=========== 
+
+1) SOLID principles. 
+
+https://www.codeproject.com/Articles/703634/%2FArticles%2F703634%2FSOLID-architecture-principles-using-simple-Csharp#Understanding%E2%80%9CS%E2%80%9D-SRP(Singleresponsibilityprinciple). 
+
+2) What is Delegates? Use of delegate and multicast delegate 
+
+3) Indexers in c# 
+
+4) Events in c# 
+
+5) SDLC 
+
+6) Design patterns 
+
+7) Find the second smallest number in given “340123” with out built in functions 
+
+8) Filters 
+
+9) Allowananymous 
+
+10) Diff b/w method overloading and overriding 
+
+11) Diff b/w function and sp 
+
+12) What is rownumber(),rank ,Dense rank in sql 
+
+13) What is Threading? Types .how to use and when to use 
+
+14) Clusterd index and non clusterd index 
+
+15) Waht is optional parametrs 
+
+16) Diff b/w ref and out 
+
+17) <input type =”text” ng-model =”::test”> what will be the out put (one time bindig to 
+
+ng=model )? 
+
+18) When will we use ng-if ,when will we use ng-show? Real time example bolo 
+
+19) How will increase store proc performance. 
+
+20) What you will do to improve appliation performance 
+
+21) What is refelction in C# ? 
+
+-----_---------------------- 
+
+ 
+
+ 
+
+ 
+
+Vinod 
+
+-------------------+ 
+
+restFul vs non-restFul services 
+
+equals vs == 
+
+linq query to filter table with lst of id's in linq -> contains may not results exact value. 
+
+any vs contains 
+
+singleordefault vs firstordefault which one is faster. 
+
+get only odd rows from lst using jquery or javascript 
+
+why JSON is so popular 
+
+advanatage of SP's 
+
+how do u handle exceptions using try catch in sql 
+
+how set drop down value using text from text value pair 
+
+ 
+
+ 
+
+ 
+
+Rafiq 
+
+----------------- 
+
+Aspire 
+
+--------------------------- 
+
+ 
+
+difference between service and factory 
+
+Abstraction 
+
+Interface 
+
+abstract class 
+
+encapsulation 
+
+inheritence 
+
+Why C# doesn't allow multiple inheritence 
+
+Overloading 
+
+Overriding 
+
+C# priniples 
+
+C# features 
+
+can we create object for abstract 
+
+VonExpy 
+
+------------------- 
+
+Tell me about ur self 
+
+Tell me about current working project 
+
+HTTpActionResult status code 
+
+ActionResult Status Code 
+
+Linq 
+
+AddRange() Add 
+
+Different approaches in MVC 
+
+wat is mvc 
+
+Jquery validations 
+
+Partial views 
+
+Default master page name in mvc 
+
+How to pass more than one viewmodel from controller to view 
+
+ORM Tolls 
+
+Which development process ur using in ur porject 
+
+How to write validation for reuired in jquery 
+
+First or FirstOrDefault() 
+
+jira 
+
+RayTex IT Services 
+
+----------------------- 
+
+in list of array the fifth element should be in bold 
+
+in dropdown when we select one option then below div in green color(background) and if we 
+
+select second option then below div in red background 
+
+var and dynamic difference 
+
+ng-if and ng-show diffrence 
+
+Getting 6th Highest salary 
+
+left join 
+
+getting records related HR department(using group by) 
+
+how to change ActionName 
+
+how routing will be run in MVC 
+
+why we use abstract 
+
+what is abstract class 
+
+can we create an object for abstrct class and why 
+
+WebAPI Route and RoutePrefix 
+
+Second round --> 
+
+assembly 
+
+How to know version and specification of assembly 
+manifest 
+asp.net life cycle 
+partial class 
+StateManagement 
+Program example for Abstraction, Inheritance, Encapsulation, polymorphism 
+tell me about your project 
+can we create an assembly with different technologies 
+what is class 
+How to create dlls in visual studio 
+Dateset 
+User Controls in ado.net 
+GAC 
+Azility 
+result types in mvc 
+attributes in custom directive 
+attribute routing 
+convention based routing 
+routing mechanism in mvc 
+data binding in angualarjs(two way binding, one way, one time binding) 
+stored procedure 
+diff between stored procedure and function 
+String and StringBuilder 
+Access Specifiers types 
+constructors in c# 
+what is property 
+read only property write only propery, read and write property (public int Id { get;}, public int 
+
+Id{set;},public int Id{get; set;}) 
+
+count the number of 'i' in given string 
+
+write simple program for method overloading 
+
+left join and inner join 
+
+can we return more than one value from function 
+
+constructor and types 
+
+inheritance 
+
+multilevel inheritance and program 
+
+query to get the records from two tables based on condition and display records after top 5 
+
+records 
+
+Linq to get the records from two tables based on condition 
+
+what is javascipt and jquery which is the fast 
+
+Index diferent type of index and difference between them 
+
+current roles in project 
+
+explain about project 
+
+can we return table from stored proc 
+
+how to insert 4 table records in db(optimization when saving?) 
+
+how to get records from two tables based on groupid in LINQ 
+
+how to validate duplicate emailID in form 
+
+Partial class 
+
+why we are using webapi can we acheive through MVC 
+
+How to get the last day of the month using DateTime class 
+
+How to compare two dates, no of days between two dates 
+
+How to pass data to custom directives 
+
+
+Viewstate and session 
+how pagination will work 
+CTE in Database 
+Httpclient 
+Repository Pattern 
+When to use GET, PUT, POST, DELETE 
+https://stackoverflow.com/questions/50056514/put-method-can-insert-delete-then-why-we-have-to-use-post-method-instead-of-pu 
+Angular project with .net core 
+
+https://github.com/saineshwar/Angular-7-Project-with-ASP.NET-CORE-APIS 
+
+https://www.aspdotnet-suresh.com/2015/04/csharp-interview-questions-and-answers-for-experienced-freshers-with-examples.html 
+ 
+http://www.f5debug.net/post/2012/09/17/350-Interview-Questions-and-Answers-on-Net-Framework-OOPS-ASPNet-CNet-SQL-Server-WCF-in-one-place.aspx 
+
+
+
+
+
+
+
+Programming Questions
+
+int x = 1245
+int sum = 0;
+while(x!=0){
+	
+	int y = x%10;
+	
+	sum +=y;
+	x = x/10;
+}
+
+Console.Write(sum);
+
+int[] arr1 =[2,3,1,5];
+
+arr1.sort();
+
+Console.Write(arr1[arr1.length-2]);
+
+int max1 = 0;
+int max2 = 0;
+int temp = 0;
+for(int i =0;i<arr1.length;i++){
+
+	temp = arr1[i];
+	if(max1 > arr1[i]){
+		max1 = arr[i];
+		
+		if(temp<max1){
+		
+		max2 = arr1[i]
+		}
+	}
+	
+}
+
+Console.Write(max2);
+
+
+string temp = "aabbccxyz";
+
+char[] c = temp.toCharArray();
+
+for(int i=0; i<c.length;i++){
+	if(c[i]== "x"){
+		if(c[i+1] == "y"){
+			if(c[i+2] == "z"){
+				c[i] = "a";
+				c[i+1] = "b";
+				c[i+2] = "c";
+			}
+		}
+	}
+}
+
+Console.Write(c.ToString());
+
+Will the below code compile?
+Interface A {void get ()}
+Interface B {void get ()}
+Class C:A,B {public void get () {}}
+
+
+Will the below code compile?
+class A {public virtual void Get(){}}
+class B : A {}
+class C : B {public override void Get(){}}
+
+What will be the output?
+class A{ public virtual void Print(){Console.Writeline("A");}}
+class B:A{ public new void Print(){Console.Writeline("B");}}
+A b = new B();
+b.Print();
+
+var cat = new Animal();
+object dog = new Animal();
+
+
+What will be the output of following code?
+try
+{
+	string a = null;
+	Console.Writeline(a.Length);
+}
+catch(Exception ex)
+{
+	Console.Writeline("Exception");
+}
+catch(NullReferenceException ex)
+{
+	Console.Writeline("NullReferenceException");
+}
+Gaurav Jain3:10 PM
+int 1245
+=> 12
+
+"aabbccxyzab"
+"xyz" => "abc" 
+
+
+
+select DENSE_RANK(OVER PARTITION BY SALARY ORDER BY SALARY DESC) RowNum FROM Employee WHERE RowNum = 2
+
+Duplicate records, delete
+https://www.sqlservertutorial.net/sql-server-basics/delete-duplicates-sql-server
+
+
+RXJs operator and its use
+Constructor chaining
+Private cosntructor
+Write singleton class
+Base keyword in method override
+Cluster vs non cluster
+How to add Global exception
+Async await, multithreading, thread, looping thread operations
+CORS
+Loosely coupled 
+Agile
+Primary vs Unique key difference
+AOT vs JIT
+How you handle exceptions in .net core
+Where we use static class
+Authentication key and value
+Global exception vs method level exception
+Filters authentication authorize using claims identity
+Where we use interfaces
+Types of temp table
+Is and AS use
+Early binding and late binding
+Can we use abstract class instead of interfacd in DI
+Generic type collection
+Method overloading in interface
+Custom annotations in c#
+ORM dataset datareader entity framework
+Lambda expression
+Can we create component through cli using particular module name
+How to reduce bundling size
+Router events
+Rowspan columnspan, paginator in angular material
+How to use compoment from one module to another module
+How width is handled of images for small scale and large devices
+Snackbar duration for longer time
+Stateless
+Routing
+IDisposable
+Self join father grandfather
+Lazy loading in angular
+Swagger in API
+RFID card scanning, Payment Gateway, Email functionality.
+JSON files in .net core
+Maim start of .net core class startup.cs Program.cs
+Stack heap ref vs value types
+Garbage collector I disposable
+Can we create static constructor in nkrmal vice versa
+Abstratct class can we define method as virtual
+Dispose and finalize
+Will Finally execute if we write route navigate in catch block 
+Repository pattern, Generic repository pattern, advantages of it if not used cons of it
+Concurrency, multithreading
+Explain in MYSQL
+Hoisting clousure
+Var let const
+Caching with interceptor
+Types of pipes, directives
+Encapsulation in angular
+Properties in ngmodule
+Lazyloading
+How we communicate cross component
+Subject vs observable
+How to store previos value in ngonchange
+How to get output of 3 observable single time
+Global level exceptionhandling
+Routing where to add
+Data integrity
+Websocket communication
+Exception handling in .net core
+Use of base keyword
+Generic class
+Diamond problem
+when to use protected and private constructor
+cross component comunication using ngOnChange
+can we use sealed on method if yes then instead we can use override or new
+.Net Core Authentication, Authorization
+Entity framework, ADO.Net
+Async await, exception handling
+Modern softwares and systems architecture, load balancing, performance tuning, availability, business continuity, fault tolerant distributed system, 
+microservices, Devops and Agile Practices
+Controller to controller data pass
+RedirectToAction
+Can we do dml operations in function
+Triggers vs storedprocedure
+Exception handling in stored procedure
+5th record from table, last indentity column
+Different action results
+How data is converted from db
+Disconnected architecture dataset datareader
+Dictionary vs Hashtable
+Can we use variable in interface
+Struct vs class
+String stringbuilder
+Boxing unboxing
+Object var dynamic
+Value vs reference
+SQL unique indexes
+Performance tuning practices
+How will you make secure web api
+How to say to user time got expired what if token got expired what will happen
+What is claims identity
+how to notify user to say session got expired
+async await
+Indexer in c#
+Constructor copy constructor
+Routing, Same Action method name, Controller name
+Authentication
+Angular elements
+var vs dynamic
+Microservices
+practical where C =A class assigned
+sp vs function
+Under what circumstances use a Garbage collector 
+How to handle exception handling
+How to use SQL profiler
+The query execution plan, how do you read that table scan, index scan
+Parallelize the queries
+Where you have used multithreading in project situation
+Normalization
+Features developed by you and how like export to excel, print pdf
+What problems you have faced and how you provided solution - Batch job performance
+Microsoft certification
+Charts in angular
+How will you represent yourself in programming
+How many classes you will create to represent family tree and what properties will that family class have
+Lambda expression, multithreading
+Concurrency and Parallelism
+Async and Thread, Task
+Difference between server side and client side code main difference
+
+How will you maintain Sessions when user login and how it will get expire how will you handle that
+Types of collections 
+To maintain cache which collection you will use - MemoryCollection
+Self join example managerid and employee id
+Query optimization
+Create a view using mvc orders and customer model how to show both of them
+Which algorithm you will use to sort it
+Partial views
+Questions on constructors
+Records with same id number in two tables if we apply all join how much records it will fetch
+Unit testing framework like MSTest or NUnit
+Agile, TDD
+What is hoisting
+Content header, JWT implementation how you pass the key from angular
+NgRx
+How to abort if maliscious attack is present in middleware in .net core
+Soap vs rest vs web api
+Can we use functions of sql server in c#
+Middleware main use example
+Helpertag
+Routeroutlet
+Financial year change
+Routing differences
+SQL interview questions
+Give example of any DI added in your project and Middleware
+What is present in startup class in .net core
+What is Iquerable difference with Ienumerable and list
+
+
+
+
+
+
+Solutions provided by me
+Excel functionality - multiple sheet
+To Null Amount values created function 
+PDF generation
+From date todate common functionality created library
+
+
+
+SQL
+Web Api
+C#
+ANGULAR
+SQL
+.Net Core API
+Javascript
+Solid Principles
+Design Patterns - must
+LINQ
+CSS
+Data structure and Coding practice
+JWT Authentication
+
+Do POC of
+Authentication, DI,  Caching, OOPS, MVC, Filter, extension method, Excel, Pdf, Chart in Angular, Multigrid, Pagination, Unit Testing, .Net core crud application, LINQ
+
+
+
