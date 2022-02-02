@@ -1,0 +1,83 @@
+1. If you truly want to only update some of the controls on the group, you can use patchValue.
+If you use setValue then you have to provide all values.
+	
+	From <https://stackoverflow.com/questions/51047540/angular-reactive-form-error-must-supply-a-value-for-form-control-with-name> 
+	
+	2. To manage MatTable dyanamically
+	<table mat-table [dataSource]="data" class="mat-elevation-z8">
+  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+  </ng-container>
+	<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+</table>
+	
+	From <https://material.angular.io/components/table/examples> 
+	
+	- Table with filtering
+	
+	From <https://material.angular.io/components/table/examples> 
+	
+	
+	- Footer row table
+	<td mat-footer-cell *matFooterCellDef> Total </td>
+	
+	From <https://material.angular.io/components/table/examples> 
+	
+	3. For the error Operation not allowed for reason code "7" on table <schema_name>.<table_name>.
+	SQLSTATE=57016
+	
+What is Happening/Why it's Happening ?
+As a result of a alter or other statement that contains a reorg recommended operation the table will be put into a reorg pending state. Until the status is cleared through a reorg operation, access to table is blocked.
+
+From <https://www.ibm.com/support/pages/sql0668n-operating-not-allowed-reason-code-7-seen-when-querying-or-viewing-table-db2-warehouse-cloud-and-db2-cloud> 
+
+SELECT REORG_PENDING FROM SYSIBMADM.ADMINTABINFO where TABSCHEMA=‘<schema_name>’ and tabname=‘<table_name>’
+
+call sysproc.admin_cmd(‘reorg table <schema_name>.<table_name>’)
+call sysproc.admin_cmd('reorg table UHAADM.DE_COSTCENT')
+
+	4. To Handle null values we have to use below query instead of coalesce
+	--Don't use like below
+	SELECT COALESCE(SUM(DEC(COALESCE(AMOUNT,0),14,2)),0.00) ,0,0 FROM IPCNTRN
+	
+	SELECT SUM(DEC(A.AMOUNT,14,2)) FROM IPCNTRN A
+	
+
+	--Correct one below
+	Works in DB2 not on UAT - 
+	SELECT SUM((CASE WHEN TRIM(AMOUNT)='' THEN '0' ELSE AMOUNT END)) AMOUNT FROM IPCNTRN
+	
+	UAT Query
+	SELECT SUM((CASE WHEN AMOUNT='' THEN 0 ELSE DEC(COALESCE(AMOUNT,0),14,2) END)) FROM RUBYDB.IPCNTRN
+	
+	5. To handle duplicate values/entries
+	If you double click of Save button it will enter multiple entries so we have to stop multiple hit. If user double click multiple modals will open.
+	
+	6. FromDate reference variable ViewChild was undefined in ngOnInit()
+	When are variables injected via @ViewChild available?
+	The value of this injected member variable is not immediately available at component construction time!
+	Angular will fill in this property automatically, but only later in the component lifecycle, after the view initialization is completed.
+	
+	Solution - Declare/Use it in ngAfterViewInit()
+	From <https://blog.angular-university.io/angular-viewchild/> 
+	
+	7. 
+	https://stackoverflow.com/questions/54719538/convert-list-to-listdictionary-efficiently-without-foreach-in-c-sharp
+	
+	8. In oracle db2 UAT sum was not taking decimal digits in query
+SELECT TRIM(IPBILLNO) AS BillNo, TRIM(BILLDATE) AS BillDate,
+	(CAST(COALESCE(CASE WHEN LENGTH(TRIM(DEPAMT))=0 THEN 0 ELSE TRIM(DEPAMT) END,0)AS DECIMAL(10,2)) +CAST(COALESCE(CASE WHEN LENGTH(TRIM(RCVDAMT))=0 THEN 0 ELSE TRIM(RCVDAMT) END,0)AS DECIMAL(10,2)) +CAST(COALESCE(CASE WHEN LENGTH(TRIM(CNAMOUNT))=0 THEN 0 ELSE TRIM(CNAMOUNT) END,0)AS DECIMAL(10,2)) -CAST(COALESCE(CASE WHEN LENGTH(TRIM(RFNDAMT))=0 THEN 0 ELSE TRIM(RFNDAMT) END,0)AS DECIMAL(10,2)) +CAST(COALESCE(CASE WHEN LENGTH(TRIM(TDSAMT))=0 THEN 0 ELSE TRIM(TDSAMT) END,0)AS DECIMAL(10,2))) AS ReceivedAmount FROM IPBILL A LEFT JOIN IPREGIST B ON TRIM(B.REGNO) = TRIM(A.REGNO)
+	
+	Solution - 
+	SELECT TRIM(A.IPBILLNO) AS BillNo, TRIM(A.BILLDATE) AS BillDate, TRIM(A.REGNO) AS RegNo, TRIM(B.PATNAME) AS PatientName, (CAST(COALESCE(NULLIF(A.BILLAMT,''),'0.00') AS DECIMAL(10,2)) +CAST(COALESCE(NULLIF(A.PREVBILL,''),'0.00') AS DECIMAL(10,2))) AS BillAmount FROM IPBILL A JOIN IPREGIST B ON TRIM(A.REGNO) = TRIM(B.REGNO)
+	
+	9. when i use router.getCurrentNavigation() inside ngOnInit() it gives me type error but when i use it inside constructor it works fine, why?
+	http://5.9.10.113/66745618/when-i-use-router-getcurrentnavigation-inside-ngoninit-it-gives-me-type-erro
+	
+	• It's necessary to call getCurrentNavigation() inside of the constructor because in ngOnInit() the navigation has finished.
+	10. Query to Reorg table if it is in lock state column lock 7 error in db
+	REORG TABLE DBNAME.TABLENAME; 
+	
+	
