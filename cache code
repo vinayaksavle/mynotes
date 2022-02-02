@@ -1,0 +1,2388 @@
+Cache code 
+ 
+How to do caching in dot net core 
+
+ 
+
+CacheManager 
+
+ 
+
+ 
+
+***AppLiveChatController.cs*** 
+
+ 
+
+// Last Modified On :  
+
+// *********************************************************************** 
+
+// <copyright file="AppLiveChatController.cs" company="CTS"> 
+
+//     Copyright (c) .CTS All rights reserved. 
+
+// </copyright> 
+
+// <summary></summary> 
+
+// *********************************************************************** 
+
+ 
+
+namespace OneC2.AppLaunchTracker.Controllers 
+
+{ 
+
+    using System; 
+
+    using System.Collections.ObjectModel; 
+
+    using AzureSQLHelper; 
+
+    using Microsoft.AspNetCore.Mvc; 
+
+    using Microsoft.Extensions.Caching.Memory; 
+
+    using Microsoft.Extensions.Options; 
+
+    using OneC2.AppLaunchTracker.CacheManager; 
+
+    using OneC2.AppLaunchTracker.Common; 
+
+    using OneC2.AppLaunchTracker.Models; 
+
+ 
+
+    /// <summary> 
+
+    /// App Live Chat Controller 
+
+    /// </summary> 
+
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" /> 
+
+    [Route("api/[Controller]/[Action]")] 
+
+    [ApiController] 
+
+    public class AppLiveChatController : ControllerBase 
+
+    { 
+
+        /// <summary> 
+
+        /// The configuration 
+
+        /// </summary> 
+
+        private readonly IOptions<Configurations> configuration; 
+
+ 
+
+        /// <summary> 
+
+        /// The object exception logger 
+
+        /// </summary> 
+
+        private LogExceptionInAppDynamics objExceptionLogger = new LogExceptionInAppDynamics(); 
+
+ 
+
+        /// <summary> 
+
+        /// The cache 
+
+        /// </summary> 
+
+        private IMemoryCache cache; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="AppLiveChatController"/> class. 
+
+        /// </summary> 
+
+        /// <param name="memoryCache">The memory cache.</param> 
+
+        /// <param name="config">The configuration.</param> 
+
+        public AppLiveChatController(IMemoryCache memoryCache, IOptions<Configurations> config) 
+
+        { 
+
+            ConfigHelper.config = config; 
+
+            this.cache = memoryCache; 
+
+            this.configuration = config; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Global application ID's for live chat. 
+
+        /// </summary> 
+
+        /// <returns>Application Details.</returns> 
+
+        [HttpGet] 
+
+        [ActionName("GetGlobalAppIdforLiveChat")] 
+
+        public Collection<AppDetailsViewModel> GlobalAppIdforLiveChat() 
+
+        { 
+
+            Collection<AppDetailsViewModel> applist = new Collection<AppDetailsViewModel>(); 
+
+            string associateId = string.Empty; 
+
+ 
+
+            try 
+
+            { 
+
+                if (string.IsNullOrEmpty(associateId)) 
+
+                { 
+
+                    associateId = User.Identity.Name.ToUpper().Replace("CTS\\", string.Empty); 
+
+                } 
+
+                 
+
+                applist = AppLiveChatCM.GetAppLiveChatList(associateId, this.cache, this.configuration); 
+
+            } 
+
+            catch (Exception ex) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(ex); 
+
+            } 
+
+ 
+
+            return applist; 
+
+        } 
+
+    } 
+
+} 
+
+ 
+
+------------------------------------------------------------------------------------------------------------- 
+
+***AppLiveChatCM.cs*** 
+
+ 
+
+namespace OneC2.AppLaunchTracker.CacheManager 
+
+{ 
+
+    using System; 
+
+    using System.Collections.ObjectModel; 
+
+    using Microsoft.Extensions.Caching.Memory; 
+
+    using Microsoft.Extensions.Options; 
+
+    using OneC2.AppLaunchTracker.Common; 
+
+    using OneC2.AppLaunchTracker.DAL; 
+
+    using OneC2.AppLaunchTracker.Models; 
+
+ 
+
+    /// <summary> 
+
+    /// App Live Chat Cache Manager 
+
+    /// </summary> 
+
+    public sealed class AppLiveChatCM 
+
+    { 
+
+        /// <summary> 
+
+        /// The app instance 
+
+        /// </summary> 
+
+        private static AppLiveChatCM appInstance; 
+
+ 
+
+        /// <summary> 
+
+        /// The configuration 
+
+        /// </summary> 
+
+        private readonly IOptions<Configurations> configuration; 
+
+ 
+
+        /// <summary> 
+
+        /// The creation time stamp to save current DateTime 
+
+        /// </summary> 
+
+        private DateTime creationTimeStamp; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="AppLiveChatCM" /> class from being created. 
+
+        /// </summary> 
+
+        /// <param name="associateid">Associate Id</param> 
+
+        /// <param name="cache">Memory Cache</param> 
+
+        /// <param name="iconfig">configuration values</param> 
+
+        private AppLiveChatCM(string associateid, IMemoryCache cache, IOptions<Configurations> iconfig) 
+
+        { 
+
+            AppLiveChatDAL objAppLiveChatDAL = new AppLiveChatDAL(iconfig); 
+
+            this.configuration = iconfig; 
+
+            this.creationTimeStamp = DateTime.Now; 
+
+            int appRefreshDuration = Convert.ToInt32(this.configuration.Value.AppLiveChatRefreshDuration); 
+
+            this.AppList = objAppLiveChatDAL.FetchAppListForLiveChatCache(associateid); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Gets or sets the app. 
+
+        /// </summary> 
+
+        /// <value> 
+
+        /// The app. 
+
+        /// </value> 
+
+        private Collection<AppDetailsViewModel> AppList { get; set; } 
+
+         
+
+        /// <summary> 
+
+        /// Get App 
+
+        /// </summary> 
+
+        /// <param name="associateid">associate id of employee</param> 
+
+        /// <param name="cache">Memory cache</param> 
+
+        /// <param name="configuration">The configuration</param> 
+
+        /// <returns>App Details</returns> 
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage 
+
+            ("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Verified")] 
+
+        public static Collection<AppDetailsViewModel> GetAppLiveChatList(string associateid, IMemoryCache cache, IOptions<Configurations> configuration) 
+
+        { 
+
+            return GetAppInstance(associateid, cache, configuration).AppList; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// To Get Instance of private constructor AppLiveChatCM 
+
+        /// </summary> 
+
+        /// <param name="associateid">associate id of employee</param> 
+
+        /// <param name="cache">Memory cache</param> 
+
+        /// <param name="configuration">The configuration</param> 
+
+        /// <returns>App Details</returns> 
+
+        private static AppLiveChatCM GetAppInstance(string associateid, IMemoryCache cache, IOptions<Configurations> configuration) 
+
+        { 
+
+            int appRefreshDuration = Convert.ToInt32(configuration.Value.AppRefreshDuration); 
+
+            if (!cache.TryGetValue(CacheKeys.AppLiveChatDetails, out AppLiveChatCM.appInstance)) 
+
+            { 
+
+                MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions(); 
+
+                cacheEntryOptions.AbsoluteExpiration = DateTime.Now.AddMinutes(appRefreshDuration); 
+
+                appInstance = new AppLiveChatCM(associateid, cache, configuration); 
+
+                cache.Set<AppLiveChatCM>(CacheKeys.AppLiveChatDetails, appInstance, cacheEntryOptions); 
+
+            } 
+
+             
+
+            return appInstance; 
+
+        } 
+
+    } 
+
+} 
+
+ 
+
+-------------------------------------------------------------------------------------------------------------- 
+
+ 
+
+AppLiveChatDAL.cs 
+
+ 
+
+//----------------------------------------------------------------------- 
+
+// <copyright file="AppLiveChatDAL.cs" company="Cts"> 
+
+//     Copyright Cts. All rights reserved. 
+
+// </copyright> 
+
+//----------------------------------------------------------------------- 
+
+ 
+
+namespace OneC2.AppLaunchTracker.DAL 
+
+{ 
+
+    using System; 
+
+    using System.Collections.ObjectModel; 
+
+    using System.Data; 
+
+    using System.Data.SqlClient; 
+
+    using AzureSQLHelper; 
+
+    using Microsoft.Extensions.Options; 
+
+    using OneC2.AppLaunchTracker.Common; 
+
+    using OneC2.AppLaunchTracker.DAL.DataSet; 
+
+    using OneC2.AppLaunchTracker.Models; 
+
+ 
+
+    /// <summary> 
+
+    /// App Live Chat DAL 
+
+    /// </summary> 
+
+    public class AppLiveChatDAL 
+
+    { 
+
+        /// <summary> 
+
+        /// The configuration 
+
+        /// </summary> 
+
+        private readonly IOptions<Configurations> configuration; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="AppLiveChatDAL"/> class. 
+
+        /// </summary> 
+
+        /// <param name="iconfig">The configuration.</param> 
+
+        public AppLiveChatDAL(IOptions<Configurations> iconfig) 
+
+        { 
+
+            this.configuration = iconfig; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// To Fetch App List Details 
+
+        /// </summary> 
+
+        /// <param name="associateid">Associate Id</param> 
+
+        /// <returns>App Details View Model</returns> 
+
+        public Collection<AppDetailsViewModel> FetchAppListForLiveChatCache(string associateid) 
+
+        { 
+
+            LogExceptionInAppDynamics objExceptionLogger = new LogExceptionInAppDynamics(); 
+
+            Collection<AppDetailsViewModel> applist = new Collection<AppDetailsViewModel>(); 
+
+ 
+
+            SqlConnection connectionString = null; 
+
+            SqlCommand sqlCommand = null; 
+
+            SqlDataAdapter objSqlDataAdapter = null; 
+
+            try 
+
+            { 
+
+                connectionString = new SqlConnection(this.configuration.Value.CoreConnectionString); 
+
+                connectionString.OpenWithMSI(); 
+
+                sqlCommand = new SqlCommand(Constants.GetLiveChatEnabledUserDetails, connectionString) 
+
+                { 
+
+                    CommandType = CommandType.StoredProcedure 
+
+                }; 
+
+                SqlParameter passociateId = sqlCommand.Parameters.Add(Constants.SPParameters.AssociateId, System.Data.SqlDbType.VarChar); 
+
+                passociateId.Value = associateid; 
+
+                objSqlDataAdapter = new SqlDataAdapter(sqlCommand); 
+
+                AppLiveChatDataset objAppLiveChatDataset = new AppLiveChatDataset(); 
+
+                objSqlDataAdapter.Fill(objAppLiveChatDataset); 
+
+ 
+
+                if (objAppLiveChatDataset.Tables.Count > 0) 
+
+                { 
+
+                    AppDetailsViewModel objAppDetailsViewModel = null; 
+
+                    for (int i = 0; i < objAppLiveChatDataset.Tables[0].Rows.Count; i++) 
+
+                    { 
+
+                        objAppDetailsViewModel = new AppDetailsViewModel(); 
+
+                        objAppDetailsViewModel.GlobalAppId = Convert.ToInt32(objAppLiveChatDataset.Tables[0].Rows[i][Constants.GlobalAppId]); 
+
+                        applist.Add(objAppDetailsViewModel); 
+
+                    } 
+
+                } 
+
+ 
+
+                connectionString.Close(); 
+
+            } 
+
+            catch (Exception ex) 
+
+            { 
+
+                objExceptionLogger.LogExceptionInAD(ex); 
+
+            } 
+
+            finally 
+
+            { 
+
+                if (objSqlDataAdapter != null) 
+
+                { 
+
+                    objSqlDataAdapter.Dispose(); 
+
+                } 
+
+ 
+
+                if (sqlCommand != null) 
+
+                { 
+
+                    sqlCommand.Dispose(); 
+
+                } 
+
+ 
+
+                if (connectionString != null) 
+
+                { 
+
+                    connectionString.Close(); 
+
+                    connectionString.Dispose(); 
+
+                } 
+
+            } 
+
+ 
+
+            return applist; 
+
+        } 
+
+    } 
+
+} 
+ 
+ 
+ 
+ 
+Using uribuilder adding querystring to url 
+ 
+
+public async Task<GetAllCityDetails> GetAllCityDetails(string associateId = null) 
+
+        { 
+
+            GetAllCityDetails objGetAllCityDetails = new GetAllCityDetails(); 
+
+ 
+
+            try 
+
+            { 
+
+                Uri uri = new Uri(configuration.Value.PurposeOfVistAPI); 
+
+                var uriBuilder = new UriBuilder(uri); 
+
+                var query = HttpUtility.ParseQueryString(uriBuilder.Query); 
+
+                query["associateId"] = "672640"; 
+
+                uriBuilder.Query = query.ToString(); 
+
+                var jsonDataResponse = await ObjURIResponse.DeserializeJsonObject(new Uri(uriBuilder.ToString())); 
+
+                objGetAllCityDetails = JsonConvert.DeserializeObject<GetAllCityDetails>(jsonDataResponse); 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return objGetAllCityDetails; 
+
+        } 
+
+ 
+
+Or 
+ 
+ 
+
+[HttpGet] 
+
+        [ActionName("GetSeatDetails")] 
+
+        [EnableQuery()] 
+
+        public async Task<SeatDetailsModel> GetSeatDetails(string associateId, DateTime selectedDate, string seatCategory, int cityid, int facilityid) 
+
+        { 
+
+            SeatDetailsModel objSeatDetailsModel = new SeatDetailsModel(); 
+
+            try 
+
+            { 
+
+                associateId = associateId ?? GetAssociateId().Trim(); 
+
+ 
+
+                Uri uri = new Uri(this.config.Value.BookTemporarySeatGetSeatDetailsAPI); 
+
+                UriBuilder uribuilder = new UriBuilder(uri); 
+
+                NameValueCollection query = HttpUtility.ParseQueryString(uribuilder.Query); 
+
+                query["associateId"] = associateId; 
+
+                query["selectedDate"] = selectedDate.ToString(); 
+
+                query["seatCategory"] = seatCategory; 
+
+                query["cityid"] = cityid.ToString(); 
+
+                query["facilityid"] = facilityid.ToString(); 
+
+                uribuilder.Query = query.ToString(); 
+
+                URIResponse objURIResponse = new URIResponse(); 
+
+                dynamic deserialized = await objURIResponse.DeserializeJsonToModelGet(new Uri(uribuilder.ToString())); 
+
+                objSeatDetailsModel = JsonConvert.DeserializeObject<List<SeatDetailsModel>>(deserialized); 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return objSeatDetailsModel; 
+
+        } 
+ 
+ 
+ 
+ 
+ 
+ 
+URIResponse.cs 
+ 
+
+namespace OneC2.Home.API.Common 
+
+{ 
+
+    using System; 
+
+    using System.Net.Http; 
+
+    using System.Threading.Tasks; 
+
+    using Newtonsoft.Json; 
+
+    using OneC2.Home.API.Filter; 
+
+ 
+
+    /// <summary> 
+
+    /// URI Response 
+
+    /// </summary> 
+
+    public class URIResponse 
+
+    { 
+
+        /// <summary> 
+
+        /// The object exception logger 
+
+        /// </summary> 
+
+        private readonly LogExceptionInAppDynamics objExceptionLogger = new LogExceptionInAppDynamics(); 
+
+ 
+
+        /// <summary> 
+
+        /// Get async response for get method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// The Response 
+
+        /// </returns> 
+
+        public async Task<Response> Get(string uri) 
+
+        { 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                Response objResponse = new Response(); 
+
+                using (objResponse.GetClient()) 
+
+                using (var request = new HttpRequestMessage()) 
+
+                { 
+
+                    request.Method = HttpMethod.Get; 
+
+                    request.RequestUri = new Uri(uri); 
+
+                    response = await objResponse.GetClient().SendAsync(request); 
+
+                    if (response.IsSuccessStatusCode) 
+
+                    { 
+
+                        var responseBody = await response.Content.ReadAsStringAsync(); 
+
+                        return new Response(response.Headers, responseBody); 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return new Response(response.Headers, "Error"); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Get async response for post method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// the Response 
+
+        /// </returns> 
+
+        public async Task<Response> Post(string uri) 
+
+        { 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                Response objResponse = new Response(); 
+
+                using (objResponse.GetClient()) 
+
+                using (var request = new HttpRequestMessage()) 
+
+                { 
+
+                    request.Method = HttpMethod.Post; 
+
+                    request.RequestUri = new Uri(uri); 
+
+                    response = await objResponse.GetClient().SendAsync(request); 
+
+                    if (response.IsSuccessStatusCode) 
+
+                    { 
+
+                        var responseBody = await response.Content.ReadAsStringAsync(); 
+
+                        return new Response(response.Headers, responseBody); 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return new Response(response.Headers, "Error"); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Gets the asynchronous. 
+
+        /// </summary> 
+
+        /// <param name="uri">The URI.</param> 
+
+        /// <returns>call response</returns> 
+
+        public async Task<Response> GetAsync(string uri) 
+
+        { 
+
+            string responseBody = "Error"; 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                Response objResponse = new Response(); 
+
+                using (objResponse.GetClient()) 
+
+                { 
+
+                    response = await objResponse.GetClient().GetAsync(uri); 
+
+                    if (response.IsSuccessStatusCode) 
+
+                    { 
+
+                        responseBody = await response.Content.ReadAsStringAsync(); 
+
+                    } 
+
+                    else 
+
+                    { 
+
+                        return new Response(response.Headers, responseBody); 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return new Response(response.Headers, responseBody); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Deserializes Model for Post method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// the dynamic 
+
+        /// </returns> 
+
+        public async Task<dynamic> DeserializeJsonToModelPost(Uri uri) 
+
+        { 
+
+            URIResponse objURIResponse = new URIResponse(); 
+
+            var result = await objURIResponse.Post(uri.ToString()); 
+
+            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(result.ResponseValue)); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Deserializes To Model for Get method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// the dynamic 
+
+        /// </returns> 
+
+        public async Task<dynamic> DeserializeJsonToModelGet(Uri uri) 
+
+        { 
+
+            URIResponse objURIResponse = new URIResponse(); 
+
+            var result = await objURIResponse.Get(uri.ToString()); 
+
+            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(result.ResponseValue)); 
+
+        } 
+
+    } 
+
+} 
+
+ 
+ 
+ 
+ 
+
+POST 
+public Response objResponse = new Response(); 
+ 
+
+[HttpPost] 
+
+        [ActionName("BookSeat")] 
+
+        [EnableQuery()] 
+
+        public IActionResult PostBookSeat(BookSeatModel bookSeatModel) 
+
+        { 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                if (ModelState.IsValid) 
+
+                { 
+
+                    using (var client = this.objResponse.GetClient()) 
+
+                    { 
+
+                        Uri uri = new Uri(this.config.Value.BookTemporarySeatPostAPI); 
+
+                        response = client.PostAsJsonAsync(uri, bookSeatModel).Result; 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return this.Ok(response.StatusCode); 
+
+        } 
+ 
+Response.cs 
+ 
+ 
+
+// ----------------------------------------------------------------------- 
+
+// <copyright file="Response.cs" company="Cognizant Technology Solutions"> 
+
+// TODO: Update copyright text. 
+
+// </copyright> 
+
+// ----------------------------------------------------------------------- 
+
+ 
+
+namespace OneC2.Home.API.Common 
+
+{ 
+
+    using System; 
+
+    using System.Net; 
+
+    using System.Net.Http; 
+
+    using System.Net.Http.Headers; 
+
+    using AzureSQLHelper; 
+
+ 
+
+    /// <summary> 
+
+    /// Response to verbs 
+
+    /// </summary> 
+
+    public struct Response 
+
+    { 
+
+        /// <summary> 
+
+        /// The headers 
+
+        /// </summary> 
+
+        public HttpResponseHeaders Headers; 
+
+ 
+
+        /// <summary> 
+
+        /// The response value 
+
+        /// </summary> 
+
+        public string ResponseValue; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="Response"/> struct. 
+
+        /// </summary> 
+
+        /// <param name="headers">The headers.</param> 
+
+        /// <param name="response">The response.</param> 
+
+        public Response(HttpResponseHeaders headers, string response) 
+
+        { 
+
+            this.Headers = headers; 
+
+            this.ResponseValue = response; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Gets the client. 
+
+        /// </summary> 
+
+        /// <returns>The configured client</returns> 
+
+        public HttpClient GetClient() 
+
+        { 
+
+            HttpClientHandler handler = new HttpClientHandler 
+
+            { 
+
+                Credentials = new NetworkCredential( 
+
+                    ConfigHelper.config.Value.NetWorkUserId, ConfigHelper.config.Value.NetWorkPwd) 
+
+            }; 
+
+            HttpClient client = new HttpClient(handler); 
+
+            client.Timeout = TimeSpan.FromSeconds(120); 
+
+            return client; 
+
+        } 
+
+    } 
+
+} 
+
+ 
+
+Cache code 
+ 
+How to do caching in dot net core 
+
+ 
+
+CacheManager 
+
+ 
+
+ 
+
+***AppLiveChatController.cs*** 
+
+ 
+
+// Last Modified On :  
+
+// *********************************************************************** 
+
+// <copyright file="AppLiveChatController.cs" company="CTS"> 
+
+//     Copyright (c) .CTS All rights reserved. 
+
+// </copyright> 
+
+// <summary></summary> 
+
+// *********************************************************************** 
+
+ 
+
+namespace OneC2.AppLaunchTracker.Controllers 
+
+{ 
+
+    using System; 
+
+    using System.Collections.ObjectModel; 
+
+    using AzureSQLHelper; 
+
+    using Microsoft.AspNetCore.Mvc; 
+
+    using Microsoft.Extensions.Caching.Memory; 
+
+    using Microsoft.Extensions.Options; 
+
+    using OneC2.AppLaunchTracker.CacheManager; 
+
+    using OneC2.AppLaunchTracker.Common; 
+
+    using OneC2.AppLaunchTracker.Models; 
+
+ 
+
+    /// <summary> 
+
+    /// App Live Chat Controller 
+
+    /// </summary> 
+
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" /> 
+
+    [Route("api/[Controller]/[Action]")] 
+
+    [ApiController] 
+
+    public class AppLiveChatController : ControllerBase 
+
+    { 
+
+        /// <summary> 
+
+        /// The configuration 
+
+        /// </summary> 
+
+        private readonly IOptions<Configurations> configuration; 
+
+ 
+
+        /// <summary> 
+
+        /// The object exception logger 
+
+        /// </summary> 
+
+        private LogExceptionInAppDynamics objExceptionLogger = new LogExceptionInAppDynamics(); 
+
+ 
+
+        /// <summary> 
+
+        /// The cache 
+
+        /// </summary> 
+
+        private IMemoryCache cache; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="AppLiveChatController"/> class. 
+
+        /// </summary> 
+
+        /// <param name="memoryCache">The memory cache.</param> 
+
+        /// <param name="config">The configuration.</param> 
+
+        public AppLiveChatController(IMemoryCache memoryCache, IOptions<Configurations> config) 
+
+        { 
+
+            ConfigHelper.config = config; 
+
+            this.cache = memoryCache; 
+
+            this.configuration = config; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Global application ID's for live chat. 
+
+        /// </summary> 
+
+        /// <returns>Application Details.</returns> 
+
+        [HttpGet] 
+
+        [ActionName("GetGlobalAppIdforLiveChat")] 
+
+        public Collection<AppDetailsViewModel> GlobalAppIdforLiveChat() 
+
+        { 
+
+            Collection<AppDetailsViewModel> applist = new Collection<AppDetailsViewModel>(); 
+
+            string associateId = string.Empty; 
+
+ 
+
+            try 
+
+            { 
+
+                if (string.IsNullOrEmpty(associateId)) 
+
+                { 
+
+                    associateId = User.Identity.Name.ToUpper().Replace("CTS\\", string.Empty); 
+
+                } 
+
+                 
+
+                applist = AppLiveChatCM.GetAppLiveChatList(associateId, this.cache, this.configuration); 
+
+            } 
+
+            catch (Exception ex) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(ex); 
+
+            } 
+
+ 
+
+            return applist; 
+
+        } 
+
+    } 
+
+} 
+
+ 
+
+------------------------------------------------------------------------------------------------------------- 
+
+***AppLiveChatCM.cs*** 
+
+ 
+
+namespace OneC2.AppLaunchTracker.CacheManager 
+
+{ 
+
+    using System; 
+
+    using System.Collections.ObjectModel; 
+
+    using Microsoft.Extensions.Caching.Memory; 
+
+    using Microsoft.Extensions.Options; 
+
+    using OneC2.AppLaunchTracker.Common; 
+
+    using OneC2.AppLaunchTracker.DAL; 
+
+    using OneC2.AppLaunchTracker.Models; 
+
+ 
+
+    /// <summary> 
+
+    /// App Live Chat Cache Manager 
+
+    /// </summary> 
+
+    public sealed class AppLiveChatCM 
+
+    { 
+
+        /// <summary> 
+
+        /// The app instance 
+
+        /// </summary> 
+
+        private static AppLiveChatCM appInstance; 
+
+ 
+
+        /// <summary> 
+
+        /// The configuration 
+
+        /// </summary> 
+
+        private readonly IOptions<Configurations> configuration; 
+
+ 
+
+        /// <summary> 
+
+        /// The creation time stamp to save current DateTime 
+
+        /// </summary> 
+
+        private DateTime creationTimeStamp; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="AppLiveChatCM" /> class from being created. 
+
+        /// </summary> 
+
+        /// <param name="associateid">Associate Id</param> 
+
+        /// <param name="cache">Memory Cache</param> 
+
+        /// <param name="iconfig">configuration values</param> 
+
+        private AppLiveChatCM(string associateid, IMemoryCache cache, IOptions<Configurations> iconfig) 
+
+        { 
+
+            AppLiveChatDAL objAppLiveChatDAL = new AppLiveChatDAL(iconfig); 
+
+            this.configuration = iconfig; 
+
+            this.creationTimeStamp = DateTime.Now; 
+
+            int appRefreshDuration = Convert.ToInt32(this.configuration.Value.AppLiveChatRefreshDuration); 
+
+            this.AppList = objAppLiveChatDAL.FetchAppListForLiveChatCache(associateid); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Gets or sets the app. 
+
+        /// </summary> 
+
+        /// <value> 
+
+        /// The app. 
+
+        /// </value> 
+
+        private Collection<AppDetailsViewModel> AppList { get; set; } 
+
+         
+
+        /// <summary> 
+
+        /// Get App 
+
+        /// </summary> 
+
+        /// <param name="associateid">associate id of employee</param> 
+
+        /// <param name="cache">Memory cache</param> 
+
+        /// <param name="configuration">The configuration</param> 
+
+        /// <returns>App Details</returns> 
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage 
+
+            ("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Verified")] 
+
+        public static Collection<AppDetailsViewModel> GetAppLiveChatList(string associateid, IMemoryCache cache, IOptions<Configurations> configuration) 
+
+        { 
+
+            return GetAppInstance(associateid, cache, configuration).AppList; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// To Get Instance of private constructor AppLiveChatCM 
+
+        /// </summary> 
+
+        /// <param name="associateid">associate id of employee</param> 
+
+        /// <param name="cache">Memory cache</param> 
+
+        /// <param name="configuration">The configuration</param> 
+
+        /// <returns>App Details</returns> 
+
+        private static AppLiveChatCM GetAppInstance(string associateid, IMemoryCache cache, IOptions<Configurations> configuration) 
+
+        { 
+
+            int appRefreshDuration = Convert.ToInt32(configuration.Value.AppRefreshDuration); 
+
+            if (!cache.TryGetValue(CacheKeys.AppLiveChatDetails, out AppLiveChatCM.appInstance)) 
+
+            { 
+
+                MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions(); 
+
+                cacheEntryOptions.AbsoluteExpiration = DateTime.Now.AddMinutes(appRefreshDuration); 
+
+                appInstance = new AppLiveChatCM(associateid, cache, configuration); 
+
+                cache.Set<AppLiveChatCM>(CacheKeys.AppLiveChatDetails, appInstance, cacheEntryOptions); 
+
+            } 
+
+             
+
+            return appInstance; 
+
+        } 
+
+    } 
+
+} 
+
+ 
+
+-------------------------------------------------------------------------------------------------------------- 
+
+ 
+
+AppLiveChatDAL.cs 
+
+ 
+
+//----------------------------------------------------------------------- 
+
+// <copyright file="AppLiveChatDAL.cs" company="Cts"> 
+
+//     Copyright Cts. All rights reserved. 
+
+// </copyright> 
+
+//----------------------------------------------------------------------- 
+
+ 
+
+namespace OneC2.AppLaunchTracker.DAL 
+
+{ 
+
+    using System; 
+
+    using System.Collections.ObjectModel; 
+
+    using System.Data; 
+
+    using System.Data.SqlClient; 
+
+    using AzureSQLHelper; 
+
+    using Microsoft.Extensions.Options; 
+
+    using OneC2.AppLaunchTracker.Common; 
+
+    using OneC2.AppLaunchTracker.DAL.DataSet; 
+
+    using OneC2.AppLaunchTracker.Models; 
+
+ 
+
+    /// <summary> 
+
+    /// App Live Chat DAL 
+
+    /// </summary> 
+
+    public class AppLiveChatDAL 
+
+    { 
+
+        /// <summary> 
+
+        /// The configuration 
+
+        /// </summary> 
+
+        private readonly IOptions<Configurations> configuration; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="AppLiveChatDAL"/> class. 
+
+        /// </summary> 
+
+        /// <param name="iconfig">The configuration.</param> 
+
+        public AppLiveChatDAL(IOptions<Configurations> iconfig) 
+
+        { 
+
+            this.configuration = iconfig; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// To Fetch App List Details 
+
+        /// </summary> 
+
+        /// <param name="associateid">Associate Id</param> 
+
+        /// <returns>App Details View Model</returns> 
+
+        public Collection<AppDetailsViewModel> FetchAppListForLiveChatCache(string associateid) 
+
+        { 
+
+            LogExceptionInAppDynamics objExceptionLogger = new LogExceptionInAppDynamics(); 
+
+            Collection<AppDetailsViewModel> applist = new Collection<AppDetailsViewModel>(); 
+
+ 
+
+            SqlConnection connectionString = null; 
+
+            SqlCommand sqlCommand = null; 
+
+            SqlDataAdapter objSqlDataAdapter = null; 
+
+            try 
+
+            { 
+
+                connectionString = new SqlConnection(this.configuration.Value.CoreConnectionString); 
+
+                connectionString.OpenWithMSI(); 
+
+                sqlCommand = new SqlCommand(Constants.GetLiveChatEnabledUserDetails, connectionString) 
+
+                { 
+
+                    CommandType = CommandType.StoredProcedure 
+
+                }; 
+
+                SqlParameter passociateId = sqlCommand.Parameters.Add(Constants.SPParameters.AssociateId, System.Data.SqlDbType.VarChar); 
+
+                passociateId.Value = associateid; 
+
+                objSqlDataAdapter = new SqlDataAdapter(sqlCommand); 
+
+                AppLiveChatDataset objAppLiveChatDataset = new AppLiveChatDataset(); 
+
+                objSqlDataAdapter.Fill(objAppLiveChatDataset); 
+
+ 
+
+                if (objAppLiveChatDataset.Tables.Count > 0) 
+
+                { 
+
+                    AppDetailsViewModel objAppDetailsViewModel = null; 
+
+                    for (int i = 0; i < objAppLiveChatDataset.Tables[0].Rows.Count; i++) 
+
+                    { 
+
+                        objAppDetailsViewModel = new AppDetailsViewModel(); 
+
+                        objAppDetailsViewModel.GlobalAppId = Convert.ToInt32(objAppLiveChatDataset.Tables[0].Rows[i][Constants.GlobalAppId]); 
+
+                        applist.Add(objAppDetailsViewModel); 
+
+                    } 
+
+                } 
+
+ 
+
+                connectionString.Close(); 
+
+            } 
+
+            catch (Exception ex) 
+
+            { 
+
+                objExceptionLogger.LogExceptionInAD(ex); 
+
+            } 
+
+            finally 
+
+            { 
+
+                if (objSqlDataAdapter != null) 
+
+                { 
+
+                    objSqlDataAdapter.Dispose(); 
+
+                } 
+
+ 
+
+                if (sqlCommand != null) 
+
+                { 
+
+                    sqlCommand.Dispose(); 
+
+                } 
+
+ 
+
+                if (connectionString != null) 
+
+                { 
+
+                    connectionString.Close(); 
+
+                    connectionString.Dispose(); 
+
+                } 
+
+            } 
+
+ 
+
+            return applist; 
+
+        } 
+
+    } 
+
+} 
+ 
+ 
+ 
+ 
+Using uribuilder adding querystring to url 
+ 
+
+public async Task<GetAllCityDetails> GetAllCityDetails(string associateId = null) 
+
+        { 
+
+            GetAllCityDetails objGetAllCityDetails = new GetAllCityDetails(); 
+
+ 
+
+            try 
+
+            { 
+
+                Uri uri = new Uri(configuration.Value.PurposeOfVistAPI); 
+
+                var uriBuilder = new UriBuilder(uri); 
+
+                var query = HttpUtility.ParseQueryString(uriBuilder.Query); 
+
+                query["associateId"] = "672640"; 
+
+                uriBuilder.Query = query.ToString(); 
+
+                var jsonDataResponse = await ObjURIResponse.DeserializeJsonObject(new Uri(uriBuilder.ToString())); 
+
+                objGetAllCityDetails = JsonConvert.DeserializeObject<GetAllCityDetails>(jsonDataResponse); 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return objGetAllCityDetails; 
+
+        } 
+
+ 
+
+Or 
+ 
+ 
+
+[HttpGet] 
+
+        [ActionName("GetSeatDetails")] 
+
+        [EnableQuery()] 
+
+        public async Task<SeatDetailsModel> GetSeatDetails(string associateId, DateTime selectedDate, string seatCategory, int cityid, int facilityid) 
+
+        { 
+
+            SeatDetailsModel objSeatDetailsModel = new SeatDetailsModel(); 
+
+            try 
+
+            { 
+
+                associateId = associateId ?? GetAssociateId().Trim(); 
+
+ 
+
+                Uri uri = new Uri(this.config.Value.BookTemporarySeatGetSeatDetailsAPI); 
+
+                UriBuilder uribuilder = new UriBuilder(uri); 
+
+                NameValueCollection query = HttpUtility.ParseQueryString(uribuilder.Query); 
+
+                query["associateId"] = associateId; 
+
+                query["selectedDate"] = selectedDate.ToString(); 
+
+                query["seatCategory"] = seatCategory; 
+
+                query["cityid"] = cityid.ToString(); 
+
+                query["facilityid"] = facilityid.ToString(); 
+
+                uribuilder.Query = query.ToString(); 
+
+                URIResponse objURIResponse = new URIResponse(); 
+
+                dynamic deserialized = await objURIResponse.DeserializeJsonToModelGet(new Uri(uribuilder.ToString())); 
+
+                objSeatDetailsModel = JsonConvert.DeserializeObject<List<SeatDetailsModel>>(deserialized); 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return objSeatDetailsModel; 
+
+        } 
+ 
+ 
+ 
+ 
+ 
+ 
+URIResponse.cs 
+ 
+
+namespace OneC2.Home.API.Common 
+
+{ 
+
+    using System; 
+
+    using System.Net.Http; 
+
+    using System.Threading.Tasks; 
+
+    using Newtonsoft.Json; 
+
+    using OneC2.Home.API.Filter; 
+
+ 
+
+    /// <summary> 
+
+    /// URI Response 
+
+    /// </summary> 
+
+    public class URIResponse 
+
+    { 
+
+        /// <summary> 
+
+        /// The object exception logger 
+
+        /// </summary> 
+
+        private readonly LogExceptionInAppDynamics objExceptionLogger = new LogExceptionInAppDynamics(); 
+
+ 
+
+        /// <summary> 
+
+        /// Get async response for get method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// The Response 
+
+        /// </returns> 
+
+        public async Task<Response> Get(string uri) 
+
+        { 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                Response objResponse = new Response(); 
+
+                using (objResponse.GetClient()) 
+
+                using (var request = new HttpRequestMessage()) 
+
+                { 
+
+                    request.Method = HttpMethod.Get; 
+
+                    request.RequestUri = new Uri(uri); 
+
+                    response = await objResponse.GetClient().SendAsync(request); 
+
+                    if (response.IsSuccessStatusCode) 
+
+                    { 
+
+                        var responseBody = await response.Content.ReadAsStringAsync(); 
+
+                        return new Response(response.Headers, responseBody); 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return new Response(response.Headers, "Error"); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Get async response for post method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// the Response 
+
+        /// </returns> 
+
+        public async Task<Response> Post(string uri) 
+
+        { 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                Response objResponse = new Response(); 
+
+                using (objResponse.GetClient()) 
+
+                using (var request = new HttpRequestMessage()) 
+
+                { 
+
+                    request.Method = HttpMethod.Post; 
+
+                    request.RequestUri = new Uri(uri); 
+
+                    response = await objResponse.GetClient().SendAsync(request); 
+
+                    if (response.IsSuccessStatusCode) 
+
+                    { 
+
+                        var responseBody = await response.Content.ReadAsStringAsync(); 
+
+                        return new Response(response.Headers, responseBody); 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return new Response(response.Headers, "Error"); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Gets the asynchronous. 
+
+        /// </summary> 
+
+        /// <param name="uri">The URI.</param> 
+
+        /// <returns>call response</returns> 
+
+        public async Task<Response> GetAsync(string uri) 
+
+        { 
+
+            string responseBody = "Error"; 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                Response objResponse = new Response(); 
+
+                using (objResponse.GetClient()) 
+
+                { 
+
+                    response = await objResponse.GetClient().GetAsync(uri); 
+
+                    if (response.IsSuccessStatusCode) 
+
+                    { 
+
+                        responseBody = await response.Content.ReadAsStringAsync(); 
+
+                    } 
+
+                    else 
+
+                    { 
+
+                        return new Response(response.Headers, responseBody); 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return new Response(response.Headers, responseBody); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Deserializes Model for Post method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// the dynamic 
+
+        /// </returns> 
+
+        public async Task<dynamic> DeserializeJsonToModelPost(Uri uri) 
+
+        { 
+
+            URIResponse objURIResponse = new URIResponse(); 
+
+            var result = await objURIResponse.Post(uri.ToString()); 
+
+            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(result.ResponseValue)); 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Deserializes To Model for Get method 
+
+        /// </summary> 
+
+        /// <param name="uri">The uri</param> 
+
+        /// <returns> 
+
+        /// the dynamic 
+
+        /// </returns> 
+
+        public async Task<dynamic> DeserializeJsonToModelGet(Uri uri) 
+
+        { 
+
+            URIResponse objURIResponse = new URIResponse(); 
+
+            var result = await objURIResponse.Get(uri.ToString()); 
+
+            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(result.ResponseValue)); 
+
+        } 
+
+    } 
+
+} 
+
+ 
+ 
+ 
+ 
+
+POST 
+public Response objResponse = new Response(); 
+ 
+
+[HttpPost] 
+
+        [ActionName("BookSeat")] 
+
+        [EnableQuery()] 
+
+        public IActionResult PostBookSeat(BookSeatModel bookSeatModel) 
+
+        { 
+
+            HttpResponseMessage response = new HttpResponseMessage(); 
+
+            try 
+
+            { 
+
+                if (ModelState.IsValid) 
+
+                { 
+
+                    using (var client = this.objResponse.GetClient()) 
+
+                    { 
+
+                        Uri uri = new Uri(this.config.Value.BookTemporarySeatPostAPI); 
+
+                        response = client.PostAsJsonAsync(uri, bookSeatModel).Result; 
+
+                    } 
+
+                } 
+
+            } 
+
+            catch (Exception exception) 
+
+            { 
+
+                this.objExceptionLogger.LogExceptionInAD(exception); 
+
+            } 
+
+ 
+
+            return this.Ok(response.StatusCode); 
+
+        } 
+ 
+Response.cs 
+ 
+ 
+
+// ----------------------------------------------------------------------- 
+
+// <copyright file="Response.cs" company="Cognizant Technology Solutions"> 
+
+// TODO: Update copyright text. 
+
+// </copyright> 
+
+// ----------------------------------------------------------------------- 
+
+ 
+
+namespace OneC2.Home.API.Common 
+
+{ 
+
+    using System; 
+
+    using System.Net; 
+
+    using System.Net.Http; 
+
+    using System.Net.Http.Headers; 
+
+    using AzureSQLHelper; 
+
+ 
+
+    /// <summary> 
+
+    /// Response to verbs 
+
+    /// </summary> 
+
+    public struct Response 
+
+    { 
+
+        /// <summary> 
+
+        /// The headers 
+
+        /// </summary> 
+
+        public HttpResponseHeaders Headers; 
+
+ 
+
+        /// <summary> 
+
+        /// The response value 
+
+        /// </summary> 
+
+        public string ResponseValue; 
+
+ 
+
+        /// <summary> 
+
+        /// Initializes a new instance of the <see cref="Response"/> struct. 
+
+        /// </summary> 
+
+        /// <param name="headers">The headers.</param> 
+
+        /// <param name="response">The response.</param> 
+
+        public Response(HttpResponseHeaders headers, string response) 
+
+        { 
+
+            this.Headers = headers; 
+
+            this.ResponseValue = response; 
+
+        } 
+
+ 
+
+        /// <summary> 
+
+        /// Gets the client. 
+
+        /// </summary> 
+
+        /// <returns>The configured client</returns> 
+
+        public HttpClient GetClient() 
+
+        { 
+
+            HttpClientHandler handler = new HttpClientHandler 
+
+            { 
+
+                Credentials = new NetworkCredential( 
+
+                    ConfigHelper.config.Value.NetWorkUserId, ConfigHelper.config.Value.NetWorkPwd) 
+
+            }; 
+
+            HttpClient client = new HttpClient(handler); 
+
+            client.Timeout = TimeSpan.FromSeconds(120); 
+
+            return client; 
+
+        } 
+
+    } 
+
+} 
+
+ 
+
+ Softwares installed
+- VMWAREVMWARE horizon client for windows desktop
+- RSA secureid Authenticate
+
+C# Microsoft
+C# Extentions jchannon
+Angular Snippets John Papa
+Angular files Alexander Ivanichev
+Angular language Service 
+Bracket Pair Colorizer Coenraads
+Material Icon Theme* Philipp Kief
+Path Intellisense Christian Kohler
+Prettier Code Formatter Esben Petersen
+TSLint egamma
+Nuget Package Manager jmrog
+TypeScript Hero* Christoph Buhler
+Debugger for Chrome
+
+Open API folder run "dotnet run" to run API application.
+
+
+
