@@ -1,0 +1,495 @@
+using System;
+
+public class Program
+{
+	public static void Main()
+	{
+		Parent b = new Child();
+		b.Method1(); //Parent Method1
+		b.Method2(); //Child Method2()
+		b.Method3(); //Parent Method3()
+
+		Child d = new Child();
+		d.Method1(); //Child Method1() 
+		d.Method2(); //Child Method2() 
+		d.Method3(); //Child Method3()
+		d.Method4(); //Parent Method4()
+		
+		//Child c1 = new Parent(); // error
+		//c1.Method1();
+	}
+class Parent
+{
+	public void Method1() { Console.WriteLine("//Parent Method1"); }
+	public  virtual void Method2() { Console.WriteLine("//Parent Method2()");  }
+	public  virtual void Method3() { Console.WriteLine("//Parent Method3()"); }
+	public virtual void Method4() { Console.WriteLine("//Parent Method4() ");}
+}
+class Child : Parent
+{
+	public void Method1() { Console.WriteLine("//Child Method1() "); }
+	public override void Method2() {Console.WriteLine(" //Child Method2()  ");}
+	public  void Method3() { Console.WriteLine("//Child Method3()"); }
+}
+}
+
+TableA		
+Id	EmpName	CityId
+1	Rahul	1
+2	Suraj	2
+3	Raghav	1
+		
+		
+TableB		
+CityId	CityName	
+1	    Pune	
+2 	    Mumbai	
+3	    Delhi
+
+
+select b.CityId from tableb b left join tablea a on b.CityId = a.CityId where a.CityId = null
+
+
+
+
+for(int i =5; i >0 ; i--){
+
+for(int j=0; j<=i; j--){
+	
+	Console.Write("*");
+}
+
+}
+
+
+export class AuthGaurd implements CanActivate{
+
+	canActivate(roleId){
+		if(roleId == "ADMIN"){
+			router.navigate("/path");
+		} else{
+			router.navigate("/notauthorised");
+		}
+	}
+}
+
+
+ChildComponent
+
+@Output() empId = new EventEmitter();
+
+employeedId = 5;
+
+sendToParent(){
+empId.emit(employeedId);
+}
+
+ParentComponent
+
+<div (sentToParent)="getEmpId($event)"></div>
+
+getEmpId(event){
+console.log(event);
+}
+
+service.AddSingleton(LoggerService,ILoggerService);
+
+STudent
+Id, name, ContactNumber
+
+Subject
+SubId, Name, LanguageInt
+
+Marks
+StudentId, SubjectId, Marks
+
+
+SELECT S.Name, SUM(M.Marks) FROM MARKS M JOIN STUDENT S ON M.StudentId = S.Id JOIN SUBJECT SB ON M.SubjectId = SB.SubId AND SB.LanguageInt = 1 GROUP BY S.Name
+
+.Net core mega packages
+how to enable sessions in .net core
+
+
+Key Value Pair practical question
+
+let arry = [1, 2, 44, 23, 44, 23, 23, 23, 1, 3, 2, 3];
+
+output = {​​​
+'1': 2,
+'2': 2,
+'44': 2,
+'23': 4,
+'3': 2
+}​​​;
+
+
+obj=[{key:'',value:''}];
+
+let distinct = arry.distinct();
+
+let resultArray.forEach(x => x.key = distinct[x]);
+
+for(let i=0;i<arry.length;i++){
+count = 1
+for(let j=0;j<arry.length;i++){
+
+if(arry[i]==arry[j]){
+	count++;
+	resultArray.map(x=> if()x.Value = count)
+} else{
+	obj.add({key=arry[i],value=count}); 
+}
+
+}
+}
+
+
+
+
+int[] x = [10,-1,0,5,0,20];
+
+int[] y;
+for(int i=0;i<x.length;){
+
+	if(x[i+1]<x[i]){
+		temp1 = x[i];
+		temp2 = x[i+1];
+		x[i] = temp2;
+		x[i+1] = temp1;
+		i=0;
+	}else{
+		i++;
+	}
+	
+}
+
+
+
+public int Recursive(int n){
+
+	
+	while(n!=1){
+		
+		return n*(n-1);
+	}
+
+}
+
+int result=1;
+for(i=n;i>1;i--){
+	
+	result =result*n;
+	n--;
+}
+
+return result;
+
+
+SELECT A.EmpName, B.EmpName Manager FROM Employee A JOIN Employee B ON A.ManagerId = B.EmpId WHERE EmpId =1
+
+[HttpGet]
+Controller/Action
+
+
+
+var listEmployee = List<Employee>(){
+
+}.Where(x=>x.City="Pune");
+
+
+
+
+
+int n;
+int result =1;
+while(n!=1){
+
+result = result*n;
+n--;
+}
+
+return result;
+
+
+fact(int n){
+	if(n!=1){
+		result = result*n;
+		n--;
+		return fact(n);
+	} else{
+		result;
+	}
+}
+
+
+
+string param1 = "abccba";
+
+char[] charParam = param1.ToCharArray();
+
+for(int i=0;i<charParam.length;i++){
+
+for(int j=charParam.length;j>=0;j--){
+
+	if(charParam[i]==charParam[j]){
+			return true;
+	}
+}
+
+}
+
+
+string param2 = param1.reverse();
+
+if(param1 == param2){
+return true;
+}
+
+
+
+
+class class1
+{
+  virtual method1(){}
+}
+
+
+class class2: class1
+{
+  override method1(){}
+}
+
+
+
+class class3: class2
+{
+  override method1(){}
+}
+
+
+class class4: class3
+{
+  override method1(){}
+}
+
+
+----------------------------------
+
+//Please mark TRUE if it's a valid statement, FALSE otherwise
+
+
+class1 obj1 = new class2();//True
+class1 obj2 = new class3();//True
+class1 obj3 = new class4();//True
+class2 obj4 = new class1();//False
+class2 obj5 = new class3();//True
+class2 obj6 = new class4();//True
+class3 obj7 = new class1();//False
+class3 obj8 = new class2();//False
+class3 obj9 = new class4();//True
+class4 obj10 = new class1();//False
+class4 obj11 = new class2();//False
+class4 obj12 = new class3();//False
+
+
+
+
+string input = "vinayak is from deglur deglur";
+
+
+string[] wordArray = input.Split(' ');
+
+
+string[] temp = wordArray;
+Dictionary<string,int> result = new Dictionary<string,int>();
+
+for(int i=0;i<temp.Length;i++){
+    result.Key = temp [i];
+    for(int j=0;j<wordArray.length;i++){
+        if(result.Key == wordArray[j]){
+            result.Value += 1;
+        }
+    }
+}
+
+
+
+
+
+string inputParam = "abccba";
+
+char[] charParam = inputParam.ToCharArray();
+
+char[] temp = new char[inputParam.Length];
+
+for(int i=0;i<=inputParam.Length;i++){
+	
+temp[i] = charParam[(inputParam.Length-1)-i];
+}
+
+for(int i=0;i<=inputParam.Length;i++){
+		for(int j=inputParam.Length-1;j>=i;j--)
+			if(inputParam[i]==inputParam[j]){
+				return true;
+			}
+}
+
+return inputParam == temp.ToString();
+
+
+HomemController{
+
+HomemController(IExceptionLogger exception){
+		exception = new ExceptionLogger();
+}
+
+Method1(){
+try{
+}
+catch(){
+	exception.Log();
+}
+}
+
+}
+
+
+
+string text = "t1";
+
+Action f1 = () => Console.WriteLine(text) ;
+
+ClassA{
+	
+}
+
+using(ClassA a = new ClassA()){
+
+	
+}
+
+
+Employee Id,Name,Salary,DeptId, Department DeptId,Dptname
+
+
+SELECT E.DeptId, D.Dptname, SUM(E.Salary) TotalSalary FROM Employee E JOIN Department D ON E.DeptId = D.DeptId
+GROUP BY E.DeptId, D.Dptname
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
